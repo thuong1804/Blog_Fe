@@ -1,10 +1,10 @@
-import Button from "@/components/Button/Button";
+import HeaderLayout from "@/components/Layouts/Header/Header";
 
 export default function Home() {
   return (
     <div>
       <main>
-        <Button title="Contact Us"/>
+        <HeaderLayout/>
       </main>
     </div>
   );
