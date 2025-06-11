@@ -12,7 +12,12 @@
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+<<<<<<< HEAD
     "tailwind-merge": "^3.3.1"
+=======
+    "react-icons": "^5.5.0",
+    "tailwind-merge": "^3.3.0"
+>>>>>>> 9d6f4d752c7971ae62adb3757dc80ccbac23851c
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
