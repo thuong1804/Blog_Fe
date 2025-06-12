@@ -1,10 +1,10 @@
-import HeaderLayout from "@/components/Layouts/Header/Header";
+import LandingLayout from "@/components/Layouts/LandingPage/LangdingPage";
 
 export default function Home() {
   return (
     <div>
       <main>
-        <HeaderLayout/>
+        <LandingLayout/>
       </main>
     </div>
   );

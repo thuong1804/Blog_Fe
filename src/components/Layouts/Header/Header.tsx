@@ -6,8 +6,9 @@ const HeaderLayout = () => {
   return (
     <div className="flex justify-center items-center w-full bg-white  text-[#333333] py-5 border-0">
       <div className="max-w-[1234px] flex justify-between items-center w-full ">
-        <div>
+        <div className="flex items-center">
           <FaBlogger className="text-[70px]" />
+          <span className="font-bold text-3xl">TECHNEWS</span>
         </div>
         <div className="flex-1 pr-5"><SearchBar /></div>
         <div className="flex-none">
