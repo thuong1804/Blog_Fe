@@ -1,11 +1,11 @@
 import Image from "next/image"
 import Button from "../Button/Button"
 import ItemCardPost from "./ItemCardPost"
-import { ItemCardProps } from "@/type/typeProps"
+import { ItemCardBlogProps } from "@/type/typeProps"
 
 type PostCardProps = {
   title: string,
-  itemCards: ItemCardProps[],
+  itemCards: ItemCardBlogProps[],
 }
 
 const PostCard: React.FC<PostCardProps> = ({ title, itemCards}) => {
@@ -17,7 +17,7 @@ const PostCard: React.FC<PostCardProps> = ({ title, itemCards}) => {
       </div>
       <div className="flex text-black gap-12 mt-20">
         <div className="relative w-3/5 h-[456px]">
-          <Image src={'/images/banner-2.jpg'} alt="banner-post" className="object-cover rounded-2xl" fill />
+          <Image src={'/images/banner-2.jpg'} alt="banner-post" className="object-cover rounded-2xl" fill sizes='(max-width: 768px)'/>
         </div>
         <div className="flex-1">
           <div className="text-xs font-bold">
@@ -41,11 +41,12 @@ const PostCard: React.FC<PostCardProps> = ({ title, itemCards}) => {
             <ItemCardPost
               key={key}
               title={item.title}
-              link={item.link}
+              slug={`/posts/${item.slug}`}
               category={item.category}
-              date={item.date}
+              createdAt={item.createdAt}
               image={item.image}
-              description={item.description}
+              content={item.content}
+              author={item.author}
             />
           ))
         )}

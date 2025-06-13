@@ -1,24 +1,33 @@
-import { ItemCardProps } from "@/type/typeProps";
+import { ItemCardBlogProps } from "@/type/typeProps";
 import Image from "next/image";
 import Link from "next/link";
+import dayjs from "dayjs";
+import { DATE_TIME_VALUE } from "@/constant";
 
-const ItemCardPost: React.FC<ItemCardProps> = ({
+const ItemCardPost: React.FC<ItemCardBlogProps> = ({
   title,
   image,
-  description,
-  category,
-  link,
-  date,
+  content,
+  slug,
+  createdAt,
+  author
 }) => {
   return (
     <div className=" w-[400px] h-[630px] flex flex-col">
       <div className="relative w-full h-[300px]">
-        <Image src={image} fill alt="img-card" className="object-cover rounded-2xl" />
+        <Image src={image} fill alt="img-card" className="object-cover rounded-2xl" sizes="(max-width: 400px)" />
       </div>
-      <div className="text-black text-xs font-bold mt-10">{category} <span className="text-[#999999] ml-4">{date}</span></div>
+      <div className="flex gap-5 items-center text-black text-xs font-bold mt-10 flex-wrap">
+        <div>
+          {author.name}
+        </div>
+        <span className="text-[#999999] ml-4">
+          {dayjs(createdAt).format(DATE_TIME_VALUE)}
+        </span>
+      </div>
       <h4 className="text-2xl font-bold text-black mt-4">{title}</h4>
-      <div className="text-[#999999] text-[16px] font-normal mt-2">{description}</div>
-      <Link href={link} className="text-[#7C4EE4] text-lg font-bold underline mt-5">Read more...</Link>
+      <div className="text-[#999999] text-[16px] font-normal mt-2">{content}</div>
+      <Link href={slug} className="text-[#7C4EE4] text-lg font-bold underline mt-5">Read more...</Link>
     </div>
   )
 }
