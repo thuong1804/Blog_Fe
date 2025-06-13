@@ -1,0 +1,1 @@
+export const DATE_TIME_VALUE = 'HH-mm-ss MM-DD-YYYY'
