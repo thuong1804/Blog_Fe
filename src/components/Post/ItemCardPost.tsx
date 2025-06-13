@@ -14,7 +14,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps> = ({
 }) => {
   return (
     <div className=" w-[400px] h-[630px] flex flex-col">
-      <div className="relative w-full h-[300px] overflow-hidden rounded-2xl cursor-pointer">
+      <div className="relative w-full h-[360px] overflow-hidden rounded-2xl cursor-pointer">
         <Image src={image} fill alt="img-card" className="object-cover transition-transform duration-300 transform hover:scale-105" sizes="(max-width: 400px)" />
       </div>
       <div className="flex gap-5 items-center text-black text-xs font-bold mt-10 flex-wrap">
