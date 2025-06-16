@@ -4,6 +4,7 @@ import "./globals.css";
 import HeaderLayout from "@/components/Layouts/Header/Header";
 import MainLayout from "@/components/Layouts/Main/Main";
 import ApolloWrapper from "@/config/ApolloWrapper/ApolloWrapper";
+import FooterLayout from "@/components/Layouts/Footer/Footer";
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
           <MainLayout>
             {children}
           </MainLayout>
+          <FooterLayout/>
         </ApolloWrapper>
       </body>
     </html>

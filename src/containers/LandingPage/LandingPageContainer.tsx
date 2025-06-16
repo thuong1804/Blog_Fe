@@ -41,7 +41,12 @@ const { data } = useQuery(GET_ALL_POSTS);
       </div>
       <div className="mt-[88px]">
         {data && data.posts && (
-          <PostCard title="Our Recent Post" itemCards={data.posts}/>
+          <PostCard title="Our Recent Post" itemCards={data.posts} isOutstanding/>
+        )}
+      </div>
+       <div className="mt-[88px]">
+        {data && data.posts && (
+          <PostCard title="Popular Post" itemCards={data.posts}/>
         )}
       </div>
       <SubscribeEmail/>
