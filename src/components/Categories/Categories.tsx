@@ -54,7 +54,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
         const isCurrentlyOpen = activeIndex === key
         return (
           <React.Fragment key={key} >
-            <div className="flex items-center gap-2 w-max" onClick={() => toggleDropdown(key)}   ref={el => { categoryRefs.current[key] = el; }} >
+            <div className="flex items-center gap-2 w-max cursor-pointer" onClick={() => toggleDropdown(key)}   ref={el => { categoryRefs.current[key] = el; }} >
               <div className="text-xl font-bold">{itemCategory.name}</div>
               <div className="text-[25px]">
                {isCurrentlyOpen ? <TiArrowSortedUp /> :  <IoMdArrowDropdown />}
