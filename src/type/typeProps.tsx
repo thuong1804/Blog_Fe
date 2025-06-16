@@ -6,7 +6,16 @@ export type ItemCardBlogProps = {
   description?: string;
   excerpt?: string;
   image: string;
-  category: string;
+  category?: {
+    id?: number
+    name: string,
+    description: string,
+    children: {
+      id?: number
+      name: string,
+      description: string
+    }
+  };
   tags?: { id: number; name: string }[];
   views?: number;
   readingTime?: number;

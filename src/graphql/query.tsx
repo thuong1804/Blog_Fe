@@ -10,7 +10,16 @@ export const GET_ALL_POSTS = gql`
       description
       excerpt
       image
-      category
+      category {
+        id
+        name,
+        description,
+        children {
+          id
+          name
+          description
+        }
+      }
       tags {
         id
         name
