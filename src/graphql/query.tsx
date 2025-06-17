@@ -43,3 +43,36 @@ export const GET_ALL_POSTS = gql`
     }
   }
 `;
+
+export const GET_ALL_CATEGORIES = gql`
+ query Categories {
+  categories {
+    id
+    name,
+    posts {
+      id
+      description,
+      category {
+        name,
+        id,
+        description
+      },
+      createdAt,
+      slug,
+      title
+      image,
+      content,
+      author {
+        id,
+        email,
+        name,
+      }
+    }
+    children {
+      id,
+      description,
+      name,
+    }
+  }
+}
+`
