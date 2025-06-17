@@ -18,6 +18,31 @@
   }
 }
 
+@layer base {
+  h1 {
+    @apply text-5xl font-bold text-[#333333];
+  }
+
+  h4 {
+    @apply text-base font-bold text-[#666666];
+  }
+
+  p {
+    @apply text-base font-normal text-[#666666];
+  }
+}
+
+
+
+
+@theme {
+  --max-width-desktop: 1232px;
+  --text-color-body: #999999;
+  --text-color-primary: #7c4ee4;
+  --text-color-title: #333333;
+
+}
+
 body {
   background: white;
   color: var(--foreground);

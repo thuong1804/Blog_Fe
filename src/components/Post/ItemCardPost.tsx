@@ -29,7 +29,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
   }[imageSize];
 
   return (
-    <div className={`max-w-[400px] max-h-[630px] flex flex-col ${imageSize}`}>
+    <div className={`group max-w-[400px] max-h-[630px] flex flex-col ${imageSize}`}>
       <Link href={joinSlug}>
         <div className={`relative overflow-hidden rounded-2xl cursor-pointer ${imageClass} flex justify-center`}>
           <Image src={image} fill alt="img-card" className="object-cover transition-transform duration-300 transform hover:scale-105" sizes="(max-width: 400px)" />
@@ -42,7 +42,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
             {dayjs(createdAt).format(DATE_TIME_VALUE)}
           </span>
         </div>
-        <h4 className="text-2xl font-bold text-black mt-4">{title}</h4>
+        <h4 className="group-hover:underline group-hover:text-(--text-color-primary) text-2xl font-bold text-black mt-4">{title}</h4>
         <div className="text-[#999999] text-[16px] font-normal mt-2">{content}</div>
       </Link>
       <Link href={slug} className="text-[#7C4EE4] text-lg font-bold underline mt-5">Read more...</Link>

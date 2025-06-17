@@ -6,18 +6,17 @@ import AnotherPost from "@/containers/LandingPage/AnotherPost/AnotherPost"
 import Image from "next/image"
 import { useQuery } from '@apollo/client';
 import { GET_ALL_POSTS } from "@/graphql/query"
-import SubscribeEmail from "./SubscribeEmail/SubscribeEmail"
 
 const LandingPage = () => {
   const { data } = useQuery(GET_ALL_POSTS);
 
   return (
-    <div className="h-auto w-full">
+    <div className="h-auto w-full pb-24">
       <div className="bg-[#7C4EE4] p-24 relative">
         <div className="w-[600px] h-[200px] pointer-events-none overflow-hidden absolute top-0 left-0 ">
           <Image src={'/images/vector.svg'} alt="vector-banner" className="pointer-events-none  w-auto rounded-br-[200px] h-auto" fill sizes="(max-width: 608px)"/>
         </div>
-        <div className="flex justify-between gap-12 max-w-[1232px] lg-max-w-[1232px] w-full h-auto mx-auto">
+        <div className="flex justify-between gap-12 max-w-(--max-width-desktop) lg-max-w-(--max-width-desktop) w-full h-auto mx-auto">
           <div className="w-1/2">
             <span className="font-bold text-lg">Featured Post</span>
             <h1 className="text-[64px] font-bold leading-[1.5] pb-8">
@@ -48,9 +47,6 @@ const LandingPage = () => {
         {data && data.posts && (
           <PostCard title="Popular Post" itemCards={data.posts}/>
         )}
-      </div>
-      <div className="mt-[88px]">
-        <SubscribeEmail />
       </div>
     </div>
 
