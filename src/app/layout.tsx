@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Raleway, Roboto } from "next/font/google";
 import "./globals.css";
-import HeaderLayout from "@/components/Layouts/Header/Header";
 import MainLayout from "@/components/Layouts/Main/Main";
-import ApolloWrapper from "@/config/ApolloWrapper/ApolloWrapper";
 import FooterLayout from "@/components/Layouts/Footer/Footer";
+import ApolloWrapper from "@/lib/ApolloWrapper";
+import HeaderLayout from "@/components/Layouts/Header/Header";
 
 const raleway = Raleway({
   subsets: ['latin'],

@@ -9,7 +9,7 @@ import { GET_ALL_POSTS } from "@/graphql/query"
 import SubscribeEmail from "./SubscribeEmail/SubscribeEmail"
 
 const LandingPage = () => {
-const { data } = useQuery(GET_ALL_POSTS);
+  const { data } = useQuery(GET_ALL_POSTS);
 
   return (
     <div className="h-auto w-full">
@@ -49,7 +49,9 @@ const { data } = useQuery(GET_ALL_POSTS);
           <PostCard title="Popular Post" itemCards={data.posts}/>
         )}
       </div>
-      <SubscribeEmail/>
+      <div className="mt-[88px]">
+        <SubscribeEmail />
+      </div>
     </div>
 
   )

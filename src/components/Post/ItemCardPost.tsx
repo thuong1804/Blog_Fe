@@ -4,7 +4,13 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { DATE_TIME_VALUE } from "@/constant";
 
-const ItemCardPost: React.FC<ItemCardBlogProps> = ({
+type ImageSize = 'sm' | 'md' | 'lg';
+
+type ItemCardPostProps  = {
+  imageSize?: ImageSize
+}
+
+const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
   title,
   image,
   content,
@@ -12,14 +18,20 @@ const ItemCardPost: React.FC<ItemCardBlogProps> = ({
   createdAt,
   author,
   category,
+  imageSize = 'lg'
 }) => {
-  const formatSlug = category.toLowerCase().replace(/\s+/g, '-')
+  const formatSlug = category?.name.toLowerCase().replace(/\s+/g, '-')
   const joinSlug = `${formatSlug}/${slug}`
+    const imageClass = {
+    sm: 'w-32 h-20',
+    md: 'w-64 h-40',
+    lg: 'w-full h-[360px]',
+  }[imageSize];
 
   return (
-    <div className=" w-[400px] h-[630px] flex flex-col">
-      <Link  href={joinSlug}>
-        <div className="relative w-full h-[360px] overflow-hidden rounded-2xl cursor-pointer">
+    <div className={`max-w-[400px] max-h-[630px] flex flex-col ${imageSize}`}>
+      <Link href={joinSlug}>
+        <div className={`relative overflow-hidden rounded-2xl cursor-pointer ${imageClass} flex justify-center`}>
           <Image src={image} fill alt="img-card" className="object-cover transition-transform duration-300 transform hover:scale-105" sizes="(max-width: 400px)" />
         </div>
         <div className="flex gap-5 items-center text-black text-xs font-bold mt-10 flex-wrap">

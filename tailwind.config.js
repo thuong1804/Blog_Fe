@@ -2,17 +2,22 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,html}'],
   theme: {
     extend: {
-      colors: {
-        primary: '7C4EE4',
-        secondary: '#ff4081'
+      keyframes: {
+        'fade-in-down': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(-10px) scale(0.95)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0) scale(1)'
+          },
+        }
       },
-      fontSize: {
-        base: '16px'
-      },
-      maxWidth: {
-        desktop: '1234px'
+      animation: {
+        'fade-in-down': 'fade-in-down 0.2s ease-out'
       }
-    }
+    },
   },
   plugins: []
 }

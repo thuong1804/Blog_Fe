@@ -1,8 +1,10 @@
 import { FaBlogger } from "react-icons/fa";
 import Button from "@/components/Button/Button";
 import SearchBar from "@/components/SearchBar/SearchBar";
+import CategoriesPage from "@/containers/Categories/Categories";
 
 const HeaderLayout = () => {
+
   return (
     <div className="w-full bg-white py-5 border-0">
       <div className="flex justify-center items-center text-[#333333]">
@@ -23,8 +25,8 @@ const HeaderLayout = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-[1234px] mx-auto text-black">
-        hahahah
+      <div className="max-w-[1234px] mx-auto text-black w-full flex items-center justify-between relative mt-2.5">
+        <CategoriesPage/>
       </div>
     </div>
   )
