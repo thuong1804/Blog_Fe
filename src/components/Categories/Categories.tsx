@@ -42,7 +42,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
   }
 
   return (
-    <div className="flex justify-between items-center w-full relative ">
+    <div className="flex justify-between items-center w-full relative text-[#333333]">
       {items.map((itemCategory, key) => {
         const itemCardByWithCategory = itemCategory.posts[0]
         const isCurrentlyOpen = activeIndex === key

@@ -1,21 +1,28 @@
+type CategoryProps = {
+  id?: number
+  name: string,
+  description: string,
+  parent: {
+    id: string,
+    name: string,
+    description: string,
+  },
+  children: {
+    id?: number
+    name: string,
+    description: string
+  }
+}
+
 export type ItemCardBlogProps = {
   id?: number;
   title: string;
   slug: string;
-  content: string;
+  content?: string;
   description?: string;
   excerpt?: string;
   image: string;
-  category?: {
-    id?: number
-    name: string,
-    description: string,
-    children: {
-      id?: number
-      name: string,
-      description: string
-    }
-  };
+  category?: CategoryProps,
   tags?: { id: number; name: string }[];
   views?: number;
   readingTime?: number;
@@ -39,3 +46,23 @@ export type ItemCardBlogProps = {
     };
   }[];
 };
+
+
+export type BlogCategoryProps = {
+  title: string,
+  category?: CategoryProps,
+  author: {
+    id: string,
+    name: string,
+    email: string,
+  },
+  createdAt: string,
+  updatedAt: string,
+  content: string,
+  image: string,
+  tags: {
+    id: string,
+    name: string,
+  }[],
+  data: ItemCardBlogProps[],
+}

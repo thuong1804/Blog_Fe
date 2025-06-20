@@ -11,7 +11,7 @@ type PostCardProps = {
 
 const PostCard: React.FC<PostCardProps> = ({ title, itemCards, isOutstanding = false}) => {
   return (
-    <div className="max-w-[1232px] lg-max-w-[1232px] mx-auto">
+    <div className="max-w-(--max-width-desktop) lg-max-w-(--max-width-desktop) mx-auto">
       <div className="flex justify-between">
         <h1 className="text-black text-4xl font-bold">{title}</h1>
         <Button title="View all" />
@@ -38,18 +38,20 @@ const PostCard: React.FC<PostCardProps> = ({ title, itemCards, isOutstanding = f
           </div>
         </div>
       )}
-      <div className="mt-16 grid grid-cols-3 gap-4">
+      <div className="mt-16 grid grid-cols-3 gap-4 gap-y-10">
         {itemCards.length > 0 && (
           itemCards.map((item, key) => (
             <ItemCardPost
               key={key}
               title={item.title}
               slug={item.slug}
+              description={item.description}
               category={item.category}
               createdAt={item.createdAt}
               image={item.image}
               content={item.content}
               author={item.author}
+              excerpt={item.excerpt}
             />
           ))
         )}

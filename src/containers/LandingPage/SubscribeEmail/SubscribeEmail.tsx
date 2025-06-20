@@ -13,7 +13,7 @@ const SubscribeEmail = () => {
         </div>
         <div className="text-5xl font-bold">us to your inbox weekly.</div>
         <div className="flex items-center gap-2 mt-12 h-auto">
-          <input type="text " placeholder="Type here" className="input ghost bg-white text-[#9999] font-normal w-80 h-[53px]" />
+          <input type="text " placeholder="Your email" className="input ghost bg-white text-[#9999] font-normal w-80 h-[53px]" />
           <Button title="Get started" classNames="border border-white"/>
         </div>
         <div className="mt-6 text-[#BBBBBB]">Get a response tomorrow if you submit by 9pm today. If we received afte</div>
