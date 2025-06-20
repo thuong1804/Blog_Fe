@@ -1,5 +1,10 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography" {
+   className: wysiwyg;
+};
 @plugin "daisyui";
+
+
 
 @keyframes fade-in-down {
   from {
@@ -33,14 +38,11 @@
 }
 
 
-
-
 @theme {
   --max-width-desktop: 1232px;
   --text-color-body: #999999;
   --text-color-primary: #7c4ee4;
   --text-color-title: #333333;
-
 }
 
 body {

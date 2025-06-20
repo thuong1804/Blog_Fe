@@ -19,7 +19,7 @@ const LandingPage = () => {
         <div className="flex justify-between gap-12 max-w-(--max-width-desktop) lg-max-w-(--max-width-desktop) w-full h-auto mx-auto">
           <div className="w-1/2">
             <span className="font-bold text-lg">Featured Post</span>
-            <h1 className="text-[64px] font-bold leading-[1.5] pb-8">
+            <h1 className="text-[64px] font-bold leading-[1.5] pb-8 text-white">
               How AI will <br /> Change the Future
             </h1>
             <div className=" w-full max-w-[416px] pb-16">The future of AI will see home robots having enhanced intelligence,

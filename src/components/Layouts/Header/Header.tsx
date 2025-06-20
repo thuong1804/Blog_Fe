@@ -5,7 +5,6 @@ import CategoriesPage from "@/containers/Categories/Categories";
 import Link from "next/link";
 
 const HeaderLayout = () => {
-
   return (
     <div className="w-full bg-white py-5 border-0">
       <div className="flex justify-center items-center text-(--text-color-title)">

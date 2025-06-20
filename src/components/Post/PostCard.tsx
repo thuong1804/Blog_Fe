@@ -45,11 +45,13 @@ const PostCard: React.FC<PostCardProps> = ({ title, itemCards, isOutstanding = f
               key={key}
               title={item.title}
               slug={item.slug}
+              description={item.description}
               category={item.category}
               createdAt={item.createdAt}
               image={item.image}
               content={item.content}
               author={item.author}
+              excerpt={item.excerpt}
             />
           ))
         )}

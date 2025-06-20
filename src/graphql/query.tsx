@@ -12,12 +12,10 @@ export const GET_ALL_POSTS = gql`
       image
       category {
         id
-        name,
-        description,
-        children {
+        name
+        parent {
           id
           name
-          description
         }
       }
       tags {
@@ -44,35 +42,144 @@ export const GET_ALL_POSTS = gql`
   }
 `;
 
-export const GET_ALL_CATEGORIES = gql`
- query Categories {
-  categories {
+export const GET_POST_BY_SLUG = gql`
+  query GetPostBySlug($slug: String!) {
+  post(slug: $slug) {
     id
-    name,
-    posts {
+    title
+    slug
+    content
+    description
+    excerpt
+    image
+    views
+    readingTime
+    isFeatured
+    createdAt
+    updatedAt
+    author {
       id
-      description,
-      category {
-        name,
-        id,
-        description
-      },
-      createdAt,
-      slug,
-      title
-      image,
-      content,
-      author {
-        id,
-        email,
-        name,
-      }
+      name
+      email
     }
-    children {
-      id,
-      description,
-      name,
+    authorId
+    tags {
+      id
+      name
+    }
+    comments {
+      id
+      content
+      createdAt
+    }
+    category {
+      id
+      name
+      parent {
+        id
+        name
+      }
     }
   }
 }
+`
+
+export const GET_ALL_CATEGORIES = gql`
+  query Categories {
+    categories {
+      id
+      name
+      description
+      posts {
+        id
+        title
+        slug
+        description
+        image
+        content
+        createdAt
+        category {
+          id
+          name
+          description
+        }
+        author {
+          id
+          name
+          email
+        }
+      }
+      children {
+        id
+        name
+        description
+      }
+    }
+  }
+`;
+
+export const GET_ALL_POSTS_BY_CATEGORY = gql`
+  query GetCategoryWithPosts($slug: String!) {
+    category(slug: $slug) {
+      id
+      name
+      slug
+      description
+      parent {
+        id
+        name
+        slug
+        description
+      }
+      children {
+        id
+        name
+        description
+        posts {
+          id
+          title
+          excerpt
+          image
+          description
+          category {
+            id
+            slug
+            name,
+            parent {
+              id
+              name
+              slug
+            }
+          }
+          slug
+          createdAt
+          author {
+            name
+          }
+        }
+      }
+      posts {
+        id
+        title
+        excerpt
+        image
+        description
+        slug
+        createdAt
+        category {
+            id
+            slug
+            name,
+          parent {
+              id
+              name
+              slug
+            }
+          }
+        author {
+          name
+        }
+      }
+    }
+  }
 `
