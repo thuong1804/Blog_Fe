@@ -257,3 +257,46 @@ export const GET_ALL_POSTS_BY_CATEGORY = gql`
     }
   }
 `
+
+export const GET_POST_BY_TITLE = gql `
+  query GetPostByTitle($search: String!) {
+    postsByTitle(search: $search) {
+      id
+      title
+      slug
+      content
+      description
+      excerpt
+      image
+      views
+      readingTime
+      isFeatured
+      createdAt
+      updatedAt
+      author {
+        id
+        name
+        email
+        avatar
+      }
+      authorId
+      tags {
+        id
+        name
+      }
+      comments {
+        id
+        content
+        createdAt
+      }
+      category {
+        id
+        name
+        parent {
+          id
+          name
+        }
+      }
+    }
+}
+`

@@ -1,15 +1,30 @@
 'use client'
 
-import { useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const SearchBar = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSubmit = () => {
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    router.push('/blog' + '?' + createQueryString('search', inputValue))
+    setInputValue('')
+    setShowInput(false)
   }
 
   const handelOnclickShow = () => {
