@@ -1,5 +1,6 @@
 import Breadcrumbs from "@/components/Breadcumbs/Breadcumbs";
 import { MarkdownExtra } from "@/components/Markdown/Markdown";
+import { LuEye } from "react-icons/lu";
 import PostCard from "@/components/Post/PostCard";
 import { BlogCategoryProps } from "@/type/typeProps";
 import dayjs from "dayjs";
@@ -14,6 +15,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
   content,
   tags,
   author,
+  views,
   image,
   data,
 }) => {
@@ -51,11 +53,18 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
           <Image src={image} alt="banner-post" className="object-cover rounded-2xl" fill sizes='(max-width: 1232px)' />
         </div>
         <div className="max-w-[1024px] flex flex-col w-full mt-5">
-          <div className="flex justify-between flex-wrap">
-            <div className="text-(--text-color-title) font-bold">{author.name} . {author.email}</div>
+          <div className="flex justify-between flex-wrap items-center">
+            <div className="text-(--text-color-title) font-bold flex items-center gap-2">
+              <div className="avatar">
+                <div className="w-[30px] object-cover rounded">
+                  <Image alt='avatar'src={author.avatar} width={30} height={30}/>
+                </div>
+              </div>
+              {author.name} . {author.email}
+            </div>
             <div className="flex gap-2 items-center">
               {tags.map((tag, key) => (
-                <span key={key} className="shadow border border-[#7c4ee4] rounded-xl text-black flex items-center p-2">
+                <span key={key} className="shadow border border-[#7c4ee4] rounded-xl text-(--text-color-title) flex items-center p-2">
                   {tag.name}
                 </span>
               ))}
@@ -70,6 +79,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
               Updated {dayjs(updatedAt).format(formattedDate)}
             </span>
           </div>
+          <div className="text-(--text-color-title) flex items-center gap-1 mt-2 font-bold">Views: {views}<LuEye/></div>
         </div>
         <div className="h-[1px] border border-[#7c4ee4] max-w-(--max-width-desktop) w-full mt-5"></div>
         <div className="max-w-[1024px] mt-10 w-full text-(--text-color-body)">

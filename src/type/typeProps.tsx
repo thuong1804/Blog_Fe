@@ -33,6 +33,7 @@ export type ItemCardBlogProps = {
     id?: number;
     name: string;
     email?: string;
+    avatar?: string;
   };
   authorId?: number;
   comments?: {
@@ -55,9 +56,11 @@ export type BlogCategoryProps = {
     id: string,
     name: string,
     email: string,
+    avatar: string,
   },
   createdAt: string,
   updatedAt: string,
+  views: number,
   content: string,
   image: string,
   tags: {
@@ -65,4 +68,10 @@ export type BlogCategoryProps = {
     name: string,
   }[],
   data: ItemCardBlogProps[],
+}
+
+export type CategorySlug = {
+  parent?: string
+  children?: string
+  slug: string
 }

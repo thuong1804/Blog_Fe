@@ -31,6 +31,7 @@ export const GET_ALL_POSTS = gql`
         id
         name
         email
+        avatar
       }
       authorId
       comments {
@@ -41,6 +42,50 @@ export const GET_ALL_POSTS = gql`
     }
   }
 `;
+
+export const GET_ALL_POST_POPULAR = gql`
+  query GetPostPopular {
+    popularPosts {
+      id
+      title
+      slug
+      content
+      description
+      excerpt
+      image
+      category {
+        id
+        name
+        parent {
+          id
+          name
+        }
+      }
+      tags {
+        id
+        name
+      }
+      views
+      readingTime
+      isFeatured
+      createdAt
+      updatedAt
+      author {
+        id
+        name
+        email
+        avatar
+      }
+      authorId
+      comments {
+        id
+        content
+        createdAt
+      }
+    }
+  }
+`;
+
 
 export const GET_POST_BY_SLUG = gql`
   query GetPostBySlug($slug: String!) {
@@ -61,6 +106,7 @@ export const GET_POST_BY_SLUG = gql`
       id
       name
       email
+      avatar
     }
     authorId
     tags {
@@ -90,6 +136,7 @@ export const GET_ALL_CATEGORIES = gql`
       id
       name
       description
+      slug
       posts {
         id
         title
@@ -107,12 +154,37 @@ export const GET_ALL_CATEGORIES = gql`
           id
           name
           email
+          avatar
         }
       }
       children {
         id
         name
         description
+        slug
+        posts {
+          id
+          title
+          excerpt
+          image
+          description
+          category {
+            id
+            slug
+            name,
+            parent {
+              id
+              name
+              slug
+            }
+          }
+          slug
+          createdAt
+          author {
+            name
+            avatar
+          }
+        }
       }
     }
   }
@@ -155,6 +227,7 @@ export const GET_ALL_POSTS_BY_CATEGORY = gql`
           createdAt
           author {
             name
+            avatar
           }
         }
       }
@@ -178,6 +251,7 @@ export const GET_ALL_POSTS_BY_CATEGORY = gql`
           }
         author {
           name
+          avatar
         }
       }
     }

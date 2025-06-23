@@ -22,11 +22,12 @@ export default async function BlogDetail({ params }: { params: Params }) {
     return <div>Post not found</div>;
   }
 
-  const { title, category, createdAt, updatedAt, content, tags, image, author } = dataByPost.data.post
+  const { title, category, createdAt, updatedAt, content, tags, image, author, views } = dataByPost.data.post
 
   return (
     <BlogCategory
       title={title}
+      views={views}
       category={category}
       createdAt={createdAt}
       content={content}

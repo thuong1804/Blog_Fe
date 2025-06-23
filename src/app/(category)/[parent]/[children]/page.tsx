@@ -23,7 +23,7 @@ export default async function BlogSlug({ params }: { params: Params }) {
       slug: category.slug
     }
   ]
-  console.log(category)
+
   return (
     <BlogContainer
       breadcrumbItem={pathBreadcrumbs}
