@@ -4,8 +4,6 @@
 };
 @plugin "daisyui";
 
-
-
 @keyframes fade-in-down {
   from {
     opacity: 0;

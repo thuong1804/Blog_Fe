@@ -17,7 +17,6 @@ export default async function BlogSlug({ params }: { params: Params }) {
   });
 
   const { category } = data
-  console.log(parent)
   const postData = category?.children.flatMap((child: ChildrenPost) => child.posts)
   if (!postData) {
     return '404'
@@ -29,7 +28,7 @@ export default async function BlogSlug({ params }: { params: Params }) {
       slug: category.slug
     }
   ]
-console.log(postData)
+
   return (
     <BlogContainer
       breadcrumbItem={pathBreadcrumbs}
