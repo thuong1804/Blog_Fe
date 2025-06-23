@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Raleway, Roboto } from "next/font/google";
 import "./globals.css";
-
+import MainLayout from "@/components/Layouts/Main/Main";
+import FooterLayout from "@/components/Layouts/Footer/Footer";
+import ApolloWrapper from "@/lib/ApolloWrapper";
+import HeaderLayout from "@/components/Layouts/Header/Header";
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -30,7 +33,13 @@ export default function RootLayout({
       <body
         className={`${raleway.variable} ${roboto.variable} antialiased`}
       >
-        {children}
+        <ApolloWrapper>
+          <HeaderLayout />
+          <MainLayout>
+            {children}
+          </MainLayout>
+          <FooterLayout/>
+        </ApolloWrapper>
       </body>
     </html>
   );
