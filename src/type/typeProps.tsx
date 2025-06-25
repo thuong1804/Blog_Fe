@@ -75,3 +75,11 @@ export type CategorySlug = {
   children?: string
   slug: string
 }
+
+export type PageProps = {
+  params: {
+    parent: string;
+    children: string;
+    slug: string;
+  };
+};
