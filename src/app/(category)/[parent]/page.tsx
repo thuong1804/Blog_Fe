@@ -1,14 +1,13 @@
 import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_ALL_POSTS_BY_CATEGORY } from "@/graphql/query";
 import { createApolloClient } from "@/lib/apolloClient";
-import { ItemCardBlogProps } from "@/type/typeProps";
-import { Params } from "next/dist/server/request/params";
+import { ItemCardBlogProps, PageProps } from "@/type/typeProps";
 
 export type ChildrenPost = {
   posts: ItemCardBlogProps[]
 }
 
-export default async function BlogSlug({ params }: { params: Params }) {
+export default async function BlogSlug({ params }: PageProps) {
   const {parent} = await params
   const client = createApolloClient({ isServer: true });
   const { data } = await client.query({

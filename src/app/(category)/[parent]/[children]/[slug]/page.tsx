@@ -1,10 +1,10 @@
 import BlogCategory from "@/containers/Blog/BlogCategory"
 import { GET_ALL_POSTS, GET_POST_BY_SLUG } from "@/graphql/query";
 import { createApolloClient } from "@/lib/apolloClient";
-import { Params } from "next/dist/server/request/params";
+import { PageProps } from "@/type/typeProps";
 
-export default async function BlogDetail({ params }: { params: Params }) {
-  const { slug } = await params
+export default async function BlogDetail({ params }: PageProps ) {
+  const { slug } =  await params
   const client = createApolloClient({ isServer: true });
 
   const dataByPost = await client.query({
