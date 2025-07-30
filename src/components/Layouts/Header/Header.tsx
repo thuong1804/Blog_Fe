@@ -3,6 +3,7 @@ import Button from "@/components/Button/Button";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import CategoriesPage from "@/containers/Categories/Categories";
 import Link from "next/link";
+import { Suspense } from "react";
 
 const HeaderLayout = () => {
   return (
@@ -13,14 +14,18 @@ const HeaderLayout = () => {
             <FaBlogger className="text-[70px]" />
             <span className="font-bold text-3xl">TECHNEWS</span>
           </Link>
-          <div className="flex-1 pr-5"><SearchBar /></div>
+          <div className="flex-1 pr-5">
+            <Suspense>
+              <SearchBar />
+            </Suspense>
+          </div>
           <div className="flex-none">
             <ul className="menu menu-horizontal px-1 flex items-center text-[16px] gap-5 text-(--text-color-title)">
               <li className="font-bold hover:text-purple-400 transition">
                 <Link href="/blog">Blog</Link>
               </li>
               <li className="font-bold hover:text-purple-400 transition">
-                <Link href="/blog">About</Link>
+                <Link href="/about">About</Link>
               </li>
               <li>
                 <Button title="Contact Us" classNames="w-[180px] h-[56px]" />

@@ -2,6 +2,7 @@ import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_ALL_POSTS_BY_CATEGORY } from "@/graphql/query";
 import { createApolloClient } from "@/lib/apolloClient";
 import { ItemCardBlogProps } from "@/type/typeProps";
+import { Suspense } from "react";
 
 export type ChildrenPost = {
   posts: ItemCardBlogProps[]
@@ -31,11 +32,13 @@ export default async function BlogSlug(props: {params: tParams}) {
   ]
 
   return (
-    <BlogContainer
-      breadcrumbItem={pathBreadcrumbs}
-      dataCustom={postData}
-      title={category.name}
-      description={category.description}
-    />
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogContainer
+        breadcrumbItem={pathBreadcrumbs}
+        dataCustom={postData}
+        title={category.name}
+        description={category.description}
+      />
+    </Suspense>
   )
 }

@@ -28,17 +28,21 @@ type CategoryProp = {
 const Category: React.FC<CategoryProp> = ({ items }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const wrapperRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const buttonRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        activeIndex !== null &&
-        wrapperRefs.current[activeIndex] &&
-        !wrapperRefs.current[activeIndex]?.contains(event.target as Node)
+      if (activeIndex !== null) {
+      const menu = wrapperRefs.current[activeIndex];
+      const button = buttonRefs.current[activeIndex];
+      const target = event.target as Node;
+
+      if (menu && button && !menu.contains(target) && !button.contains(target)
       ) {
         setActiveIndex(null);
       }
-    };
+    }
+  };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -65,9 +69,9 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
         return (
           itemCategory.children.length > 0 && (
             <React.Fragment key={key}>
-              <div className="flex items-center gap-2 w-max cursor-pointer" onClick={() => toggleDropdown(key)} ref={el => {
-                wrapperRefs.current[key] = el;
-              }} >
+              <div className="flex items-center gap-2 w-max cursor-pointer"
+                onClick={() => toggleDropdown(key)}  ref={(el) => { buttonRefs.current[key] = el}}
+              >
                 <div className="text-xl font-bold">{itemCategory.name}</div>
                 <div className="text-[25px]">
                   {isCurrentlyOpen ? <TiArrowSortedUp /> : <IoMdArrowDropdown />}
