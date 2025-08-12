@@ -1,5 +1,5 @@
 import PostCard from "@/components/Post/PostCard"
-import { GET_ALL_POST_POPULAR } from "@/graphql/query";
+import { GET_ALL_POST_POPULAR } from "@/graphql/Query/PostQuery";
 import { useQuery } from "@apollo/client";
 
 const PopularPost = () => {

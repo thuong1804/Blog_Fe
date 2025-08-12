@@ -1,7 +1,7 @@
 'use client'
 
 import BlogContainer from "@/components/Blog/BlogContainer";
-import { GET_ALL_POSTS, GET_POST_BY_TITLE } from "@/graphql/query";
+import { GET_ALL_POSTS, GET_POST_BY_TITLE } from "@/graphql/Query/PostQuery";
 import { useQuery } from "@apollo/client";
 import { useSearchParams } from "next/navigation";
 

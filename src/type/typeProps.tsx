@@ -34,6 +34,7 @@ export type ItemCardBlogProps = {
     name: string;
     email?: string;
     avatar?: string;
+    handle?: string,
   };
   authorId?: number;
   comments?: {

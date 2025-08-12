@@ -5,11 +5,11 @@ import PostCard from "@/components/Post/PostCard"
 import AnotherPost from "@/containers/LandingPage/AnotherPost/AnotherPost"
 import Image from "next/image"
 import { useQuery } from '@apollo/client';
-import { GET_ALL_POSTS } from "@/graphql/query"
 import { ItemCardBlogProps } from "@/type/typeProps"
 import Link from "next/link"
 import { joinSlugCategory } from "@/utils"
 import PopularPost from "./PopularPost/PopularPost"
+import { GET_ALL_POSTS } from "@/graphql/Query/PostQuery"
 
 const LandingPage = () => {
   const { data } = useQuery(GET_ALL_POSTS);

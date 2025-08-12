@@ -1,5 +1,5 @@
 import BlogContainer from "@/components/Blog/BlogContainer";
-import { GET_ALL_POSTS_BY_CATEGORY } from "@/graphql/query";
+import { GET_ALL_POSTS_BY_CATEGORY } from "@/graphql/Query/CategoryQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 import { ItemCardBlogProps } from "@/type/typeProps";
 import { Suspense } from "react";
