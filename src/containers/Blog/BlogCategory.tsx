@@ -6,6 +6,7 @@ import { BlogCategoryProps } from "@/type/typeProps";
 import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 const BlogCategory: React.FC<BlogCategoryProps> = ({
   title,
@@ -60,7 +61,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                   <Image alt='avatar'src={author.avatar} width={30} height={30}/>
                 </div>
               </div>
-              {author.name} . {author.email}
+							<Link href={`/author/${author.handle}`} className="hover:text-blue-400 hover:underline">{author.name}</Link>  . {author.email}
             </div>
             <div className="flex gap-2 items-center">
               {tags.map((tag, key) => (

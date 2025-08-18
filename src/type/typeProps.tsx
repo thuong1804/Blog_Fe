@@ -58,6 +58,7 @@ export type BlogCategoryProps = {
     name: string,
     email: string,
     avatar: string,
+    handle: string,
   },
   createdAt: string,
   updatedAt: string,
@@ -85,3 +86,12 @@ export type PageProps = {
   };
 };
 
+export type AuthorPageProps = {
+  user: {
+    avatar: string,
+    handle: string,
+    email: string,
+    description: string,
+    posts: ItemCardBlogProps[],
+  };
+};

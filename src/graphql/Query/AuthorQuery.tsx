@@ -7,7 +7,8 @@ export const GET_POST_BY_AUTHOR = gql`
     name,
     handle,
     email,
-    avatar
+    avatar,
+    description,
     posts {
       id
       title
@@ -49,6 +50,19 @@ export const GET_POST_BY_AUTHOR = gql`
         }
       }
     }
+  }
+}
+`
+
+export const GET_LIST_USER = gql`
+  query users {
+    users{
+      id
+      name
+      description
+      handle
+      email
+      avatar
   }
 }
 `

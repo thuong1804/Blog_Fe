@@ -1,9 +1,10 @@
-import LandingLayout from "@/components/Layouts/LandingPage/LangdingPage";
+import LandingPage from "@/containers/LandingPage/LandingPageContainer";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
-    <main>
-      <LandingLayout/>
-    </main>
+    <Suspense fallback='loading'>
+      <LandingPage />
+    </Suspense>
   );
 }
