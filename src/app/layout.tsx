@@ -19,8 +19,11 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
+  icons: {
+    icon: '/global.svg',
+  },
   title: "TECHNEWS",
-    description: "Explore articles on programming, Next.js, React, Node.js, and web development best practices. Stay updated with the latest tech trends for developers.",
+  description: "Explore articles on programming, Next.js, React, Node.js, and web development best practices. Stay updated with the latest tech trends for developers.",
 };
 
 export default function RootLayout({

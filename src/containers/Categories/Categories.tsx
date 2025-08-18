@@ -1,5 +1,5 @@
 import Category from "@/components/Categories/Categories";
-import { GET_ALL_CATEGORIES } from "@/graphql/query";
+import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 
 export default async function CategoriesPage() {
