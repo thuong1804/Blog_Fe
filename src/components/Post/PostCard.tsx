@@ -34,19 +34,27 @@ const PostCard: React.FC<PostCardProps> = ({
 			</div>
 			{isOutstanding && (
 				<div className="flex text-black gap-12 mt-20">
-					<div className="relative w-3/5 h-[456px]">
-						<Image src={cardAnother.image} alt="banner-post" className="object-cover rounded-2xl" fill sizes='(max-width: 768px)' />
+          <div className="relative w-3/5 h-[456px] overflow-hidden rounded-2xl">
+            <Link href={joinSlugCategory(cardAnother.category?.parent?.name, cardAnother.category?.name, cardAnother.slug)}>
+              <Image
+                src={cardAnother.image}
+                alt="banner-post"
+                className="object-cover transition-transform duration-300 transform hover:scale-105"
+                fill
+                sizes='(max-width: 768px)'
+              />
+          </Link>
 					</div>
-					<div className="flex-1">
+					<div className="flex-1 flex flex-col gap-5">
 						<div className="text-xs font-bold">
 							{cardAnother.category?.parent?.name || cardAnother.category?.name}
 							<span className="text-[#999999] font-normal ml-2.5">
 								{dayjs(cardAnother.updatedAt).locale('en').format(DATE_TIME_DISPLAY)}
 							</span>
 						</div>
-						<h4 className="text-3xl font-[500] leading-[1.5] pb-3.5">
+            <Link href={joinSlugCategory(cardAnother.category?.parent?.name, cardAnother.category?.name, cardAnother.slug)} className="text-3xl font-bold font-[500]">
 							{cardAnother.title}
-						</h4>
+						</Link>
 						<div className="text-[#666666] text-[16px] ">
 							{cardAnother.description}
 						</div>

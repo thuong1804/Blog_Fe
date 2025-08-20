@@ -5,6 +5,7 @@ import MainLayout from "@/components/Layouts/Main/Main";
 import FooterLayout from "@/components/Layouts/Footer/Footer";
 import ApolloWrapper from "@/lib/ApolloWrapper";
 import HeaderLayout from "@/components/Layouts/Header/Header";
+import ToastProvider from "@/context/ToastProvider/ToastProvider";
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -37,11 +38,13 @@ export default function RootLayout({
         className={`${raleway.variable} ${roboto.variable} antialiased`}
       >
         <ApolloWrapper>
-          <HeaderLayout />
-          <MainLayout>
-            {children}
-          </MainLayout>
-          <FooterLayout/>
+          <ToastProvider>
+            <HeaderLayout />
+            <MainLayout>
+              {children}
+            </MainLayout>
+            <FooterLayout />
+          </ToastProvider>
         </ApolloWrapper>
       </body>
     </html>

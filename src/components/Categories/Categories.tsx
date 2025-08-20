@@ -9,6 +9,7 @@ import ItemCardPost from "../Post/ItemCardPost";
 import { ItemCardBlogProps } from "@/type/typeProps";
 import Link from "next/link";
 
+
 type CategoryProp = {
   items: {
     id?: number,
@@ -60,6 +61,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
       setActiveIndex(null)
     }, 500)
   }
+
 
   return (
     <div className="flex justify-between items-center w-full relative text-[#333333]">
