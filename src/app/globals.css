@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
 @plugin "@tailwindcss/typography" {
    className: wysiwyg;
 };
-@plugin "daisyui";
 
 @keyframes fade-in-down {
   from {
@@ -44,8 +45,7 @@
 }
 
 body {
-  background: white;
-  color: var(--foreground);
+  /* background: white; */
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;

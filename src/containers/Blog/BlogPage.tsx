@@ -2,21 +2,30 @@
 
 import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_ALL_POSTS, GET_POST_BY_TITLE } from "@/graphql/Query/PostQuery";
-import { useQuery } from "@apollo/client";
+import { ItemCardBlogProps } from "@/type/typeProps";
+import { useSuspenseQuery } from "@apollo/client";
 import { useSearchParams } from "next/navigation";
+
+interface GetPostByTitleData {
+  postsByTitle: ItemCardBlogProps[];
+}
+
+interface GetAllPostsData {
+  posts: ItemCardBlogProps[];
+}
 
 const BlogPage = () => {
   const searchParams = useSearchParams()
   const titleParams = searchParams.get('search')
 
-  const { data } = useQuery(GET_POST_BY_TITLE, {
-    variables: { search: titleParams },
-    skip: !titleParams
-  });
+const { data } = useSuspenseQuery<GetPostByTitleData>(GET_POST_BY_TITLE, {
+  variables: { search: titleParams },
+  skip: !titleParams,
+});
 
-  const { data: dataAll,} = useQuery(GET_ALL_POSTS, {
-    skip: !!titleParams,
-  });
+const { data: dataAll } = useSuspenseQuery<GetAllPostsData>(GET_ALL_POSTS, {
+  skip: !!titleParams,
+});
 
   const dataPost = titleParams ? data?.postsByTitle : dataAll?.posts;
 

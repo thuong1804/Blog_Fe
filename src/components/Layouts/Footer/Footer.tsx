@@ -8,34 +8,34 @@ const FooterLayout = () => {
   const slug = [
     {
       title: 'Home',
-      path: '',
+      path: '/',
     },
     {
       title: 'Blog',
-      path: '',
+      path: '/blog',
     },
     {
       title: 'About',
-      path: '',
+      path: '/about',
     },
     {
       title: 'Contact Us',
-      path: '',
+      path: '/contact',
     },
   ]
 
   const contacts = [
     {
       title: 'FB',
-      href: ''
+      href: 'https://www.facebook.com/Thuongpro40/'
     },
     {
       title: 'IG',
-      href: ''
+      href: 'https://www.instagram.com/lehoaithuong20/'
     },
     {
-      title: 'LN',
-      href: ''
+      title: 'IN',
+      href: 'https://www.linkedin.com/in/hoai-thuong1804/'
     },
     {
       title: 'YT',
@@ -54,12 +54,16 @@ const FooterLayout = () => {
               <span className="font-bold text-3xl text-(--text-color-title)">TECHNEWS</span>
             </div>
             <div className="flex items-center gap-11">
-              {slug.map((item, key) => (<Link className="text-(--text-color-title)" href={item.path} key={key}>{item.title}</Link>))}
+              {slug.map((item, key) => (<Link className="text-(--text-color-title) hover:text-[#7C4EE4]" href={item.path} key={key}>{item.title}</Link>))}
             </div>
             <div className="flex items-center gap-2">
               {contacts.map((item, key) => (
-                <Link href={item.href} key={key} className="border-2 bg-[#7C4EE4] rounded-[50%] w-[40px] h-[40px] flex items-center justify-center">
-                  {item.title}
+                <Link
+                  target="_blank"
+                  href={item.href}
+                  key={key}
+                  className=" transition-all duration-200 ease-in-out border-2 bg-[#7C4EE4] rounded-[50%] w-[40px] h-[40px] flex items-center justify-center hover:scale-105">
+                    {item.title}
                 </Link>
               ))}
             </div>

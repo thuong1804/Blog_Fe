@@ -1,16 +1,27 @@
-import Category from "@/components/Categories/Categories";
+"use client";
+
+import { useQuery } from "@apollo/client";
 import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
-import { createApolloClient } from "@/lib/apolloClient";
+import Category from "@/components/Categories/Categories";
 
-export default async function CategoriesPage() {
-  const client = createApolloClient({isServer: true});
-  const { data } = await client.query({
-    query: GET_ALL_CATEGORIES,
-  });
+export default function CategoriesPage() {
+  const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
 
-  const categories = data.categories || [];
+  if (error) return <p>Error loading categories</p>;
+
+  const categories = data?.categories || [];
 
   return (
-    <Category items={categories}/>
-  );
+    <>
+      {loading ? (
+        <div className="flex justify-between gap-2 items-center w-full relative text-[#333333] animate-pulse">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div key={idx} className="h-7 w-full bg-gray-200 rounded"></div>
+          ))}
+        </div>
+      ) : (
+        <Category items={categories} />
+      )}
+    </>
+  )
 }

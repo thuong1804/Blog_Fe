@@ -54,6 +54,7 @@ export const GET_ALL_CATEGORIES = gql`
           author {
             name
             avatar
+            handle
           }
         }
       }
@@ -99,6 +100,7 @@ export const GET_ALL_POSTS_BY_CATEGORY = gql`
           author {
             name
             avatar
+            handle
           }
         }
       }
@@ -123,6 +125,7 @@ export const GET_ALL_POSTS_BY_CATEGORY = gql`
         author {
           name
           avatar
+          handle
         }
       }
     }
