@@ -64,7 +64,6 @@ const SendMailContact = () => {
                 className="input input-neutral text-black bg-white border-1 border-gray-400"
               />
             </fieldset>
-
             <fieldset className="fieldset relative">
               <legend className="fieldset-legend text-black">Email</legend>
               <label className="input validator bg-white text-black border-1 border-gray-400">
