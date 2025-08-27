@@ -66,3 +66,58 @@ export const GET_LIST_USER = gql`
   }
 }
 `
+
+
+export const GET_USER_BY_ID = gql`
+  query userByPosts($id: Int!) {
+   userDetail(id: $id) {
+    id,
+    name,
+    handle,
+    email,
+    avatar,
+    description,
+    posts {
+      id
+      title
+      slug
+      content
+      description
+      excerpt
+      image
+      views
+      readingTime
+      isFeatured
+      createdAt
+      updatedAt
+       author {
+        id
+        name
+        email
+        avatar
+        handle
+      }
+      authorId
+      tags {
+        id
+        name
+      }
+      comments {
+        id
+        content
+        createdAt
+      }
+      category {
+        id
+        slug
+        name,
+        parent {
+          id
+          name
+          slug
+        }
+      }
+    }
+  }
+}
+`

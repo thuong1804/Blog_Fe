@@ -92,6 +92,7 @@ export type AuthorPageProps = {
     handle: string,
     email: string,
     description: string,
+    name: string,
     posts: ItemCardBlogProps[],
   };
 };
