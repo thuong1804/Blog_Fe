@@ -45,7 +45,7 @@ export default function DropdownInfoProfile({user}: AuthorPageProps) {
               tabIndex={0}
               className="text-white menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-            <li><a><ImProfile className="text-[18px]"/> Profile</a></li>
+            <li><Link href={path.profile}><ImProfile className="text-[18px]"/> Profile</Link></li>
             <li><a><IoIosSettings className="text-[18px]" />Settings</a></li>
             <li>
               <button onClick={handleLogout}>
