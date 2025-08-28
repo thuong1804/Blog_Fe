@@ -1,5 +1,8 @@
+'use client'
+
 import { InputHTMLAttributes, ReactNode, useState } from "react";
 import { FaEye, FaEyeLowVision } from "react-icons/fa6";
+import { twMerge } from "tailwind-merge";
 
 interface BaseInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -9,6 +12,7 @@ interface BaseInputProps
   required?: boolean;
   icon?: ReactNode;
   customMsg?: string,
+  customIcon?: ReactNode,
   onChange?: (value: string) => void;
   type?: string;
 }
@@ -17,6 +21,7 @@ const BaseInput: React.FC<BaseInputProps> = ({
   value,
   required,
   placeholder,
+  customIcon,
   name,
   onChange,
   type = "text",
@@ -24,6 +29,7 @@ const BaseInput: React.FC<BaseInputProps> = ({
   customMsg,
   minLength,
   maxLength,
+  disabled,
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -36,8 +42,8 @@ const BaseInput: React.FC<BaseInputProps> = ({
     if (!val) {
       return `${title || "This field"} is required`
     }
+
     if (minLength && val.length < minLength) {
-      console.log('render')
       return `${title || "This field"} must be at least ${minLength} characters`;
     }
 
@@ -159,8 +165,10 @@ const BaseInput: React.FC<BaseInputProps> = ({
   return (
     <fieldset className="fieldset relative w-full">
       <legend className="fieldset-legend text-black text-sm">{title}</legend>
-      <label className="input validator input-lg bg-white text-black border border-gray-400 w-full flex items-center gap-2 px-2">
-        {renderIcon(type)}
+      <label className={twMerge("input validator input-lg bg-white text-black border border-gray-400 w-full flex items-center gap-2 px-2",
+        disabled && "bg-gray-300 text-gray-500 pointer-events-none "
+      )}>
+        {customIcon ? <span className="h-[1em] opacity-50">{customIcon}</span> : renderIcon(type)}
         <input
           type={inputType}
           name={name}
