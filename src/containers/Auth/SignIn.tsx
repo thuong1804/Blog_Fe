@@ -11,7 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const SigninContainer = () => {
-  const [signin, { loading, error}] = useMutation(SIGNIN)
+  const [signin] = useMutation(SIGNIN)
     const [form, setForm] = useState({
       email: '',
       password: '',
@@ -19,17 +19,30 @@ const SigninContainer = () => {
 
   const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    signin({ variables: { ...form } })
 
-    if (error) {
-      return toast.error(error.message)
-    }
+    try {
+      const resData = await signin({ variables: { ...form } });
+      if (resData.data.login) {
+        const response = await fetch("/api/auth/signin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token: resData.data.login.token,
+            refreshToken: resData.data.login.refreshToken
+          }),
+        });
 
-    if (!loading) {
-      toast.success("Login success")
-      router.push('/')
+        if (response.ok) {
+          router.push("/");
+        } else {
+          toast.error("Failed to set cookie");
+        }
+      }
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message);
     }
   }
 

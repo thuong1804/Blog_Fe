@@ -36,7 +36,7 @@ export default async function HeaderLayout(){
                 </Link>
               </li>
               <li>
-                <DropdownInfoProfile user={user}/>
+                <DropdownInfoProfile user={user?.data} />
               </li>
             </ul>
           </div>

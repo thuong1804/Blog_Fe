@@ -2,33 +2,31 @@
 
 import { GET_UPLOAD_SIGNATURE } from "@/graphql/Mutation/UploadImage";
 import { MutationFunction, useMutation } from "@apollo/client";
+import { useState } from "react";
 import { toast } from "sonner";
 
-type UploadImageVariables = {
-  image: string;
-} & Record<string, number>;
-
-type UploadImageResponse = {
-  uploadImage: {
-    id: number;
-    url: string;
-  };
-};
-
-type PropsUpload = {
-  params: Record<string, number>;
+type PropsUpload<TData, TVariables> = {
+  params: Record<string, string | number | Date | undefined>;
   title?: string,
-  onChangeSuccess?: (imageUrl: string) => void,
-  setFile: React.Dispatch<React.SetStateAction<File | null>>;
-  actionUpload?: MutationFunction<UploadImageResponse, UploadImageVariables>;
+  onUploadSuccess?: (imageUrl: string) => void,
+  onLoadingUpload?: ((loading: boolean) => void) | undefined,
+  actionUpload?: MutationFunction<TData, TVariables>;
 };
 
-export default function UploadImage({ onChangeSuccess, actionUpload, params, title = 'Upload image', setFile }: PropsUpload) {
-  const [getUploadSignature, { loading: signing }] = useMutation(GET_UPLOAD_SIGNATURE);
+export default function UploadImage<TData, TVariables>({
+  onUploadSuccess,
+  actionUpload,
+  onLoadingUpload,
+  params,
+  title = 'Upload image',
+}: PropsUpload<TData, TVariables>) {
+  const [getUploadSignature] = useMutation(GET_UPLOAD_SIGNATURE);
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
-    setFile(selectedFile)
+    setLoading(true)
+    onLoadingUpload?.(true)
 
     if (!selectedFile) return;
 
@@ -45,6 +43,7 @@ export default function UploadImage({ onChangeSuccess, actionUpload, params, tit
       formData.append("api_key", apiKey);
       formData.append("timestamp", String(timestamp));
       formData.append("signature", signature);
+
       if (folder) formData.append("folder", folder);
 
       const uploadRes = await fetch(
@@ -61,14 +60,22 @@ export default function UploadImage({ onChangeSuccess, actionUpload, params, tit
       }
 
       const imageUrl = uploadData.secure_url;
+      const publicId = uploadData.public_id;
 
-      onChangeSuccess?.(imageUrl)
+      onUploadSuccess?.(imageUrl)
 
-      await actionUpload?.({
-        variables: { ...params, image: imageUrl },
+      const res = await actionUpload?.({
+        variables: {
+          ...params,
+          image: imageUrl,
+          publicId: publicId
+        } as TVariables,
       });
-
-      toast.success("Upload image success")
+      if (res?.data) {
+        onLoadingUpload?.(false)
+        setLoading(false)
+        toast.success("Upload image success")
+      }
 
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -81,20 +88,25 @@ export default function UploadImage({ onChangeSuccess, actionUpload, params, tit
     <div className="w-max">
       <label
         htmlFor="file-input"
-        className="cursor-pointer hover:shadow-lg hover:scale-105
-          transition-all duration-300 ease-in-out py-[10px] px-[25px]
-          rounded-4xl bg-white border-1 border-gray-400 text-black
-          text-sm
-          hover:bg-transparent font-medium"
-        >
+        className={`py-[10px] px-[25px] rounded-4xl text-sm font-medium flex gap-2 items-center border-1 transition-all duration-300 ease-in-out
+    ${loading ? "bg-gray-200 text-gray-500 cursor-not-allowed pointer-events-none" : "cursor-pointer hover:shadow-lg hover:scale-105 hover:bg-transparent bg-white border-gray-400 text-black"}
+  `}
+      >
         <input
           type="file"
           id="file-input"
           className="hidden"
           accept=".png,.jpeg,.jpg"
           onChange={handleUpload}
+          disabled={loading}
         />
-        {signing ? "In progress.." : title}
+        {loading ? (
+          <>
+            Uploading <span className="loading loading-spinner loading-sm"></span>
+          </>
+        ) : (
+          title
+        )}
       </label>
     </div>
   );

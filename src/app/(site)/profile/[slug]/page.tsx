@@ -1,7 +1,7 @@
-import FormEditProfile from "@/containers/Profile/FormEditProfile"
+import ProfileContainer from "@/containers/Profile/Profile"
 
-export default function EditProfile() {
+export default function ProfilePage() {
   return (
-    <FormEditProfile />
+    <ProfileContainer />
   )
 }

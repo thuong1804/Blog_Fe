@@ -5,20 +5,24 @@ import InputField from "@/components/InputField/InputField"
 import UploadImage from "@/components/UploadImage/UploadImage";
 import { useAuth } from "@/context/AuthContext/AuthContext";
 import { UPDATE_USER_DETAIL } from "@/graphql/Mutation/AuthorQuery";
+import { DELETE_AVATAR_IMAGE, UPDATE_AVATAR_IMAGE } from "@/graphql/Mutation/UploadImage";
+import { renderImage } from "@/utils";
 import { useMutation } from "@apollo/client";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineAlternateEmail, MdOutlineDescription } from "react-icons/md";
+import { toast } from "sonner";
 
 const FormEditProfile = () => {
   const { user } = useAuth()
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<string | null>(null);
   const [updateUserDetail] = useMutation(UPDATE_USER_DETAIL)
-  const [imgUrl, setImgUrl] = useState('')
+  const [updateAvatarUser] = useMutation(UPDATE_AVATAR_IMAGE)
+  const [deleteAvatar] = useMutation(DELETE_AVATAR_IMAGE)
+  const [disabledDeleteButton, setDisabledDeleteButton] = useState<boolean>(false)
+  const isNullAvatar = !user?.avatar
 
   const [form, setForm] = useState({
     email: "",
-    avatar: "",
     description: "",
     name: "",
     handle: "",
@@ -28,7 +32,6 @@ const FormEditProfile = () => {
     if (user) {
       setForm({
         email: user?.email || "",
-        avatar: user?.avatar || "",
         description: user?.description || "",
         name: user?.name || "",
         handle: user?.handle || "",
@@ -43,65 +46,53 @@ const FormEditProfile = () => {
     }))
   }
 
-  const renderImage = (file: File) => {
-    if (user?.avatar) {
-      return (
-          <Image
-            src={user?.avatar}
-            alt="preview"
-            width={64}
-            height={64}
-            className="rounded-full object-cover"
-            unoptimized
-          />
-      )
-    } else if (file && file.type.startsWith("image/")) {
-        <Image
-          src={URL.createObjectURL(file)}
-          alt="preview"
-          width={64}
-          height={64}
-          className="rounded-full object-cover"
-          unoptimized
-        />
-    } else {
-      <Image
-        src={'/avatar.png'}
-        alt="avatar" width={64}
-        height={64}
-        className="rounded-full object-cover"
-      />
-    }
-  }
+  const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
-  const handleSubmitForm = async () => {
     if (!user?.id) {
       console.error("User ID not found");
       return;
     }
 
     try {
-      const { data: userData } = await updateUserDetail({
+      await updateUserDetail({
         variables: {
-          id: user.id,
-          image: imgUrl,
+          id: user!.id,
           ...form,
         },
       });
 
-
-      console.log("User updated:", userData);
+      toast.success("Upload user success")
     } catch (err) {
-      console.error("Update failed:", err);
+      const error = err as Error;
+      toast.error(error.message);
     }
   };
 
-  const handleUploadSuccess = (imgUrl: string) => {
-    setImgUrl(imgUrl)
+  const handleDeleteAvatar = async () => {
+    try {
+      await deleteAvatar({
+        variables: {
+          publicId: user!.avatarPublicId,
+          userId: user!.id
+        }
+      })
+      setFile(null)
+      toast.success("Delete avatar success")
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message);
+    }
   }
 
+  useEffect(() => {
+    if (user?.avatar) {
+      setFile(user.avatar)
+    }
+  }, [user])
+
   return (
-    <div>
+    <React.Fragment>
       <div className="flex items-center gap-5">
         <div className="avatar">
           <div className="w-18 rounded-full">
@@ -109,13 +100,19 @@ const FormEditProfile = () => {
           </div>
         </div>
         <UploadImage
-          setFile={setFile}
-          onChangeSuccess={handleUploadSuccess}
+          onUploadSuccess={(imageURL) => setFile(imageURL)}
+          onLoadingUpload={(loading) => setDisabledDeleteButton(loading)}
+          actionUpload={updateAvatarUser}
           params={{
-            userId: 1
+            userId: user?.id
           }}
         />
-        <Button classNames="rounded-4xl bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-transparent" title="Delete" onClick={() => setFile(null)} />
+        <Button
+          classNames="rounded-4xl bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-transparent"
+          title="Delete"
+          disabled={disabledDeleteButton || isNullAvatar}
+          onClick={handleDeleteAvatar}
+        />
       </div>
       <form className="w-[70%] mt-5" onSubmit={handleSubmitForm}>
         <InputField.Email
@@ -157,7 +154,7 @@ const FormEditProfile = () => {
           <Button type="submit" title="Save profile" />
         </div>
       </form>
-    </div>
+    </React.Fragment>
   )
 }
 export default FormEditProfile

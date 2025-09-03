@@ -2,7 +2,7 @@
 
 import { path } from "@/constant/path";
 import { AuthorPageProps } from "@/type/typeProps";
-import Image from "next/image";
+import { renderImage } from "@/utils";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
 import { ImProfile } from "react-icons/im";
@@ -27,6 +27,7 @@ export default function DropdownInfoProfile({user}: AuthorPageProps) {
       console.error("Error during logout:", error);
     }
   };
+  console.log(user)
 
   return (
       <>
@@ -38,14 +39,14 @@ export default function DropdownInfoProfile({user}: AuthorPageProps) {
               className="btn btn-ghost btn-circle avatar hover:bg-white active:bg-transparent focus:bg-transparent"
             >
               <div className="w-10 rounded-full relative">
-                <Image alt={user.name || "User avatar"} src={user.avatar} fill />
+                {renderImage(user.avatar)}
               </div>
             </div>
             <ul
               tabIndex={0}
               className="text-white menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-            <li><Link href={path.profile}><ImProfile className="text-[18px]"/> Profile</Link></li>
+            <li><Link href={path.editUser}><ImProfile className="text-[18px]"/> Profile</Link></li>
             <li><a><IoIosSettings className="text-[18px]" />Settings</a></li>
             <li>
               <button onClick={handleLogout}>

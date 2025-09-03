@@ -69,14 +69,22 @@ export const GET_LIST_USER = gql`
 
 
 export const GET_USER_BY_ID = gql`
-  query userByPosts($id: Int!) {
+  query UserDetail($id: Int!) {
    userDetail(id: $id) {
     id,
     name,
     handle,
     email,
     avatar,
+    avatarPublicId,
     description,
+    accounts {
+      provider
+      providerAccountId
+      accessToken
+      refreshToken
+      userId
+    },
     posts {
       id
       title
