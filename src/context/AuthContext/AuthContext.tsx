@@ -8,8 +8,10 @@ interface User {
   name: string;
   email: string;
   avatar: string,
+  avatarPublicId: string,
   description: string,
   handle: string,
+  provider: string,
 }
 
 interface AuthContextType {
@@ -36,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
         const data = await res.json();
-        setUser(data.userDetail);
+        setUser(data.userDetail.data);
       } catch (err) {
         console.log(err);
         setUser(null);

@@ -4,5 +4,6 @@ export const path = {
   home: '/',
   contact: '/contact',
   about: '/about',
-  profile: '/profile'
+  profile: '/profile',
+  editUser: '/profile/edit-profile'
 }

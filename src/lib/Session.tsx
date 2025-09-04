@@ -7,6 +7,7 @@ interface JwtPayloadCustom {
   userId: number;
   email?: string;
   name?: string;
+  provider?:string,
 }
 
 export async function getCurrentUserFromToken(token: string | undefined) {
@@ -26,7 +27,12 @@ export async function getCurrentUserFromToken(token: string | undefined) {
     });
 
     const data = await response.json();
-    return data.data.userDetail || null;
+    return  {
+      data : {
+        ...data.data.userDetail ,
+        provider: decoded.provider
+      }
+    }
   } catch (err) {
     console.log(err);
     return null;

@@ -18,6 +18,7 @@ export const SIGNIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      refreshToken,
       user {
         id
         email

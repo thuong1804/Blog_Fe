@@ -10,17 +10,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean,
 }
 
-const Button: React.FC<ButtonProps> = ({children, title, onClick, size, classNames, disabled = false, ...rest }) => {
+const Button: React.FC<ButtonProps> = ({children, title, size, classNames, disabled = false, ...rest }) => {
   return (
     <button
       {...rest}
+      disabled={disabled}
       className={twMerge(
         "btn bg-[#7C4EE4] rounded-[8px] shadow border border-gray-300 flex items-center justify-center px-[38px] py-[26px] w-max",
         "transition-all duration-300 ease-in-out",
         !disabled && "hover:bg-[#6A3FD6] hover:shadow-lg hover:scale-105",
         disabled && "bg-[#D1C4E9] text-gray-500 cursor-not-allowed",
         size, classNames)}
-        onClick={ !disabled ? onClick : undefined}
     >
       {children ? children : title}
     </button>
