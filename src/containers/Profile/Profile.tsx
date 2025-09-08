@@ -10,6 +10,7 @@ const ProfileContainer = () => {
   const formatPathName = pathName.split('/')[2]
   const {user} = useAuth()
   const isEdit = formatPathName === 'edit-profile'
+
   return (
     <>
       {isEdit ? <FormEditProfile /> : user?.provider !== 'google' ? <FormChangePassword /> : null}

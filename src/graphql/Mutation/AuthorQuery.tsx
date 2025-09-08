@@ -23,23 +23,3 @@ export const UPDATE_USER_DETAIL = gql`
     }
   }
 `;
-
-
-export const CHANGE_PASSWORD = gql`
-  mutation ChangePassword($id: Int!, $password: String!) {
-    changePassword(id: $id, password: $password) {
-      success
-      message
-    }
-  }
-`;
-
-export const VALIDATE_PASSWORD = gql`
-  mutation ValidatePassword($id: Int!, $password: String!) {
-    validatePassword(id: $id, password: $password) {
-      success
-      message
-    }
-  }
-`;
-
