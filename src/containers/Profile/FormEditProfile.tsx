@@ -28,17 +28,6 @@ const FormEditProfile = () => {
     handle: "",
   });
 
-  useEffect(() => {
-    if (user) {
-      setForm({
-        email: user?.email || "",
-        description: user?.description || "",
-        name: user?.name || "",
-        handle: user?.handle || "",
-      })
-    }
-  }, [user])
-
   const onChangeValueInput = (fieldName: string, value: string) => {
     setForm((prev) => ({
       ...prev,
@@ -88,6 +77,17 @@ const FormEditProfile = () => {
   useEffect(() => {
     if (user?.avatar) {
       setFile(user.avatar)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      setForm({
+        email: user?.email || "",
+        description: user?.description || "",
+        name: user?.name || "",
+        handle: user?.handle || "",
+      })
     }
   }, [user])
 

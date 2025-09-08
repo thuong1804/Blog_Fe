@@ -8,9 +8,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: SizeButton;
   classNames?: string;
   disabled?: boolean,
+  loading?: boolean,
 }
 
-const Button: React.FC<ButtonProps> = ({children, title, size, classNames, disabled = false, ...rest }) => {
+const Button: React.FC<ButtonProps> = ({loading, children, title, size, classNames, disabled = false, ...rest }) => {
   return (
     <button
       {...rest}
@@ -23,6 +24,7 @@ const Button: React.FC<ButtonProps> = ({children, title, size, classNames, disab
         size, classNames)}
     >
       {children ? children : title}
+      {loading && <span className="loading loading-spinner loading-sm"></span>}
     </button>
   );
 }

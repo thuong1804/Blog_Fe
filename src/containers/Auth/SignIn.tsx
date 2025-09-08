@@ -3,6 +3,7 @@
 import Button from "@/components/Button/Button"
 import ButtonLoginGoogle from "@/components/ButtonLoginGoogle/ButtonLoginGoogle";
 import InputField from "@/components/InputField/InputField";
+import { path } from "@/constant/path";
 import { SIGNIN } from "@/graphql/Mutation/Signin";
 import { useMutation } from "@apollo/client";
 import Link from "next/link"
@@ -77,7 +78,7 @@ const SigninContainer = () => {
             />
           </div>
           <div className="w-full flex justify-end mt-5">
-            <Link href='/' className="text-sm font-normal  hover:text-blue-400 hover:underline">
+            <Link href={path.sendOtp} className="text-sm font-normal  hover:text-blue-400 hover:underline">
               Forgot password?
             </Link>
           </div>

@@ -6,7 +6,7 @@ import { renderImage } from "@/utils";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
 import { ImProfile } from "react-icons/im";
-import { IoIosSettings } from "react-icons/io";
+import { MdListAlt } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
 
 export default function DropdownInfoProfile({user}: AuthorPageProps) {
@@ -27,7 +27,6 @@ export default function DropdownInfoProfile({user}: AuthorPageProps) {
       console.error("Error during logout:", error);
     }
   };
-  console.log(user)
 
   return (
       <>
@@ -47,7 +46,7 @@ export default function DropdownInfoProfile({user}: AuthorPageProps) {
               className="text-white menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
             <li><Link href={path.editUser}><ImProfile className="text-[18px]"/> Profile</Link></li>
-            <li><a><IoIosSettings className="text-[18px]" />Settings</a></li>
+            <li><Link href={`${path.author}/${user.handle}`}><MdListAlt className="text-[18px]" />Posts</Link></li>
             <li>
               <button onClick={handleLogout}>
                 <IoLogOutOutline className="text-[18px]" />

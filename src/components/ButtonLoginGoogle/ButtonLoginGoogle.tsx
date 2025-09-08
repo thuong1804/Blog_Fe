@@ -17,7 +17,6 @@ export default function ButtonLoginGoogle() {
     scope
   )}&prompt=${prompt}`;
 
-
   return (
     <Button type="button" classNames="bg-white w-full rounded-[30px] w-full  hover:bg-gray-100 transition">
       <Link href={googleAuthUrl} target="_blank" className="flex items-center justify-center gap-2">
