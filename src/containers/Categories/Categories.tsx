@@ -8,14 +8,15 @@ import { path } from "@/constant/path";
 
 export default function CategoriesPage() {
   const pathName = usePathname()
-  const isContact = pathName === path.contact
+  const itemPath = [path.contact, path.createPost]
+  const isHideCategories = itemPath.some(item => pathName.includes(item))
   const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
 
   if (error) return <p>Error loading categories</p>;
 
   const categories = data?.categories || [];
 
-  if (isContact) return null;
+  if (isHideCategories) return null;
 
   return (
     <>

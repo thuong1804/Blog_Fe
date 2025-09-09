@@ -2,8 +2,12 @@
 @plugin "daisyui";
 
 @plugin "@tailwindcss/typography" {
-   className: wysiwyg;
+  className: wysiwyg;
 };
+
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
 
 @keyframes fade-in-down {
   from {
@@ -45,8 +49,31 @@
 
 body {
   /* background: white; */
-  width: 100vw;
+  /* width: 100vw;
   height: 100vh;
-  overflow-x: hidden;
+  overflow-x: hidden; */
   margin: 0;
+}
+
+.modal {
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+  visibility: hidden;
+}
+
+.modal[open] {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+}
+
+.modal::backdrop {
+  background-color: hsl(var(--b2, 0 0% 0%) / 0.4);
+  animation: modal-fade-in 100ms ease-out forwards;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

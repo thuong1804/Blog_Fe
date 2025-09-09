@@ -10,4 +10,5 @@ export const path = {
   sendOtp: '/send-otp',
   verifyOtp: '/verify-otp',
   changePassword: '/change-password',
+  createPost: '/post/new',
 }

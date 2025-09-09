@@ -88,11 +88,12 @@ export type PageProps = {
 
 export type AuthorPageProps = {
   user: {
+    id?: number,
     avatar: string,
     handle: string,
     email: string,
     description: string,
     name: string,
-    posts: ItemCardBlogProps[],
+    posts?: ItemCardBlogProps[],
   };
 };
