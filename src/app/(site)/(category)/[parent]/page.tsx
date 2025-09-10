@@ -25,8 +25,8 @@ export default async function BlogSlug(props: {params: tParams}) {
 
   const pathBreadcrumbs = [
     {
-      path: category.name,
-      slug: category.slug
+      path: category?.name,
+      slug: category?.slug
     }
   ]
 

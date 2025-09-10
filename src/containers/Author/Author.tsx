@@ -46,9 +46,11 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                       className="h-80 w-full bg-gray-200 rounded-xl"
                     />
                   ))}
-                  <Button classNames="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    Create a new post <IoMdCreate />
-                  </Button>
+                  <Link href={'/post/new'}>
+                    <Button classNames="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      Create a new post <IoMdCreate />
+                    </Button>
+                  </Link>
                 </div>
             </div>
           )}

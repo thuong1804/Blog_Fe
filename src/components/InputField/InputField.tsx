@@ -203,6 +203,7 @@ const InputField = {
   Email: (props: BaseInputProps) => <BaseInput {...props} type="email" />,
   Password: (props: BaseInputProps) => <BaseInput {...props} pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{9,}" minLength={8} maxLength={15} type="password" />,
   Tel: (props: BaseInputProps) => <BaseInput {...props} type="tel" />,
+  Number: (props: BaseInputProps) => <BaseInput {...props} type="number" minLength={1} maxLength={100000} min={0} />,
 };
 
 export default InputField;
