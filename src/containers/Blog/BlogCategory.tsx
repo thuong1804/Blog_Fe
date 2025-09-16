@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
+import { DATE_TIME_DISPLAY } from "@/constant";
 
 const BlogCategory: React.FC<BlogCategoryProps> = ({
   title,
@@ -20,7 +21,6 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
   image,
   data,
 }) => {
-  const formattedDate = dayjs(createdAt).format("D MMMM YYYY");
 
   const formatCategory = (slug: string) => {
     return slug.toLowerCase().replace(/\s+/g, '-')
@@ -73,11 +73,11 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
           </div>
           <div className="text-(--text-color-title) flex items-center gap-4">
             <span className="text-(--text-color-body)">
-              {dayjs(createdAt).format(formattedDate)}
+              {dayjs(Number(createdAt)).locale('en').format(DATE_TIME_DISPLAY)}
             </span>
             -
             <span className="text-(--text-color-body)">
-              Updated {dayjs(updatedAt).format(formattedDate)}
+              Updated {dayjs(Number(updatedAt)).locale('en').format(DATE_TIME_DISPLAY)}
             </span>
           </div>
           <div className="text-(--text-color-title) flex items-center gap-1 mt-2 font-bold">Views: {views}<LuEye/></div>

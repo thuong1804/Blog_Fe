@@ -13,13 +13,17 @@ type PostCardProps = {
 	isOutstanding?: boolean
 	itemCards: ItemCardBlogProps[],
 	isViewAll?: boolean,
+  isLogin?: boolean,
+  actionDelete: () => void
 }
 
 const PostCard: React.FC<PostCardProps> = ({
 	title,
 	itemCards,
 	isOutstanding = false,
-	isViewAll = true
+	isViewAll = true,
+  isLogin = false,
+  actionDelete
 }) => {
 	const cardAnother = itemCards?.[0]
 	return (
@@ -68,7 +72,7 @@ const PostCard: React.FC<PostCardProps> = ({
 								{cardAnother.author.name}
 							</Link>
 							<span className="text-[#999999]">
-								{dayjs(cardAnother.createdAt).locale('en').format(DATE_TIME_DISPLAY)}
+							  {dayjs(Number(cardAnother.createdAt)).locale('en').format(DATE_TIME_DISPLAY)}
 							</span>
 						</div>
             <div className="mt-5">
@@ -93,6 +97,7 @@ const PostCard: React.FC<PostCardProps> = ({
 							content={item.content}
 							author={item.author}
 							excerpt={item.excerpt}
+              isLogin={isLogin}
 						/>
 					))
 				)}

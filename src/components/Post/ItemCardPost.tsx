@@ -4,11 +4,14 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { DATE_TIME_DISPLAY } from "@/constant";
 import { joinSlugCategory } from "@/utils";
+import React from "react";
+import { IoIosMore } from "react-icons/io";
 
 type ImageSize = 'sm' | 'md' | 'lg';
 
 type ItemCardPostProps = {
   imageSize?: ImageSize
+  isLogin?: boolean
 }
 
 const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
@@ -20,9 +23,9 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
   author,
   category,
   excerpt,
-  imageSize = 'lg'
+  imageSize = 'lg',
+  isLogin,
 }) => {
-
   const imageClass = {
     sm: 'w-32 h-20',
     md: 'w-64 h-40',
@@ -30,7 +33,31 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
   }[imageSize];
 
   return (
-    <div className={` max-w-[400px] max-h-[700px] flex flex-col ${imageSize} border-b-1 border-gray-300 pb-10`}>
+    <div className={` max-w-[400px] max-h-[700px] flex flex-col ${imageSize} border-b-1 border-gray-300 pb-10 relative`}>
+      {isLogin && (
+        <div className="absolute top-1 right-0 z-50">
+          <div className="dropdown dropdown-end">
+            <button tabIndex={0} className="btn btn-xs btn-ghost text-black rounded-full hover:bg-gray-600 hover:text-white">
+              <IoIosMore size={20} />
+            </button>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-white text-gray-700 rounded-xl shadow-lg w-28 p-2 border border-gray-400"
+            >
+              <li>
+                <a className="hover:bg-gray-400 hover:text-white rounded-lg px-3 py-2 transition-colors duration-200">
+                  Edit
+                </a>
+              </li>
+              <li>
+                <a className="hover:bg-gray-400 hover:text-white rounded-lg px-3 py-2 transition-colors duration-200">
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
       <Link href={joinSlugCategory(category?.parent?.name, category?.name, slug)} className="group">
         <div className={`relative overflow-hidden rounded-2xl cursor-pointer ${imageClass} flex justify-center`}>
           <Image src={image} fill alt="img-card" className="object-cover transition-transform duration-300 transform hover:scale-105" sizes="(max-width: 400px)" />
@@ -49,7 +76,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
           {author.name}
         </Link>
         <span className="text-[#999999]">
-          {dayjs(createdAt).locale('en').format(DATE_TIME_DISPLAY)}
+          {dayjs(Number(createdAt)).locale('en').format(DATE_TIME_DISPLAY)}
         </span>
       </div>
       <Link href={joinSlugCategory(category?.parent?.name, category?.name, slug)} className="text-[#7C4EE4] text-lg font-bold underline mt-5">Read more...</Link>
