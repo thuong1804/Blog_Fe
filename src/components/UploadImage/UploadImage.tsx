@@ -4,6 +4,7 @@ import { GET_UPLOAD_SIGNATURE } from "@/graphql/Mutation/UploadImage";
 import { MutationFunction, useMutation } from "@apollo/client";
 import { useState } from "react";
 import { toast } from "sonner";
+import { IoIosCamera } from "react-icons/io";
 
 type PropsUpload<TData, TVariables> = {
   params: Record<string, string | number | Date | undefined>;
@@ -71,12 +72,12 @@ export default function UploadImage<TData, TVariables>({
           publicId: publicId
         } as TVariables,
       });
+
       if (res?.data) {
         onLoadingUpload?.(false)
-        setLoading(false)
         toast.success("Upload image success")
       }
-
+      setLoading(false)
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message)
@@ -102,10 +103,10 @@ export default function UploadImage<TData, TVariables>({
         />
         {loading ? (
           <>
-            Uploading <span className="loading loading-spinner loading-sm"></span>
+          Uploading <span className="loading loading-spinner loading-sm"></span>
           </>
         ) : (
-          title
+          <><IoIosCamera className="text-xl"/> {title}</>
         )}
       </label>
     </div>

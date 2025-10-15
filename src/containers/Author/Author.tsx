@@ -9,12 +9,18 @@ import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
 import { IoMdCreate } from "react-icons/io";
+import Modal from "@/components/Modal/Modal";
+import { useState } from "react";
 
 const AuthorPage = ({ user }: AuthorPageProps) => {
-  const {user: userLogin} = useAuth()
-
+  const { user: userLogin } = useAuth()
+  const posts = user.posts ?? [];
   const isUserLogin = user.email === userLogin?.email
-  console.log(isUserLogin)
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleDeletePost = (e) => {
+    setOpenModal((prev) => !prev)
+  }
 
   return (
     <div className="w-full pb-20 pt-14 px-5">
@@ -34,11 +40,28 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
           </div>
         </div>
         <div className="mt-20">
-          {user.posts.length > 0 ? (
-            <PostCard title={isUserLogin ? "Your posts" : "Posts by this author"} itemCards={user?.posts} isOutstanding={true} isViewAll={false} />
-          ) : (
-            <div className="text-black w-full h-[400px] ">
-              <h1>Your post</h1>
+          {isUserLogin ? (
+            posts.length > 0 ? (
+              <div className="relative w-full">
+                <PostCard
+                  isLogin={isUserLogin}
+                  title={isUserLogin ? "Your posts" : "Posts by this author"}
+                  itemCards={posts}
+                  isOutstanding={true}
+                  isViewAll={false}
+                  actionDelete={handleDeletePost}
+                />
+                <Link href={'/post/new'} >
+                  <div className="absolute top-0 right-0">
+                    <Button classNames="p-6">
+                      Create new post <IoMdCreate />
+                    </Button>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <div className="text-black w-full h-[400px] ">
+                <h1>Your post</h1>
                 <div className="flex justify-between items-center gap-4 h-full relative">
                   {Array.from({ length: 3 }).map((_, idx) => (
                     <div
@@ -47,15 +70,23 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                     />
                   ))}
                   <Link href={'/post/new'}>
-                    <Button classNames="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                      Create a new post <IoMdCreate />
-                    </Button>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      <Button>
+                        Create a new post <IoMdCreate />
+                      </Button>
+                    </div>
                   </Link>
                 </div>
-            </div>
+              </div>
+            )
+          ) : (
+            <PostCard title={isUserLogin ? "Your posts" : "Posts by this author"} itemCards={posts} isOutstanding={true} isViewAll={false} />
           )}
         </div>
       </div>
+      <Modal modal_id="delete_modal" title="Delete post" open={openModal} setOpenModal={setOpenModal}>
+        <h1>Are you sure you want to delete this post?</h1>
+      </Modal>
     </div>
   )
 }

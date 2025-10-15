@@ -1,3 +1,5 @@
+import { FetchResult } from "@apollo/client"
+
 type CategoryProps = {
   id?: number
   name: string,
@@ -88,7 +90,7 @@ export type PageProps = {
 
 export type AuthorPageProps = {
   user: {
-    id?: number,
+    id?: string | number,
     avatar: string,
     handle: string,
     email: string,
@@ -97,3 +99,40 @@ export type AuthorPageProps = {
     posts?: ItemCardBlogProps[],
   };
 };
+
+export type optionProps = {
+  name: string,
+  id: number | string,
+}
+
+export interface OptionType {
+  readonly value: string;
+  readonly label: string;
+  readonly color?: string;
+  readonly isFixed?: boolean;
+  readonly isDisabled?: boolean;
+}
+
+export type FormValuesPost = {
+  title: string;
+  excerpt: string;
+  description: string,
+  readingTime: number | undefined,
+  categoryId?: number | undefined,
+  tagIds?: number[],
+  image: string,
+};
+
+export type UploadSignatureResponse = {
+  getUploadSignature: {
+    apiKey: string;
+    cloudName: string;
+    timestamp: number;
+    signature: string;
+    folder?: string;
+  };
+};
+
+export type GetUploadSignatureFn = (params: {
+  variables: { folder: string };
+}) => Promise<FetchResult<UploadSignatureResponse>>;

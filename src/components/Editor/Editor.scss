@@ -1,0 +1,49 @@
+// .tiptap {
+//   :first-child {
+//     margin-top: 0;
+//   }
+
+//   ul,
+//   ol {
+//     padding: 0 1rem;
+//     margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+//     li p {
+//       margin-top: 0.25em;
+//       margin-bottom: 0.25em;
+//     }
+//   }
+
+//   blockquote {
+//     border-left: 3px solid var(--gray-3);
+//     margin: 1.5rem 0;
+//     padding-left: 1rem;
+//   }
+
+//   div[data-youtube-video] {
+//     cursor: move;
+//     padding-right: 1.5rem;
+
+//     iframe {
+//       border: 0.5rem solid var(--black-contrast);
+//       display: block;
+//       min-height: 200px;
+//       min-width: 200px;
+//       outline: 0px solid transparent;
+//     }
+
+//     &.ProseMirror-selectednode iframe {
+//       outline: 3px solid var(--purple);
+//       transition: outline 0.15s;
+//     }
+//   }
+
+//   a {
+//     color: var(--purple);
+//     cursor: pointer;
+
+//     &:hover {
+//       color: var(--purple-contrast);
+//     }
+//   }
+// }

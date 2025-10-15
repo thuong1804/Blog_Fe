@@ -1,283 +1,286 @@
 'use client'
 
-import React, { useRef } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import Link from '@tiptap/extension-link'
-import Image from '@tiptap/extension-image'
-import TextAlign from '@tiptap/extension-text-align'
+import hljs from 'highlight.js'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import { FaAlignLeft } from "react-icons/fa";
+import { FaAlignCenter, FaAlignRight, FaLink, FaListOl, FaListUl, FaYoutube } from 'react-icons/fa6';
+import { FiItalic, FiUnderline } from "react-icons/fi";
+import { LuHighlighter, LuStrikethrough } from "react-icons/lu";
+import { GrBlockQuote } from "react-icons/gr";
+import { GoChecklist, GoMultiSelect } from "react-icons/go";
+import { MdHorizontalRule } from "react-icons/md";
+import { MdOutlineLinkOff } from 'react-icons/md';
+import { PiCodeBlockBold } from "react-icons/pi";
+import { Editor, useEditorState } from '@tiptap/react'
 
-export default function EditorWithMenuBar({ onUpdate }) {
-  const fileInputRef = useRef(null)
+import './Editor.scss'
+import ImageUploadButton from './ImageUploadButton';
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        // enable/disable sub-extensions if cần
-      }),
-      Underline,
-      Link.configure({
-        openOnClick: false,
-      }),
-      Image,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-    ],
-    content: '',
-    onUpdate: ({ editor }) => {
-      // trả về HTML cho parent nếu cần
-      onUpdate?.(editor.getHTML())
-    },
-    immediatelyRender: false
+type MenuBarProps = {
+  editor: Editor,
+  onAddFile: (file:File) => void
+}
+
+type ToggleProps = {
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void,
+  classname?: string,
+  title?: string,
+  disabled?: boolean | undefined
+  children?: ReactNode
+}
+
+const languages = [
+  { label: "Auto Detect", value: "" },
+  { label: "JavaScript", value: "javascript" },
+  { label: "TypeScript", value: "typescript" },
+  { label: "CSS", value: "css" },
+  { label: "HTML", value: "html" },
+  { label: "Python", value: "python" },
+];
+
+const Menubar: React.FC<MenuBarProps> = React.memo(function Menubar({ editor, onAddFile }) {
+  const [height, setHeight] = useState<number>(480)
+  const [width, setWidth] = useState<number>(640)
+
+  const editorState = useEditorState({
+    editor,
+    selector: ctx => ({
+      isLink: ctx.editor.isActive('link'),
+    }),
   })
 
-  if (!editor) return null
+  const setLink = useCallback(() => {
+    const previousUrl = editor.getAttributes('link').href
+    console.log(previousUrl)
+    const url = window.prompt('URL', previousUrl)
 
-  const insertImage = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
-    input.onchange = () => {
-      const file = input.files?.[0]
-      if (file) {
-        const previewURL = URL.createObjectURL(file)
-        setPendingImages(prev => [...prev, file])
-        editor.chain().focus().setImage({ src: previewURL }).run()
-      }
-    }
-    input.click()
-  }
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0]
-    if (file) addImage(file)
-    e.target.value = ''
-  }
-
-  const promptForLink = () => {
-    const previousUrl = editor.getAttributes('link').href || ''
-    const url = window.prompt('Nhập URL', previousUrl)
-    if (url === null) return // cancel
-    if (url === '') {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+    if (url === null) {
       return
     }
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-  }
 
-  const toolbarBtn = (props) => {
-    // props: { onClick, isActive, title, children }
-    const { onClick, isActive, title, children } = props
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+
+      return
+    }
+
+    try {
+      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+    } catch (e) {
+      const err = e as Error
+      alert(err.message)
+    }
+  }, [editor])
+
+  const ToggleButton = ({ onClick, classname, title, disabled, children }: ToggleProps) => {
     return (
       <button
-        type="button"
         onClick={onClick}
-        title={title}
-        className={`p-2 rounded-md hover:bg-gray-100 transition ${isActive ? 'bg-gray-200' : ''
-          }`}
+        className={`cursor-pointer px-3 py-1.5 rounded-md text-xs font-medium transition  text-gray-700 hover:bg-gray-300 ${classname}`}
+        disabled={disabled}
       >
-        {children}
+        <span className='flex item-center justify-center gap-1'>{children ? children : title}</span>
       </button>
     )
   }
 
+  const addYoutubeVideo = () => {
+    const url = prompt('Enter YouTube URL')
+
+    if (url) {
+      editor.commands.setYoutubeVideo({
+        src: url,
+        width: Math.max(320, width),
+        height: Math.max(180, height),
+      })
+    }
+  }
+
+  const handleLanguageSelect = (lang: string) => {
+    if (lang === "") {
+      const code = editor.getText();
+      console.log(code)
+      const result = hljs.highlightAuto(code, [
+        "javascript",
+        "typescript",
+        "css",
+        "html",
+        "python",
+        "ruby"
+      ]);
+      lang = result.language || "javascript";
+    }
+    editor.chain().focus().setCodeBlock({ language: lang }).run();
+  };
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.focus('end')
+    }
+  }, [editor])
+
   return (
-    <div className="prose w-full">
-      {/* Toolbar */}
-      <div className="flex flex-wrap gap-2 items-center mb-3 border text-black border-gray-200 rounded-md p-2">
-        {/* Formatting */}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleBold().run(),
-          isActive: editor.isActive('bold'),
-          title: 'Bold (Ctrl/Cmd+B)',
-          children: <strong>B</strong>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleItalic().run(),
-          isActive: editor.isActive('italic'),
-          title: 'Italic (Ctrl/Cmd+I)',
-          children: <em>I</em>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleUnderline().run(),
-          isActive: editor.isActive('underline'),
-          title: 'Underline',
-          children: <span style={{ textDecoration: 'underline' }}>U</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleStrike().run(),
-          isActive: editor.isActive('strike'),
-          title: 'Strike',
-          children: <s>S</s>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleCode().run(),
-          isActive: editor.isActive('code'),
-          title: 'Inline code',
-          children: <code>{'{}'}</code>,
-        })}
-
-        {/* Headings / paragraph */}
-        <div className="border-l h-6 mx-2" />
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-          isActive: editor.isActive('heading', { level: 1 }),
-          title: 'Heading 1',
-          children: <span>H1</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-          isActive: editor.isActive('heading', { level: 2 }),
-          title: 'Heading 2',
-          children: <span>H2</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().setParagraph().run(),
-          isActive: editor.isActive('paragraph'),
-          title: 'Paragraph',
-          children: <span>P</span>,
-        })}
-
-        {/* Lists */}
-        <div className="border-l h-6 mx-2" />
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleBulletList().run(),
-          isActive: editor.isActive('bulletList'),
-          title: 'Bullet list',
-          children: <span>• List</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleOrderedList().run(),
-          isActive: editor.isActive('orderedList'),
-          title: 'Numbered list',
-          children: <span>1. List</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleTaskList().run(),
-          isActive: editor.isActive('taskList'),
-          title: 'Task list',
-          children: <span>☐ Task</span>,
-        })}
-
-        {/* Block */}
-        <div className="border-l h-6 mx-2" />
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleBlockquote().run(),
-          isActive: editor.isActive('blockquote'),
-          title: 'Blockquote',
-          children: <span>❝</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().toggleCodeBlock().run(),
-          isActive: editor.isActive('codeBlock'),
-          title: 'Code block',
-          children: <span>{'</>'}</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().setHorizontalRule().run(),
-          title: 'Horizontal rule',
-          children: <span>—</span>,
-        })}
-
-        {/* Link / Image */}
-        <div className="border-l h-6 mx-2" />
-        {toolbarBtn({
-          onClick: promptForLink,
-          isActive: editor.isActive('link'),
-          title: 'Add / Edit link',
-          children: <span>🔗</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => fileInputRef.current?.click(),
-          title: 'Insert image',
-          children: <span>🖼️</span>,
-        })}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-
-        {/* Alignment */}
-        <div className="border-l h-6 mx-2" />
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().setTextAlign('left').run(),
-          isActive: editor.isActive({ textAlign: 'left' }),
-          title: 'Align left',
-          children: <span>≡ L</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().setTextAlign('center').run(),
-          isActive: editor.isActive({ textAlign: 'center' }),
-          title: 'Align center',
-          children: <span>≡ C</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().setTextAlign('right').run(),
-          isActive: editor.isActive({ textAlign: 'right' }),
-          title: 'Align right',
-          children: <span>≡ R</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().setTextAlign('justify').run(),
-          isActive: editor.isActive({ textAlign: 'justify' }),
-          title: 'Justify',
-          children: <span>≡ J</span>,
-        })}
-
-        {/* Undo/Redo / Clear */}
-        <div className="border-l h-6 mx-2" />
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().undo().run(),
-          title: 'Undo (Ctrl/Cmd+Z)',
-          children: <span>↺</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().redo().run(),
-          title: 'Redo (Ctrl/Cmd+Y)',
-          children: <span>↻</span>,
-        })}
-        {toolbarBtn({
-          onClick: () => editor.chain().focus().clearNodes().unsetAllMarks().run(),
-          title: 'Clear formatting',
-          children: <span>✖</span>,
-        })}
-      </div>
-
-      {/* Editor area */}
-      <div className="border rounded-md p-4 min-h-[240px] bg-white">
-        <EditorContent editor={editor} />
-      </div>
-
-      {/* Footer / actions */}
-      <div className="flex gap-2 mt-3">
-        <button
-          onClick={() => {
-            const html = editor.getHTML()
-            const plain = editor.getText()
-            // ví dụ: show console hoặc gửi lên server
-            console.log('HTML:', html)
-            console.log('Plain text:', plain)
-            alert('HTML đã log ra console.')
-          }}
-          className="px-3 py-1 rounded bg-blue-600 text-white"
-        >
-          Export HTML (console)
-        </button>
-
-        <button
-          onClick={() => {
-            editor.commands.setContent('<p>Nội dung đã được reset.</p>')
-          }}
-          className="px-3 py-1 rounded border"
-        >
-          Reset
-        </button>
+    <div className='flex items-center flex-wrap justify-between'>
+      <div className="control-group">
+        <div className="button-group flex gap-2 items-center text-black flex-wrap">
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            title='H1'
+            classname={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+          />
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            title='H2'
+            classname={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
+          />
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+            title='H3'
+            classname={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
+          />
+          <ToggleButton
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
+            classname={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}
+          >
+            <FaAlignLeft />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
+            classname={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}
+          >
+            <FaAlignCenter />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
+            classname={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}
+          >
+            <FaAlignRight />
+          </ToggleButton>
+          <ImageUploadButton editor={editor} onAddFile={onAddFile}/>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            title='B'
+            classname={editor.isActive('bold') ? 'is-active' : ''}
+          />
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            classname={editor.isActive('italic') ? 'is-active' : ''}
+          >
+            <FiItalic />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            classname={editor.isActive('underline') ? 'is-active' : ''}
+          >
+            <FiUnderline />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+            classname={editor.isActive('strike') ? 'is-active' : ''}
+          >
+            <LuStrikethrough />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleHighlight().run()}
+            classname={editor.isActive('highlight') ? 'is-active' : ''}
+          >
+            Yellow <LuHighlighter />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleHighlight({ color: '#ffa8a8' }).run()}
+            classname={editor.isActive('highlight', { color: '#ffa8a8' }) ? 'is-active' : ''}
+          >
+            Red <LuHighlighter />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            classname={editor.isActive('bulletList') ? 'is-active' : ''}
+          >
+            <FaListUl />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            classname={editor.isActive('orderedList') ? 'is-active' : ''}
+          >
+            <FaListOl />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            classname={editor.isActive('blockquote') ? 'is-active' : ''}
+          >
+            <GrBlockQuote />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+            classname={editor.isActive('taskList') ? 'is-active' : ''}
+          >
+            <GoChecklist />
+          </ToggleButton>
+          <ToggleButton
+            onClick={setLink}
+            classname={editorState.isLink ? 'is-active' : ''}
+          >
+            <FaLink />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().unsetLink().run()}
+            disabled={!editorState.isLink}
+          >
+            <MdOutlineLinkOff />
+          </ToggleButton>
+          <ToggleButton
+            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          >
+            <MdHorizontalRule />
+          </ToggleButton>
+          <input
+            id="width"
+            type="number"
+            min="320"
+            max="1024"
+            placeholder="width"
+            value={width}
+            onChange={e => setWidth(Number(e.target.value))}
+            className="w-16 text-sm px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 appearance-none"
+          />
+          <input
+            id="height"
+            type="number"
+            min="180"
+            max="720"
+            placeholder="height"
+            value={height}
+            onChange={e => setHeight(Number(e.target.value))}
+            className="w-16 px-2 text-sm py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 appearance-none"
+          />
+          <button id="add" onClick={addYoutubeVideo} className='px-3 py-1.5 rounded-md text-xs font-medium transition  text-gray-700 hover:bg-gray-300 '>
+            <FaYoutube />
+          </button>
+          <ToggleButton
+            title='Code block'
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            classname={editor.isActive('codeBlock')
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : undefined}
+          >
+            <PiCodeBlockBold />
+          </ToggleButton>
+          <button className="btn px-3 btn m-1 h-[27px] text-xs font-medium rounded-md transition py-1.5
+                bg-gray-200 text-gray-700 hover:bg-gray-300 border-0 shadow-none" popoverTarget="popover-1"
+            style={{ anchorName: "--anchor-1" } as React.CSSProperties}>
+            <GoMultiSelect />
+          </button>
+          <ul className="dropdown menu w-52 rounded-box bg-white text-black  shadow-sm"
+            popover="auto" id="popover-1" style={{ positionAnchor: "--anchor-1" } as React.CSSProperties}>
+            {languages.map((lang) => (
+              <li key={lang.value} className='hover:bg-gray-500 text-black'>
+                <a onClick={() => handleLanguageSelect(lang.value)}>{lang.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   )
-}
+})
+export default Menubar;

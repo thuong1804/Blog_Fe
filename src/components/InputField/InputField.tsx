@@ -164,7 +164,7 @@ const BaseInput: React.FC<BaseInputProps> = ({
 
   return (
     <fieldset className="fieldset relative w-full">
-      <legend className="fieldset-legend text-black text-sm">{title}</legend>
+      <legend className="fieldset-legend text-black text-sm gap-1">{title}{required && (<span className="text-red-500 p-0 m-0">*</span>)} </legend>
       <label className={twMerge("input validator input-lg bg-white text-black border border-gray-400 w-full flex items-center gap-2 px-2",
         disabled && "bg-gray-300 text-gray-500 pointer-events-none "
       )}>

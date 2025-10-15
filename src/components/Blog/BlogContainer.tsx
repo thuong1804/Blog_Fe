@@ -5,7 +5,8 @@ import { ItemCardBlogProps } from "@/type/typeProps";
 import NotFoundBlog from "../NotFoundBlog/NotFoundBlog";
 
 type CustomItemProps = {
-  dataCustom?: ItemCardBlogProps[]
+  dataCustom?: ItemCardBlogProps[],
+  actionDelete?: () => void
 }
 
 type BlogItemProp = {
@@ -28,6 +29,7 @@ const BlogContainer = ({
   title,
   description,
   dataCustom,
+  actionDelete,
 }: BlogItemProp & CustomItemProps) => {
   return (
     <div className="w-full pt-16 pb-20">
@@ -54,6 +56,7 @@ const BlogContainer = ({
                 createdAt={post.createdAt}
                 author={post.author}
                 category={post.category}
+                actionDelete={actionDelete}
               />
             ))}
           </div>
