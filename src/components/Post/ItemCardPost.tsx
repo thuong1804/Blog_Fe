@@ -11,7 +11,8 @@ type ImageSize = 'sm' | 'md' | 'lg';
 
 type ItemCardPostProps = {
   imageSize?: ImageSize
-  isLogin?: boolean
+  isLogin?: boolean,
+  actionDelete?: () => void
 }
 
 const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
@@ -25,6 +26,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
   excerpt,
   imageSize = 'lg',
   isLogin,
+  actionDelete,
 }) => {
   const imageClass = {
     sm: 'w-32 h-20',
@@ -49,7 +51,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                   Edit
                 </a>
               </li>
-              <li>
+              <li onClick={actionDelete}>
                 <a className="hover:bg-gray-400 hover:text-white rounded-lg px-3 py-2 transition-colors duration-200">
                   Delete
                 </a>

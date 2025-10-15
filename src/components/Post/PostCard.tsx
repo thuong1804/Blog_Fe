@@ -14,7 +14,7 @@ type PostCardProps = {
 	itemCards: ItemCardBlogProps[],
 	isViewAll?: boolean,
   isLogin?: boolean,
-  actionDelete: () => void
+  actionDelete?: () => void
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -98,6 +98,7 @@ const PostCard: React.FC<PostCardProps> = ({
 							author={item.author}
 							excerpt={item.excerpt}
               isLogin={isLogin}
+              actionDelete={actionDelete}
 						/>
 					))
 				)}

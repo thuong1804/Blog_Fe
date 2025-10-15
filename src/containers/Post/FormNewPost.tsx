@@ -73,9 +73,9 @@ const FormNewPostContainer = () => {
         </Link>
         {user && <DropdownInfoProfile user={user} />}
       </div>
-      <div className="w-full h-[700px] max-h-[1000px]  mt-5">
-        <div className="flex gap-3 w-full h-full">
-          <div className="flex flex-col h-full w-[55%] bg-white rounded-xl border-2 gap-2 p-2 pt-5 shadow-md">
+      <div className="w-full h-full mt-5">
+        <div className="flex gap-3 w-full h-dvh">
+          <div className="flex flex-col  w-[55%] bg-white rounded-xl border-2 gap-2 p-2 pt-5 shadow-md h-full">
             <h1 className="text-center">New post</h1>
             <div className="divider before:bg-gray-300 after:bg-gray-300 text-gray-500" />
             {user && (
@@ -96,7 +96,7 @@ const FormNewPostContainer = () => {
           </div>
         </div>
         <div className="w-full flex justify-end mt-5">
-          <Button title="Save" type="button" onClick={handleSavePost} />
+          <Button title="Save" type="button" classNames="bg-white text-[#7c4ee4] font-bold hover:bg-white" onClick={handleSavePost} />
         </div>
       </div>
     </div>

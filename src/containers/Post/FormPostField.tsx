@@ -100,15 +100,15 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
 
   return (
     <div className="w-full">
-      <button
-        className="btn"
+      <Button
+        className="btn bg-[#7c4ee4] text-white border-0"
         onClick={() => {
           const modal = document.getElementById('my_modal_1') as HTMLDialogElement | null;
           if (modal) modal.showModal();
         }}
       >
         Information post
-      </button>
+      </Button>
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box bg-white  max-w-4xl h-[90%]">
           <h3 className="font-bold text-2xl text-black">Add information post!</h3>

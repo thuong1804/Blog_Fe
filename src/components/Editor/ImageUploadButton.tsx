@@ -6,15 +6,14 @@ type ImageUploadButton = {
 }
 
 export default function ImageUploadButton({onAddFile}: ImageUploadButton) {
-  console.log(onAddFile)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onAddFile(file);
   };
 
   return (
-    <div className="mt-2 space-y-2">
-      <label className="cursor-pointer inline-block p-2 bg-blue-500 text-white rounded-md">
+    <div className="space-y-2">
+      <label className="font-medium text-sm cursor-pointer inline-block p-2  text-gray-700 rounded-md hover:bg-gray-300 transition">
         Upload Image
         <input
           type="file"
