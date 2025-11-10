@@ -174,3 +174,43 @@ export const GET_ALL_POSTS = gql`
     }
   }
 `;
+
+
+export const GET_LATEST_POSTS = gql`
+  query GetLatestPosts($skip: Int, $take: Int) {
+    postsLatest(skip: $skip, take: $take) {
+      id
+      title
+      slug
+      content
+      description
+      excerpt
+      image
+      category {
+        id
+        name
+        parent {
+          id
+          name
+        }
+      }
+      tags {
+        id
+        name
+      }
+      views
+      readingTime
+      isFeatured
+      createdAt
+      updatedAt
+      author {
+        id
+        name
+        email
+        avatar
+        handle
+      }
+      authorId
+    }
+  }
+`

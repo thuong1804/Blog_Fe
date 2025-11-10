@@ -1,7 +1,6 @@
 'use client'
 
 import Button from "@/components/Button/Button"
-import PostCard from "@/components/Post/PostCard"
 import AnotherPost from "@/containers/LandingPage/AnotherPost/AnotherPost"
 import Image from "next/image"
 import { useQuery } from '@apollo/client';
@@ -11,6 +10,7 @@ import { joinSlugCategory } from "@/utils"
 import PopularPost from "./PopularPost/PopularPost"
 import { GET_ALL_POSTS } from "@/graphql/Query/PostQuery"
 import LoadingLandingPage from "@/components/Loading/LoadingLandingPage"
+import OurRecentPost from "./OurRecentPost/OurRecentPost";
 
 const LandingPage = () => {
   const { data } = useQuery(GET_ALL_POSTS);
@@ -47,15 +47,13 @@ const LandingPage = () => {
             <div>
             </div>
           </div>
-          <div className="mt-[88px]">
+          <div className="p-24">
             <AnotherPost post={postDataAnother} />
           </div>
-          <div className="mt-[88px]">
-            {data && data.posts && (
-              <PostCard title="Our Recent Post" itemCards={data.posts} isOutstanding />
-            )}
+          <div className="pb-24">
+            <OurRecentPost />
           </div>
-          <div className="mt-[88px]">
+          <div >
             <PopularPost />
           </div>
         </div>
