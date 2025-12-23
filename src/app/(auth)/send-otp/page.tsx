@@ -1,8 +1,6 @@
 import SendOTPContainer from "@/containers/Auth/SendOTP";
 
 const SendOTP = () => {
-  return (
-    <SendOTPContainer/>
-  )
-}
+    return <SendOTPContainer />;
+};
 export default SendOTP;
