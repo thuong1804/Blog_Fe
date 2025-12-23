@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { path } from "@/constant/path";
 import { AuthorPageProps } from "@/type/typeProps";
@@ -9,57 +9,65 @@ import { ImProfile } from "react-icons/im";
 import { MdListAlt } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
 
-export default function DropdownInfoProfile({user}: AuthorPageProps) {
+export default function DropdownInfoProfile({ user }: AuthorPageProps) {
+    const handleLogout = async () => {
+        try {
+            const response = await fetch("/api/auth/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+            if (response.ok) {
+                console.log("Logout successful");
+                window.location.href = "/";
+            } else {
+                console.error("Logout failed:", await response.text());
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
+    };
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (response.ok) {
-        console.log("Logout successful");
-        window.location.href = "/";
-      } else {
-        console.error("Logout failed:", await response.text());
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
-  return (
-      <>
-        {user ? (
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar hover:bg-white active:bg-transparent focus:bg-transparent"
-            >
-              <div className="w-10 rounded-full relative">
-                {renderImage(user.avatar)}
-              </div>
-            </div>
-            <ul
-              tabIndex={0}
-              className="text-white menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-            >
-            <li><Link href={path.editUser}><ImProfile className="text-[18px]"/> Profile</Link></li>
-            <li><Link href={`${path.author}/${user.handle}`}><MdListAlt className="text-[18px]" />Posts</Link></li>
-            <li>
-              <button onClick={handleLogout}>
-                <IoLogOutOutline className="text-[18px]" />
-                Logout
-              </button>
-            </li>
-            </ul>
-          </div>
-        ) : (
-          <Link href={path.signin}>
-            <FaUser className="text-xl active:scale-105 hover:scale-110 transition cursor-pointer" />
-          </Link>
-        )}
-      </>
+    return (
+        <>
+            {user ? (
+                <div className="dropdown dropdown-end">
+                    <div
+                        tabIndex={0}
+                        role="button"
+                        className="btn btn-ghost btn-circle avatar hover:bg-white active:bg-transparent focus:bg-transparent"
+                    >
+                        <div className="w-10 rounded-full relative">
+                            {renderImage(user.avatar)}
+                        </div>
+                    </div>
+                    <ul
+                        tabIndex={0}
+                        className="text-white menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                    >
+                        <li>
+                            <Link href={path.editUser}>
+                                <ImProfile className="text-[18px]" /> Profile
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={`${path.author}/${user.handle}`}>
+                                <MdListAlt className="text-[18px]" />
+                                Posts
+                            </Link>
+                        </li>
+                        <li>
+                            <button onClick={handleLogout}>
+                                <IoLogOutOutline className="text-[18px]" />
+                                Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            ) : (
+                <Link href={path.signin}>
+                    <FaUser className="text-xl active:scale-105 hover:scale-110 transition cursor-pointer" />
+                </Link>
+            )}
+        </>
     );
 }

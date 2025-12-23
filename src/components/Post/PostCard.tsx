@@ -1,123 +1,165 @@
-import Image from "next/image"
-import Button from "../Button/Button"
-import ItemCardPost from "./ItemCardPost"
-import { ItemCardBlogProps } from "@/type/typeProps"
-import dayjs from "dayjs"
-import 'dayjs/locale/en'
-import { DATE_TIME_DISPLAY } from "@/constant"
-import Link from "next/link"
-import { joinSlugCategory } from "@/utils"
+import Image from "next/image";
+import Button from "../Button/Button";
+import ItemCardPost from "./ItemCardPost";
+import { ItemCardBlogProps } from "@/type/typeProps";
+import dayjs from "dayjs";
+import "dayjs/locale/en";
+import { DATE_TIME_DISPLAY } from "@/constant";
+import Link from "next/link";
+import { joinSlugCategory } from "@/utils";
 
 type PostCardProps = {
-  title: string,
-  isOutstanding?: boolean
-  itemCards: ItemCardBlogProps[],
-  isViewAll?: boolean,
-  isLogin?: boolean,
-  actionDelete?: () => void
-  actionLoadMore?: () => void,
-  totalItem?: number
-}
+    title: string;
+    isOutstanding?: boolean;
+    itemCards: ItemCardBlogProps[];
+    isViewAll?: boolean;
+    isLogin?: boolean;
+    actionDelete?: () => void;
+    actionLoadMore?: () => void;
+    totalItem?: number;
+};
 
 const PostCard: React.FC<PostCardProps> = ({
-  title,
-  itemCards,
-  isOutstanding = false,
-  isViewAll = true,
-  isLogin = false,
-  actionDelete,
-  actionLoadMore,
-  totalItem,
+    title,
+    itemCards,
+    isOutstanding = false,
+    isViewAll = true,
+    isLogin = false,
+    actionDelete,
+    actionLoadMore,
+    totalItem,
 }) => {
-  const cardAnother = itemCards?.[0]
+    const cardAnother = itemCards?.[0];
 
-  const handleLoadMore = () => {
-    actionLoadMore?.()
-  }
+    const handleLoadMore = () => {
+        actionLoadMore?.();
+    };
 
-  return (
-    <div className="max-w-(--max-width-desktop) lg-max-w-(--max-width-desktop) mx-auto">
-      <div className="flex justify-between">
-        <h1 className="text-black text-4xl font-bold">{title}</h1>
-        {isViewAll && (
-          <Link href={'/blog'}>
-            <Button title="View all" />
-          </Link>
-        )}
-      </div>
-      {isOutstanding && (
-        <div className="flex text-black gap-12 mt-20">
-          <div className="relative w-3/5 h-[456px] overflow-hidden rounded-2xl">
-            <Link href={joinSlugCategory(cardAnother.category?.parent?.name, cardAnother.category?.name, cardAnother.slug)}>
-              <Image
-                src={cardAnother.image}
-                alt="banner-post"
-                className="object-cover transition-transform duration-300 transform hover:scale-105"
-                fill
-                sizes='(max-width: 768px)'
-              />
-            </Link>
-          </div>
-          <div className="flex-1 flex flex-col gap-5">
-            <div className="text-xs font-bold">
-              {cardAnother.category?.parent?.name || cardAnother.category?.name}
-              <span className="text-[#999999] font-normal ml-2.5">
-                {dayjs(cardAnother.updatedAt).locale('en').format(DATE_TIME_DISPLAY)}
-              </span>
+    return (
+        <div className="max-w-(--max-width-desktop) lg-max-w-(--max-width-desktop) mx-auto">
+            <div className="flex justify-between">
+                <h1 className="text-black text-4xl font-bold">{title}</h1>
+                {isViewAll && (
+                    <Link href={"/blog"}>
+                        <Button title="View all" />
+                    </Link>
+                )}
             </div>
-            <Link href={joinSlugCategory(cardAnother.category?.parent?.name, cardAnother.category?.name, cardAnother.slug)} className="text-3xl font-bold font-[500]">
-              {cardAnother.title}
-            </Link>
-            <div className="text-[#666666] text-[16px] ">
-              {cardAnother.description}
-            </div>
-            <div className="flex gap-3 items-center text-black text-xs font-bold flex-wrap mt-5">
-              <div className="avatar">
-                <div className="w-[30px] object-cover rounded">
-                  <Image alt='avatar' src={cardAnother.author.avatar ? cardAnother.author.avatar : '/public/images/banner-2.jpg'} width={30} height={30} />
+            {isOutstanding && (
+                <div className="flex text-black gap-12 mt-20">
+                    <div className="relative w-3/5 h-[456px] overflow-hidden rounded-2xl">
+                        <Link
+                            href={joinSlugCategory(
+                                cardAnother.category?.parent?.name,
+                                cardAnother.category?.name,
+                                cardAnother.slug,
+                            )}
+                        >
+                            <Image
+                                src={cardAnother.image}
+                                alt="banner-post"
+                                className="object-cover transition-transform duration-300 transform hover:scale-105"
+                                fill
+                                sizes="(max-width: 768px)"
+                            />
+                        </Link>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-5">
+                        <div className="text-xs font-bold">
+                            {cardAnother.category?.parent?.name ||
+                                cardAnother.category?.name}
+                            <span className="text-[#999999] font-normal ml-2.5">
+                                {dayjs(cardAnother.updatedAt)
+                                    .locale("en")
+                                    .format(DATE_TIME_DISPLAY)}
+                            </span>
+                        </div>
+                        <Link
+                            href={joinSlugCategory(
+                                cardAnother.category?.parent?.name,
+                                cardAnother.category?.name,
+                                cardAnother.slug,
+                            )}
+                            className="text-3xl font-bold font-[500]"
+                        >
+                            {cardAnother.title}
+                        </Link>
+                        <div className="text-[#666666] text-[16px] ">
+                            {cardAnother.description}
+                        </div>
+                        <div className="flex gap-3 items-center text-black text-xs font-bold flex-wrap mt-5">
+                            <div className="avatar">
+                                <div className="w-[30px] object-cover rounded">
+                                    <Image
+                                        alt="avatar"
+                                        src={
+                                            cardAnother.author.avatar
+                                                ? cardAnother.author.avatar
+                                                : "/public/images/banner-2.jpg"
+                                        }
+                                        width={30}
+                                        height={30}
+                                    />
+                                </div>
+                            </div>
+                            <Link
+                                href={`/author/${cardAnother.author.handle}`}
+                                className=" hover:text-blue-400 hover:underline cursor-pointer"
+                            >
+                                {cardAnother.author.name}
+                            </Link>
+                            <span className="text-[#999999]">
+                                {dayjs(Number(cardAnother.createdAt))
+                                    .locale("en")
+                                    .format(DATE_TIME_DISPLAY)}
+                            </span>
+                        </div>
+                        <div className="mt-5">
+                            <Link
+                                href={joinSlugCategory(
+                                    cardAnother.category?.parent?.name,
+                                    cardAnother.category?.name,
+                                    cardAnother.slug,
+                                )}
+                            >
+                                <Button
+                                    title="Read more"
+                                    classNames="border border-[#7C4EE4] bg-white text-[#7C4EE4]"
+                                />
+                            </Link>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <Link href={`/author/${cardAnother.author.handle}`} className=" hover:text-blue-400 hover:underline cursor-pointer">
-                {cardAnother.author.name}
-              </Link>
-              <span className="text-[#999999]">
-                {dayjs(Number(cardAnother.createdAt)).locale('en').format(DATE_TIME_DISPLAY)}
-              </span>
+            )}
+            <div className="mt-16 grid grid-cols-3 gap-4 gap-y-10 items-stretch">
+                {itemCards?.length > 0 &&
+                    itemCards.map((item, key) => (
+                        <ItemCardPost
+                            key={key}
+                            title={item.title}
+                            slug={item.slug}
+                            description={item.description}
+                            category={item.category}
+                            createdAt={item.createdAt}
+                            image={item.image}
+                            content={item.content}
+                            author={item.author}
+                            excerpt={item.excerpt}
+                            isLogin={isLogin}
+                            actionDelete={actionDelete}
+                        />
+                    ))}
             </div>
-            <div className="mt-5">
-              <Link href={joinSlugCategory(cardAnother.category?.parent?.name, cardAnother.category?.name, cardAnother.slug)} >
-                <Button title="Read more" classNames="border border-[#7C4EE4] bg-white text-[#7C4EE4]" />
-              </Link>
-            </div>
-          </div>
+            {totalItem && totalItem === 6 && (
+                <div className="w-full flex items-center justify-center mt-5">
+                    <Button
+                        onClick={handleLoadMore}
+                        title="Load more"
+                        classNames="border border-[#7C4EE4] bg-white text-[#7C4EE4] hover:bg-white"
+                    />
+                </div>
+            )}
         </div>
-      )}
-      <div className="mt-16 grid grid-cols-3 gap-4 gap-y-10 items-stretch">
-        {itemCards?.length > 0 && (
-          itemCards.map((item, key) => (
-            <ItemCardPost
-              key={key}
-              title={item.title}
-              slug={item.slug}
-              description={item.description}
-              category={item.category}
-              createdAt={item.createdAt}
-              image={item.image}
-              content={item.content}
-              author={item.author}
-              excerpt={item.excerpt}
-              isLogin={isLogin}
-              actionDelete={actionDelete}
-            />
-          ))
-        )}
-      </div>
-      { totalItem && totalItem === 6 && (
-        <div className="w-full flex items-center justify-center mt-5">
-          <Button onClick={handleLoadMore} title="Load more" classNames="border border-[#7C4EE4] bg-white text-[#7C4EE4] hover:bg-white" />
-        </div>
-      )}
-    </div>
-  )
-}
-export default PostCard
+    );
+};
+export default PostCard;

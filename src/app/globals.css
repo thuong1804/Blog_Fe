@@ -1,145 +1,147 @@
-
-
 @import "tailwindcss";
 
- @plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+@plugin "daisyui" {
+    themes:
+        light --default,
+        dark --prefersdark;
 }
 
 @plugin "@tailwindcss/typography" {
-  className: wysiwyg;
-};
+    classname: wysiwyg;
+}
 
 @keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 @layer utilities {
-  .animate-fade-in-down {
-    animation: fade-in-down 0.2s ease-out;
-  }
+    .animate-fade-in-down {
+        animation: fade-in-down 0.2s ease-out;
+    }
 }
 
 @layer base {
-  h1 {
-    @apply text-5xl font-bold text-[#333333];
-  }
+    h1 {
+        @apply text-5xl font-bold text-[#333333];
+    }
 
-  h4 {
-    @apply text-base font-bold text-[#666666];
-  }
+    h4 {
+        @apply text-base font-bold text-[#666666];
+    }
 
-  p {
-    @apply text-base font-normal text-[#666666];
-  }
+    p {
+        @apply text-base font-normal text-[#666666];
+    }
 }
 
 @layer components {
-  .tiptap pre {
-    @apply bg-black rounded-lg text-white font-mono my-6 p-4;
-  }
+    .tiptap pre {
+        @apply bg-black rounded-lg text-white font-mono my-6 p-4;
+    }
 
-  .tiptap pre code {
-    @apply bg-transparent text-sm p-0;
-  }
+    .tiptap pre code {
+        @apply bg-transparent text-sm p-0;
+    }
 
-  .tiptap pre .hljs-comment,
-  .tiptap pre .hljs-quote {
-    @apply text-gray-500;
-  }
+    .tiptap pre .hljs-comment,
+    .tiptap pre .hljs-quote {
+        @apply text-gray-500;
+    }
 
-  .tiptap pre .hljs-variable,
-  .tiptap pre .hljs-template-variable,
-  .tiptap pre .hljs-attribute,
-  .tiptap pre .hljs-tag,
-  .tiptap pre .hljs-regexp,
-  .tiptap pre .hljs-link,
-  .tiptap pre .hljs-name,
-  .tiptap pre .hljs-selector-id,
-  .tiptap pre .hljs-selector-class {
-    color: #f98181;
-  }
+    .tiptap pre .hljs-variable,
+    .tiptap pre .hljs-template-variable,
+    .tiptap pre .hljs-attribute,
+    .tiptap pre .hljs-tag,
+    .tiptap pre .hljs-regexp,
+    .tiptap pre .hljs-link,
+    .tiptap pre .hljs-name,
+    .tiptap pre .hljs-selector-id,
+    .tiptap pre .hljs-selector-class {
+        color: #f98181;
+    }
 
-  .tiptap pre .hljs-number,
-  .tiptap pre .hljs-meta,
-  .tiptap pre .hljs-built_in,
-  .tiptap pre .hljs-builtin-name,
-  .tiptap pre .hljs-literal,
-  .tiptap pre .hljs-type,
-  .tiptap pre .hljs-params {
-    color: #fbbc88;
-  }
+    .tiptap pre .hljs-number,
+    .tiptap pre .hljs-meta,
+    .tiptap pre .hljs-built_in,
+    .tiptap pre .hljs-builtin-name,
+    .tiptap pre .hljs-literal,
+    .tiptap pre .hljs-type,
+    .tiptap pre .hljs-params {
+        color: #fbbc88;
+    }
 
-  .tiptap pre .hljs-string,
-  .tiptap pre .hljs-symbol,
-  .tiptap pre .hljs-bullet {
-    color: #b9f18d;
-  }
+    .tiptap pre .hljs-string,
+    .tiptap pre .hljs-symbol,
+    .tiptap pre .hljs-bullet {
+        color: #b9f18d;
+    }
 
-  .tiptap pre .hljs-title,
-  .tiptap pre .hljs-section {
-    color: #faf594;
-  }
+    .tiptap pre .hljs-title,
+    .tiptap pre .hljs-section {
+        color: #faf594;
+    }
 
-  .tiptap pre .hljs-keyword,
-  .tiptap pre .hljs-selector-tag {
-    color: #70cff8;
-  }
+    .tiptap pre .hljs-keyword,
+    .tiptap pre .hljs-selector-tag {
+        color: #70cff8;
+    }
 
-  .tiptap pre .hljs-emphasis {
-    @apply italic;
-  }
+    .tiptap pre .hljs-emphasis {
+        @apply italic;
+    }
 
-  .tiptap pre .hljs-strong {
-    @apply font-bold;
-  }
-
+    .tiptap pre .hljs-strong {
+        @apply font-bold;
+    }
 }
 
 .modal {
-  opacity: 0;
-  transform: scale(1);
-  transition: opacity 200ms ease-out, transform 200ms ease-out;
-  visibility: hidden;
+    opacity: 0;
+    transform: scale(1);
+    transition:
+        opacity 200ms ease-out,
+        transform 200ms ease-out;
+    visibility: hidden;
 }
 
 .modal[open] {
-  opacity: 1;
-  transform: scale(1);
-  visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    visibility: visible;
 }
 
 .modal::backdrop {
-  background-color: hsl(var(--b2, 0 0% 0%) / 0.4);
-  animation: modal-fade-in 100ms ease-out forwards;
+    background-color: hsl(var(--b2, 0 0% 0%) / 0.4);
+    animation: modal-fade-in 100ms ease-out forwards;
 }
 
 @keyframes modal-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-
 @theme {
-  --max-width-desktop: 1232px;
-  --text-color-body: #999999;
-  --text-color-primary: #7c4ee4;
-  --text-color-title: #333333;
+    --max-width-desktop: 1232px;
+    --text-color-body: #999999;
+    --text-color-primary: #7c4ee4;
+    --text-color-title: #333333;
 }
 
 body {
-  /* background: white; */
-  /* width: 100vw;
+    /* background: white; */
+    /* width: 100vw;
   height: 100vh;
   overflow-x: hidden; */
-  margin: 0;
+    margin: 0;
 }
-
-

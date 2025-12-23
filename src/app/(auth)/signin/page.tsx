@@ -1,10 +1,8 @@
-'use client'
+"use client";
 
-import SigninContainer from "@/containers/Auth/SignIn"
+import SigninContainer from "@/containers/Auth/SignIn";
 
 const LoginPage = () => {
-  return (
-    <SigninContainer/>
-  )
-}
-export default LoginPage
+    return <SigninContainer />;
+};
+export default LoginPage;

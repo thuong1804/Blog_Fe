@@ -7,28 +7,31 @@ import { usePathname } from "next/navigation";
 import { path } from "@/constant/path";
 
 export default function CategoriesPage() {
-  const pathName = usePathname()
-  const itemPath = [path.contact, path.createPost]
-  const isHideCategories = itemPath.some(item => pathName.includes(item))
-  const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
+    const pathName = usePathname();
+    const itemPath = [path.contact, path.createPost];
+    const isHideCategories = itemPath.some((item) => pathName.includes(item));
+    const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
 
-  if (error) return <p>Error loading categories</p>;
+    if (error) return <p>Error loading categories</p>;
 
-  const categories = data?.categories || [];
+    const categories = data?.categories || [];
 
-  if (isHideCategories) return null;
+    if (isHideCategories) return null;
 
-  return (
-    <>
-      {loading ? (
-        <div className="flex justify-between gap-2 items-center w-full relative text-[#333333] animate-pulse">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="h-7 w-full bg-gray-200 rounded"></div>
-          ))}
-        </div>
-      ) : (
-        <Category items={categories} />
-      )}
-    </>
-  )
+    return (
+        <>
+            {loading ? (
+                <div className="flex justify-between gap-2 items-center w-full relative text-[#333333] animate-pulse">
+                    {Array.from({ length: 6 }).map((_, idx) => (
+                        <div
+                            key={idx}
+                            className="h-7 w-full bg-gray-200 rounded"
+                        ></div>
+                    ))}
+                </div>
+            ) : (
+                <Category items={categories} />
+            )}
+        </>
+    );
 }

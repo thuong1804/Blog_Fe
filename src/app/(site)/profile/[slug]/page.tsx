@@ -1,7 +1,5 @@
-import ProfileContainer from "@/containers/Profile/Profile"
+import ProfileContainer from "@/containers/Profile/Profile";
 
 export default function ProfilePage() {
-  return (
-    <ProfileContainer />
-  )
+    return <ProfileContainer />;
 }
