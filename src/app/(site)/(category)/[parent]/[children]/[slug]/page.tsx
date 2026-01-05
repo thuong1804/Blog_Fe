@@ -1,5 +1,5 @@
 import BlogCategory from "@/containers/Blog/BlogCategory";
-import { GET_ALL_POSTS, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
+import { GET_ALL_POST_POPULAR, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 
 type tParams = Promise<{ slug: string }>;
@@ -7,16 +7,16 @@ type tParams = Promise<{ slug: string }>;
 export default async function BlogDetail(props: { params: tParams }) {
     const { slug } = await props.params;
     const client = createApolloClient({ isServer: true });
+
     const dataByPost = await client.query({
         query: GET_POST_BY_SLUG,
         variables: { slug: slug },
     });
 
-    const { data } = await client.query({
-        query: GET_ALL_POSTS,
+    const { data: popularPosts} = await client.query({
+        query: GET_ALL_POST_POPULAR,
     });
 
-    const dataPost = data.posts;
 
     if (!dataByPost.data?.post) {
         return <div>Post not found</div>;
@@ -43,7 +43,7 @@ export default async function BlogDetail(props: { params: tParams }) {
             content={content}
             tags={tags}
             image={image}
-            data={dataPost}
+            data={popularPosts.popularPosts}
             author={author}
             updatedAt={updatedAt}
         />

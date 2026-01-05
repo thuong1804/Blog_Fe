@@ -30,7 +30,7 @@ export default async function HeaderLayout() {
                         </span>
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-6 ml-auto flex-1">
+                    <div className="hidden lg:flex items-center gap-6 ml-auto flex-1">
                         <div className="flex-1">
                             <SearchBar />
                         </div>
@@ -59,7 +59,7 @@ export default async function HeaderLayout() {
                 </div>
             </div>
 
-            <div className="hidden md:flex justify-center">
+            <div className="hidden lg:flex justify-center">
                 <div className="max-w-desktop w-full px-6 py-2">
                     <CategoriesPage />
                 </div>

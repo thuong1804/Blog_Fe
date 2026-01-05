@@ -36,7 +36,7 @@ const PostCard: React.FC<PostCardProps> = ({
     };
 
     return (
-        <section className="max-w-desktop mx-auto px-6">
+        <section className="max-w-desktop mx-auto">
             <div className="flex items-center justify-between flex-wrap">
                 <h1 className="text-black text-2xl md:text-3xl lg:text-4xl font-bold">
                     {title}

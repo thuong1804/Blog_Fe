@@ -42,82 +42,106 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
     ];
 
     return (
-        <div className="w-full pb-20 pt-14">
+        <div className="w-full lg:pt-14 py-6 px-6 lg:px-0">
+            {/* Breadcrumbs */}
             <div className="max-w-(--max-width-desktop) mx-auto">
                 <Breadcrumbs items={breadcrumbsCategories} />
             </div>
-            <div className="flex flex-col items-center mt-10">
-                <h1 className="max-w-[1024px]">{title}</h1>
 
-                <div className="relative w-full h-[600px] max-w-(--max-width-desktop) mt-14">
+            {/* Main Content */}
+            <div className="flex flex-col items-center mt-10">
+                {/* Title */}
+                <h1 className="w-full max-w-[1024px]">
+                    {title}
+                </h1>
+
+                {/* Banner Image */}
+                <div className="relative w-full max-w-(--max-width-desktop) h-[300px] sm:h-[450px] lg:h-[600px] mt-14">
                     <Image
                         src={image}
                         alt="banner-post"
-                        className="object-cover rounded-2xl"
                         fill
                         sizes="(max-width: 1232px)"
+                        className="object-cover rounded-2xl"
+                        priority
                     />
                 </div>
-                <div className="max-w-[1024px] flex flex-col w-full mt-5">
-                    <div className="flex justify-between flex-wrap items-center">
-                        <div className="text-(--text-color-title) font-bold flex items-center gap-2">
-                            <div className="avatar">
-                                <div className="w-[30px] object-cover rounded">
-                                    <Image
-                                        alt="avatar"
-                                        src={author.avatar}
-                                        width={30}
-                                        height={30}
-                                    />
-                                </div>
+
+                {/* Meta Info */}
+                <div className="w-full max-w-[1024px] mt-5 flex flex-col gap-2">
+                    <div className="flex justify-between flex-wrap items-center gap-4">
+                        {/* Author */}
+                        <div className="flex items-center gap-2 font-bold text-(--text-color-title)">
+                            <div className="w-[30px] h-[30px] rounded overflow-hidden">
+                                <Image
+                                    src={author.avatar}
+                                    alt="avatar"
+                                    width={30}
+                                    height={30}
+                                />
                             </div>
+
                             <Link
                                 href={`/author/${author.handle}`}
                                 className="hover:text-blue-400 hover:underline"
                             >
                                 {author.name}
-                            </Link>{" "}
-                            . {author.email}
+                            </Link>
+
+                            <span className="font-normal">· {author.email}</span>
                         </div>
-                        <div className="flex gap-2 items-center">
-                            {tags.map((tag, key) => (
+
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2">
+                            {tags.map((tag, index) => (
                                 <span
-                                    key={key}
-                                    className="shadow border border-[#7c4ee4] rounded-xl text-(--text-color-title) flex items-center p-2"
+                                    key={index}
+                                    className="px-3 py-1 border border-[#7c4ee4] rounded-xl shadow text-(--text-color-title)"
                                 >
                                     {tag.name}
                                 </span>
                             ))}
                         </div>
                     </div>
-                    <div className="text-(--text-color-title) flex items-center gap-4">
-                        <span className="text-(--text-color-body)">
+
+                    {/* Date */}
+                    <div className="flex flex-wrap items-center gap-2 text-(--text-color-body)">
+                        <span>
                             {dayjs(Number(createdAt))
                                 .locale("en")
                                 .format(DATE_TIME_DISPLAY)}
                         </span>
-                        -
-                        <span className="text-(--text-color-body)">
+                        <span>-</span>
+                        <span>
                             Updated{" "}
                             {dayjs(Number(updatedAt))
                                 .locale("en")
                                 .format(DATE_TIME_DISPLAY)}
                         </span>
                     </div>
-                    <div className="text-(--text-color-title) flex items-center gap-1 mt-2 font-bold">
+
+                    {/* Views */}
+                    <div className="flex items-center gap-1 font-bold text-(--text-color-title)">
                         Views: {views}
                         <LuEye />
                     </div>
                 </div>
-                <div className="h-[1px] border border-[#7c4ee4] max-w-(--max-width-desktop) w-full mt-5"></div>
-                <div className="max-w-[1024px] mt-10 w-full text-(--text-color-body)">
+
+                {/* Divider */}
+                <div className="w-full max-w-(--max-width-desktop) h-px border border-[#7c4ee4] mt-5"></div>
+
+                {/* Content */}
+                <div className="w-full max-w-[1024px] mt-10 text-(--text-color-body)">
                     <MarkdownExtra content={content} />
                 </div>
             </div>
+
+            {/* Popular Post */}
             <div className="max-w-(--max-width-desktop) mx-auto mt-10">
                 <PostCard title="Popular Post" itemCards={data} />
             </div>
         </div>
     );
+
 };
 export default BlogCategory;

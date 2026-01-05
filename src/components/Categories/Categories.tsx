@@ -22,10 +22,11 @@ type CategoryProp = {
             slug: string;
             posts: ItemCardBlogProps[];
         }[];
-    }[];
+    }[],
+    onClickLink?: () => void,
 };
 
-const Category: React.FC<CategoryProp> = ({ items }) => {
+const Category: React.FC<CategoryProp> = ({ items, onClickLink }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const wrapperRefs = useRef<Record<number, HTMLDivElement | null>>({});
     const buttonRefs = useRef<Record<number, HTMLDivElement | null>>({});
@@ -53,11 +54,13 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [activeIndex]);
+
     const toggleDropdown = (key: number) => {
         setActiveIndex((prevIndex) => (prevIndex === key ? null : key));
     };
 
     const transferLink = () => {
+        onClickLink?.()
         setTimeout(() => {
             setActiveIndex(null);
         }, 500);
@@ -151,7 +154,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
                                             </div>
                                         </div>
                                         {itemCardByWithCategory && (
-                                            <div className="bg-[#f6f8fa] p-9 rounded-r-2xl hidden lg:block">
+                                            <div className="bg-[#f6f8fa] p-9 rounded-r-2xl hidden lg:block" onClick={() => onClickLink?.()}>
                                                 <ItemCardPost
                                                     title={
                                                         itemCardByWithCategory.title

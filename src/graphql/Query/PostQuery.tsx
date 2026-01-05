@@ -132,48 +132,45 @@ export const GET_ALL_POST_POPULAR = gql`
 `;
 
 export const GET_ALL_POSTS = gql`
-    query GetAllPosts {
-        posts {
-            id
-            title
-            slug
-            content
-            description
-            excerpt
-            image
-            category {
-                id
-                name
-                parent {
-                    id
-                    name
-                }
-            }
-            tags {
-                id
-                name
-            }
-            views
-            readingTime
-            isFeatured
-            createdAt
-            updatedAt
-            author {
-                id
-                name
-                email
-                avatar
-                handle
-            }
-            authorId
-            comments {
-                id
-                content
-                createdAt
-            }
+  query GetAllPosts(
+    $page: Int!
+    $pageSize: Int!
+    $categorySlug: String
+    $search: String
+  ) {
+    posts(
+      page: $page
+      pageSize: $pageSize
+      categorySlug: $categorySlug
+      search: $search
+    ) {
+      items {
+        id
+        title
+        slug
+        excerpt
+        image
+        createdAt
+        author {
+          name
+          avatar
         }
+        category {
+          name
+          parent {
+            name
+          }
+        }
+      }
+      meta {
+        total
+        totalPages
+        currentPage
+      }
     }
+  }
 `;
+
 
 export const GET_LATEST_POSTS = gql`
     query GetLatestPosts($skip: Int, $take: Int) {

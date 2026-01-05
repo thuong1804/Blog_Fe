@@ -4,7 +4,9 @@
    className: wysiwyg;
 };
 
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default;
+}
 
 @keyframes fade-in-down {
     from {

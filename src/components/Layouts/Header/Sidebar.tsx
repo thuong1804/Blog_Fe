@@ -6,6 +6,7 @@ import DropdownInfoProfile from "./DropdownInfoProfile";
 import Link from "next/link";
 import { AuthorPageProps } from "@/type/typeProps";
 import CategoriesPage from "@/containers/Categories/Categories";
+import { useState } from "react";
 
 type SidebarUser = AuthorPageProps["user"];
 
@@ -20,32 +21,51 @@ type SideBarProps = {
 };
 
 const SideBar = ({ user, itemMenu }: SideBarProps) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const onHandleClickLink = () => {
+        setIsOpen(false)
+    }
+
     return (
         <div className="drawer drawer-end">
-            <input id="mobile-drawer" type="checkbox" className="drawer-toggle" />
+            <input
+                id="mobile-drawer"
+                type="checkbox"
+                className="drawer-toggle"
+                checked={isOpen}
+                onChange={(e) => setIsOpen(e.target.checked)}
+            />
+
             <div className="drawer-content w-full flex justify-end">
-                <label
-                    htmlFor="mobile-drawer"
+                <button
                     className="btn btn-ghost lg:hidden"
+                    onClick={() => setIsOpen(true)}
                 >
                     <IoIosMenu className="text-3xl" />
-                </label>
+                </button>
             </div>
 
-            <div className="drawer-side z-50" >
-                <label
-                    htmlFor="mobile-drawer"
+            <div className="drawer-side z-50">
+                <div
                     className="drawer-overlay"
-                ></label>
+                    onClick={() => setIsOpen(false)}
+                />
 
-                <ul className="menu bg-white min-h-full w-[90%] p-6 gap-3 relative">
-                    <li><SearchBar /></li>
+                <ul className="menu bg-white min-h-full w-[90%] p-6 pt-7 gap-3">
+                    <div><SearchBar /></div>
+
                     <div className="mt-2">Categories</div>
-                    <CategoriesPage/>
+                    <CategoriesPage onClickLink={onHandleClickLink} />
+
                     <div className="border-t-2">
                         {itemMenu.map((item, key) => (
                             <li key={key}>
-                                <Link href={item.href} className="font-bold">
+                                <Link
+                                    href={item.href}
+                                    className="font-bold"
+                                    onClick={() => setIsOpen(false)}
+                                >
                                     {item.title}
                                 </Link>
                             </li>
@@ -60,4 +80,5 @@ const SideBar = ({ user, itemMenu }: SideBarProps) => {
         </div>
     )
 }
+
 export default SideBar;
