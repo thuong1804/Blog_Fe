@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropdown, IoIosArrowRoundBack  } from "react-icons/io";
 import { TiArrowSortedUp } from "react-icons/ti";
 
 import { MdArrowRight } from "react-icons/md";
@@ -64,7 +64,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
     };
 
     return (
-        <div className="flex justify-between items-center w-full relative text-[#333333]">
+        <div className="flex-col justify-between items-center w-full lg:flex-row lg:flex lg:relative text-[#333333]">
             {items.map((itemCategory, key) => {
                 const itemCardByWithCategory =
                     itemCategory.children[0]?.posts[0];
@@ -73,7 +73,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
                     itemCategory.children.length > 0 && (
                         <React.Fragment key={key}>
                             <div
-                                className="flex items-center gap-2 w-max cursor-pointer"
+                                className=" px-2 lg:p-0 flex justify-between items-center pb-4 gap-2 w-full lg:w-max cursor-pointer"
                                 onClick={() => toggleDropdown(key)}
                                 ref={(el) => {
                                     buttonRefs.current[key] = el;
@@ -92,13 +92,16 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
                             </div>
                             {isCurrentlyOpen && (
                                 <div
-                                    className="bg-white z-50 absolute top-full w-full mt-3 shadow rounded-2xl border-gray-300 animate-fade-in-down"
+                                    className="bg-white z-50 p-6 absolute top-0 right-0 h-full
+                                        lg:h-auto lg:top-full w-full lg:mt-3 shadow rounded-2xl
+                                        overflow-auto border-gray-300 animate-fade-in-down"
                                     ref={(el) => {
                                         wrapperRefs.current[key] = el;
                                     }}
                                 >
+                                    <div className="lg:hidden" onClick={()=> setActiveIndex(null)}><IoIosArrowRoundBack className="text-3xl" /></div>
                                     <div className="flex justify-between ">
-                                        <div className="flex flex-col p-9">
+                                        <div className="flex flex-col p-3">
                                             <div className="flex items-center gap-2">
                                                 <Link
                                                     href={`/${itemCategory.slug}`}
@@ -148,7 +151,7 @@ const Category: React.FC<CategoryProp> = ({ items }) => {
                                             </div>
                                         </div>
                                         {itemCardByWithCategory && (
-                                            <div className="bg-[#f6f8fa] p-9 rounded-r-2xl">
+                                            <div className="bg-[#f6f8fa] p-9 rounded-r-2xl hidden lg:block">
                                                 <ItemCardPost
                                                     title={
                                                         itemCardByWithCategory.title

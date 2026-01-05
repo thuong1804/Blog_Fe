@@ -6,45 +6,64 @@ import Button from "@/components/Button/Button";
 import { cookies } from "next/headers";
 import { getCurrentUserFromToken } from "@/lib/Session";
 import DropdownInfoProfile from "./DropdownInfoProfile";
+import { path } from "@/constant/path";
+import SideBar from "./Sidebar";
+
+const itemMenu = [
+    { title: "Blog", href: "/blog" },
+    { title: "About", href: "/about" },
+    { title: "Contact", href: "/contact" },
+];
 
 export default async function HeaderLayout() {
     const token = (await cookies()).get("accessToken")?.value;
     const user = await getCurrentUserFromToken(token);
 
     return (
-        <div className="w-full bg-white py-5 border-0">
-            <div className="flex justify-center items-center text-(--text-color-title)">
-                <div className="max-w-[1234px] flex justify-between items-center w-full">
-                    <Link href="/" className="flex items-center pr-2.5">
-                        <FaBlogger className="text-[70px]" />
-                        <span className="font-bold text-3xl">TECHNEWS</span>
+        <header className="w-full bg-white text-title">
+            <div className="flex justify-center">
+                <div className="max-w-desktop w-full px-6 py-4 flex items-center justify-between gap-2">
+                    <Link href="/" className="flex items-center gap-2">
+                        <FaBlogger className="text-5xl" />
+                        <span className="font-bold text-xl md:text-3xl">
+                            TECHNEWS
+                        </span>
                     </Link>
-                    <div className="flex-1 pr-5">
-                        <SearchBar />
-                    </div>
-                    <div className="flex-none">
-                        <ul className="px-1 flex items-center text-[16px] gap-7 text-(--text-color-title)">
-                            <li className="font-bold hover:text-purple-400 transition">
-                                <Link href="/blog">Blog</Link>
-                            </li>
-                            <li className="font-bold hover:text-purple-400 transition">
-                                <Link href="/about">About</Link>
-                            </li>
-                            <li>
-                                <Link href="/contact">
-                                    <Button title="Contact Us" />
+
+                    <div className="hidden md:flex items-center gap-6 ml-auto flex-1">
+                        <div className="flex-1">
+                            <SearchBar />
+                        </div>
+
+                        {itemMenu.map((item) =>
+                            item.href === path.contact ? (
+                                <Link key={item.href} href={item.href}>
+                                    <Button title="Contact us" />
                                 </Link>
-                            </li>
-                            <li>
-                                <DropdownInfoProfile user={user?.data} />
-                            </li>
-                        </ul>
+                            ) : (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="font-bold hover:text-primary"
+                                >
+                                    {item.title}
+                                </Link>
+                            )
+                        )}
+
+                        <DropdownInfoProfile user={user?.data} />
+                    </div>
+                    <div className="lg:hidden">
+                        <SideBar itemMenu={itemMenu} user={user?.data}/>
                     </div>
                 </div>
             </div>
-            <div className="max-w-[1234px] mx-auto text-(--text-color-title) w-full flex items-center justify-between relative mt-2.5">
-                <CategoriesPage />
+
+            <div className="hidden md:flex justify-center">
+                <div className="max-w-desktop w-full px-6 py-2">
+                    <CategoriesPage />
+                </div>
             </div>
-        </div>
+        </header>
     );
 }

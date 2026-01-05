@@ -45,7 +45,7 @@ const FooterLayout = () => {
     return (
         <React.Fragment>
             <SubscribeEmail />
-            <div className="bg-white py-14 h-auto">
+            <div className="bg-white py-12 h-auto">
                 <div className="max-w-(--max-width-desktop) lg-max-w-(--max-width-desktop) mx-auto">
                     <div className="flex flex-col items-center gap-10">
                         <div className="flex items-center gap-2.5">

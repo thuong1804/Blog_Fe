@@ -35,7 +35,7 @@ const SearchBar = () => {
     return (
         <div className="w-full relative h-full">
             <form
-                className={`w-full transition-all duration-500 ease-out transform
+                className={`w-full transition-all duration-500 ease-out transform absolute lg:relative
           ${
               showInput
                   ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
@@ -51,7 +51,7 @@ const SearchBar = () => {
                         type="text"
                         placeholder="Search here..."
                         name="search"
-                        className="outline-none text-black flex-1 w-full h-full transition-all duration-300 "
+                        className="outline-none text-black w-full h-full transition-all duration-300 "
                         ref={inputRef}
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}

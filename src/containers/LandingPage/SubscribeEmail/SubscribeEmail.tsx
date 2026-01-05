@@ -3,7 +3,6 @@
 import Button from "@/components/Button/Button";
 import { SUBSCRIBE_SUBMIT } from "@/graphql/Mutation/SendMail";
 import { useMutation } from "@apollo/client";
-import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -13,67 +12,69 @@ const SubscribeEmail = () => {
 
     const handleSubmitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (loading) {
-            return;
-        }
+        if (loading) return;
 
         await subscribe({
-            variables: {
-                email: inputEmail,
-            },
+            variables: { email: inputEmail },
         });
 
-        if (!loading) {
-            toast.success("🎉 Email sent! We'll get back to you soon.");
-        }
-
+        toast.success("🎉 Email sent! We'll get back to you soon.");
         setInputEmail("");
     };
 
     return (
-        <div className="w-full bg-[#7C4EE4] h-auto relative flex justify-center items-center py-[132px]">
-            <div className="w-[600px] h-[200px] pointer-events-none overflow-hidden absolute top-0 left-0 ">
-                <Image
-                    src={"/images/vector.svg"}
-                    alt="vector-banner"
-                    className="pointer-events-none w-auto rounded-br-[200px] h-auto"
-                    fill
-                    sizes="(max-width: 608px)"
-                />
-            </div>
-            <div className="flex flex-col items-center">
-                <div className="text-5xl font-bold">
-                    Get our stories delivered From
-                </div>
-                <div className="text-5xl font-bold">
-                    us to your inbox weekly.
-                </div>
+        <section className="w-full bg-[#7C4EE4] relative">
+            <div className="max-w-desktop mx-auto px-6 py-12 flex flex-col items-center text-center text-white">
+
+                {/* Title */}
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl lg:max-w-[768px] font-bold">
+                    Get our stories delivered From us to your inbox weekly.
+                </h2>
                 <form
                     onSubmit={handleSubmitEmail}
-                    className="flex items-center gap-2 mt-12 h-auto"
+                    className="
+                        mt-12
+                        flex
+                        flex-col
+                        sm:flex-row
+                        items-stretch
+                        sm:items-center
+                        gap-3
+                        w-full
+                        max-w-md
+                    "
                 >
                     <input
                         value={inputEmail}
                         onChange={(e) => setInputEmail(e.target.value)}
-                        type="text "
+                        type="email"
                         placeholder="Your email"
-                        className="input ghost bg-white text-[#9999] font-normal w-80 h-[53px]"
+                        required
+                        className="
+                            input
+                            w-full
+                            h-[53px]
+                            bg-white
+                            text-black
+                            placeholder:text-body
+                        "
                     />
+
                     <Button
                         title="Get started"
-                        classNames="border border-white"
                         type="submit"
+                        classNames="border border-white text-white self-end"
                     />
                 </form>
-                <div className="mt-6 text-[#BBBBBB]">
-                    Get a response tomorrow if you submit by 9pm today. If we
-                    received afte
-                </div>
-                <div className="text-[#BBBBBB]">
-                    9pm will get a reponse the following day.
-                </div>
+
+                {/* Description */}
+                <p className="mt-6 text-sm text-white max-w-xl">
+                    Get a response tomorrow if you submit by 9pm today.
+                    If received after 9pm, you will get a response the following day.
+                </p>
             </div>
-        </div>
+        </section>
     );
 };
+
 export default SubscribeEmail;
