@@ -19,6 +19,7 @@ const SendOTPContainer = () => {
 
         try {
             const res = await sendOtp({ variables: { email: inputEmail } });
+
             if (res.data.sendOTP.success) {
                 const EXPIRE_KEY = "otp_expire_time";
                 localStorage.removeItem(EXPIRE_KEY);
@@ -29,13 +30,10 @@ const SendOTPContainer = () => {
                         String(Number(res.data.sendOTP.expiresAt)),
                     );
                 }
-                console.log(res.data.sendOTP);
 
                 await fetch("/api/send-otp", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email: inputEmail }),
                 });
 
@@ -47,18 +45,20 @@ const SendOTPContainer = () => {
                 toast.error(res.data.sendOTP.message);
             }
         } catch (error) {
-            const err = error as Error;
-            toast.error(err.message);
+            toast.error((error as Error).message);
         }
     };
 
     return (
-        <div className="w-full h-full flex justify-center items-center">
-            <div className=" bg-white rounded-box shadow-2xs p-14 flex flex-col items-center gap-2">
-                <h1>Verify your email</h1>
+        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
+            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+                <h1 className="text-center text-2xl sm:text-3xl font-semibold">
+                    Verify your email
+                </h1>
+
                 <form
                     onSubmit={handleSubmit}
-                    className="opacity-90 max-w-[450px] w-[450px] mt-10"
+                    className="mt-8 sm:mt-10 w-full opacity-90"
                 >
                     <div className="flex flex-col gap-3">
                         <InputField.Email
@@ -67,16 +67,22 @@ const SendOTPContainer = () => {
                             type="email"
                             placeholder="@email.com"
                             value={inputEmail}
-                            onChange={(value) => setInputEmail(value)}
+                            onChange={setInputEmail}
                         />
                     </div>
-                    <div className="flex items-center justify-end w-full mt-8">
+
+                    <div className="flex w-full mt-6 sm:mt-8 justify-center sm:justify-end">
                         <Button
                             loading={loading}
                             type="submit"
-                            classNames="w-max rounded-[10px]"
-                            title="Send email"
                             disabled={loading}
+                            title="Send email"
+                            classNames="
+                                w-full
+                                sm:w-max
+                                rounded-[10px]
+                                px-8
+                            "
                         />
                     </div>
                 </form>
@@ -84,4 +90,5 @@ const SendOTPContainer = () => {
         </div>
     );
 };
+
 export default SendOTPContainer;

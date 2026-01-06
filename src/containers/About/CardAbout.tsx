@@ -27,47 +27,76 @@ const items = [
 const CardAbout = () => {
     const [active, setActive] = useState(1);
 
-    const handleClickCard = (index: number) => {
-        setActive(index);
-    };
-
     return (
-        <div className="flex w-full justify-between items-center gap-5">
-            {items.map((item, index) => {
+        <div
+            className="
+                w-full
+                grid
+                grid-cols-1
+                gap-6
+                md:grid-cols-2
+                lg:grid-cols-3
+            "
+        >
+            {items.map((item) => {
                 const isActive = active === item.key;
+
                 return (
                     <div
-                        key={index}
-                        onClick={() => handleClickCard(item.key)}
+                        key={item.key}
+                        onClick={() => setActive(item.key)}
                         className={twMerge(
-                            "flex flex-col p-4 rounded-2xl gap-3 max-w-[400px] h-[300px] cursor-pointer transition-all duration-300 ease-in-out",
-                            active === item.key
-                                ? "bg-[#7C4EE4]  text-white shadow-xl"
-                                : "text-[#7C4EE4]",
+                            `
+                            flex flex-col gap-3 cursor-pointer
+                            rounded-2xl p-5
+                            transition-all duration-300 ease-in-out
+                            min-h-[240px]
+                            lg:min-h-[300px]
+                            `,
+                            isActive
+                                ? "bg-[#7C4EE4] text-white shadow-xl"
+                                : "bg-white text-[#7C4EE4] border border-gray-100"
                         )}
                     >
+                        {/* NUMBER */}
                         <div
                             className={twMerge(
-                                "text-[50px] font-bold",
+                                `
+                                font-bold
+                                text-3xl
+                                md:text-4xl
+                                lg:text-5xl
+                                `,
                                 isActive
                                     ? "text-white"
-                                    : "text-[#666666] opacity-10",
+                                    : "text-[#666666] opacity-20"
                             )}
                         >
                             0{item.key}
                         </div>
+
+                        {/* TITLE */}
                         <div
                             className={twMerge(
-                                "text-[17px] font-bold",
-                                isActive ? "text-white" : "text-[#7C4EE4]",
+                                `
+                                font-bold
+                                text-base
+                                md:text-lg
+                                `,
+                                isActive ? "text-white" : "text-[#7C4EE4]"
                             )}
                         >
                             {item.title}
                         </div>
+
+                        {/* CONTENT */}
                         <p
                             className={twMerge(
-                                "text-[17px] text-sm",
-                                isActive ? "text-white" : "text-[#666666]",
+                                `
+                                text-sm
+                                leading-6
+                                `,
+                                isActive ? "text-white" : "text-[#666666]"
                             )}
                         >
                             {item.content}

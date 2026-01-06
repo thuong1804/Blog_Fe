@@ -67,7 +67,7 @@ const Category: React.FC<CategoryProp> = ({ items, onClickLink }) => {
     };
 
     return (
-        <div className="flex-col justify-between items-center w-full lg:flex-row lg:flex lg:relative text-[#333333]">
+        <div className="flex-col justify-between items-center w-full lg:flex-row lg:flex lg:relative text-[#333333] flex-wrap">
             {items.map((itemCategory, key) => {
                 const itemCardByWithCategory =
                     itemCategory.children[0]?.posts[0];

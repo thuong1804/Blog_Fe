@@ -1,9 +1,13 @@
 import PostCard from "@/components/Post/PostCard";
-import { GET_ALL_POST_POPULAR } from "@/graphql/Query/PostQuery";
-import { useQuery } from "@apollo/client";
+import { ItemCardBlogProps } from "@/type/typeProps";
 
-const PopularPost = () => {
-    const { data } = useQuery(GET_ALL_POST_POPULAR);
+type PropsPopularPost = {
+    data: {
+        popularPosts: ItemCardBlogProps[];
+    };
+};
+
+const PopularPost = ({data} : PropsPopularPost) => {
     return <PostCard title="Popular Post" itemCards={data?.popularPosts} />;
 };
 export default PopularPost;

@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { joinSlugCategory } from "@/utils";
 import PopularPost from "./PopularPost/PopularPost";
-import { GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
+import { GET_ALL_POST_POPULAR, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
 import LoadingLandingPage from "@/components/Loading/LoadingLandingPage";
 import OurRecentPost from "./OurRecentPost/OurRecentPost";
 
@@ -18,10 +18,11 @@ const LandingPage = () => {
             slug: FEATURED_POST_SLUG,
         },
     });
+    const { data: dataPopular } = useQuery(GET_ALL_POST_POPULAR);
+
     const blogFeatured = data?.post
 
-    const postDataAnother = data?.posts?.[4];
-
+    const postDataAnother = dataPopular?.popularPosts?.[4];
     if (!data) return <LoadingLandingPage />;
 
     return (
@@ -72,7 +73,6 @@ const LandingPage = () => {
                     )}
                 </div>
             </section>
-
             <section className="max-w-desktop mx-auto px-6 py-20">
                 <AnotherPost post={postDataAnother} />
             </section>
@@ -82,7 +82,7 @@ const LandingPage = () => {
             </section>
 
             <section className="max-w-desktop mx-auto px-6">
-                <PopularPost />
+                <PopularPost data={dataPopular}/>
             </section>
         </div>
     );

@@ -18,7 +18,7 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
     const isUserLogin = user.email === userLogin?.email;
     const [openModal, setOpenModal] = useState(false);
 
-    const handleDeletePost = (e) => {
+    const handleDeletePost = () => {
         setOpenModal((prev) => !prev);
     };
 

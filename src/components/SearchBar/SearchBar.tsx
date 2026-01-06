@@ -33,14 +33,13 @@ const SearchBar = () => {
     };
 
     return (
-        <div className="w-full relative h-full">
+        <div className="w-full relative h-12">
             <form
                 className={`w-full transition-all duration-500 ease-out transform absolute lg:relative
-          ${
-              showInput
-                  ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-                  : "opacity-0 scale-95 translate-y-[-4px] pointer-events-none"
-          }`}
+          ${showInput
+                        ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                        : "opacity-0 scale-95 translate-y-[-4px] pointer-events-none"
+                    }`}
                 onSubmit={handleSubmit}
             >
                 <div
@@ -66,7 +65,7 @@ const SearchBar = () => {
                 </div>
             </form>
             <FaSearch
-                className={`text-[20px] text-gray-500 cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-out
+                className={` text-[20px] text-gray-500 cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-out
           ${showInput ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 onClick={handelOnclickShow}
             />

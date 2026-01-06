@@ -30,44 +30,130 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
     return (
         <>
             {user ? (
-                <div className="dropdown dropdown-end">
-                    <div
-                        tabIndex={0}
-                        role="button"
-                        className="btn btn-ghost btn-circle avatar hover:bg-white active:bg-transparent focus:bg-transparent"
-                    >
-                        <div className="w-10 rounded-full relative">
-                            {renderImage(user.avatar)}
-                        </div>
-                    </div>
-                    <ul
-                        tabIndex={0}
-                        className="text-white menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-                    >
-                        <li>
-                            <Link href={path.editUser}>
-                                <ImProfile className="text-[18px]" /> Profile
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href={`${path.author}/${user.handle}`}>
-                                <MdListAlt className="text-[18px]" />
-                                Posts
-                            </Link>
-                        </li>
-                        <li>
-                            <button onClick={handleLogout}>
-                                <IoLogOutOutline className="text-[18px]" />
-                                Logout
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            ) : (
-                <Link href={path.signin}>
-                    <FaUser className="text-xl active:scale-105 hover:scale-110 transition cursor-pointer" />
+    <div className="dropdown lg:dropdown-end">
+        {/* Avatar button */}
+        <div
+            tabIndex={0}
+            role="button"
+            className="
+                btn
+                btn-ghost
+                btn-circle
+                avatar
+                hover:bg-transparent
+                focus:bg-transparent
+                active:bg-transparent
+            "
+        >
+            <div className="
+                w-10
+                h-10
+                rounded-full
+                ring-2
+                ring-primary
+                ring-offset-2
+                ring-offset-base-100
+                overflow-hidden
+            ">
+                {renderImage(user.avatar)}
+            </div>
+        </div>
+
+        {/* Dropdown menu */}
+        <ul
+            tabIndex={0}
+            className="
+                dropdown-content
+                z-50
+                mt-3
+                w-52
+                rounded-xl
+                bg-base-100
+                p-2
+                shadow-lg
+                border
+                border-base-200
+                text-base-content
+            "
+        >
+            <li>
+                <Link
+                    href={path.editUser}
+                    className="
+                        flex
+                        items-center
+                        gap-3
+                        rounded-lg
+                        px-3
+                        py-2
+                        hover:bg-base-200
+                        transition
+                    "
+                >
+                    <ImProfile className="text-lg opacity-80" />
+                    <span>Profile</span>
                 </Link>
-            )}
+            </li>
+
+            <li>
+                <Link
+                    href={`${path.author}/${user.handle}`}
+                    className="
+                        flex
+                        items-center
+                        gap-3
+                        rounded-lg
+                        px-3
+                        py-2
+                        hover:bg-base-200
+                        transition
+                    "
+                >
+                    <MdListAlt className="text-lg opacity-80" />
+                    <span>Posts</span>
+                </Link>
+            </li>
+
+            <li className="mt-1 border-t border-base-200 pt-1">
+                <button
+                    onClick={handleLogout}
+                    className="
+                        flex
+                        w-full
+                        items-center
+                        gap-3
+                        rounded-lg
+                        px-3
+                        py-2
+                        text-error
+                        hover:bg-error/10
+                        transition
+                    "
+                >
+                    <IoLogOutOutline className="text-lg" />
+                    <span>Logout</span>
+                </button>
+            </li>
+        </ul>
+    </div>
+) : (
+    <Link
+        href={path.signin}
+        className="
+            flex
+            items-center
+            justify-center
+            w-10
+            h-10
+            rounded-full
+            hover:bg-base-200
+            transition
+        "
+    >
+        <FaUser className="text-xl" />
+    </Link>
+)}
+
         </>
     );
 }
