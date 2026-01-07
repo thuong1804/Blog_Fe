@@ -9,7 +9,12 @@ import { ImProfile } from "react-icons/im";
 import { MdListAlt } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
 
-export default function DropdownInfoProfile({ user }: AuthorPageProps) {
+type DropdownInfoProfileProps = {
+    user: AuthorPageProps["user"];
+    position?: "left" | "right" | "top" | "bottom";
+};
+
+export default function DropdownInfoProfile({ user, position }: DropdownInfoProfileProps) {
     const handleLogout = async () => {
         try {
             const response = await fetch("/api/auth/logout", {
@@ -30,12 +35,11 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
     return (
         <>
             {user ? (
-    <div className="dropdown lg:dropdown-end">
-        {/* Avatar button */}
-        <div
-            tabIndex={0}
-            role="button"
-            className="
+                <div className={`dropdown ${position ? `dropdown-${position}` : ''}  `}>
+                    <div
+                        tabIndex={0}
+                        role="button"
+                        className="
                 btn
                 btn-ghost
                 btn-circle
@@ -44,8 +48,8 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
                 focus:bg-transparent
                 active:bg-transparent
             "
-        >
-            <div className="
+                    >
+                        <div className="
                 w-10
                 h-10
                 rounded-full
@@ -55,14 +59,13 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
                 ring-offset-base-100
                 overflow-hidden
             ">
-                {renderImage(user.avatar)}
-            </div>
-        </div>
+                            {renderImage(user.avatar)}
+                        </div>
+                    </div>
 
-        {/* Dropdown menu */}
-        <ul
-            tabIndex={0}
-            className="
+                    <ul
+                        tabIndex={0}
+                        className="
                 dropdown-content
                 z-50
                 mt-3
@@ -75,11 +78,11 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
                 border-base-200
                 text-base-content
             "
-        >
-            <li>
-                <Link
-                    href={path.editUser}
-                    className="
+                    >
+                        <li>
+                            <Link
+                                href={path.editUser}
+                                className="
                         flex
                         items-center
                         gap-3
@@ -89,16 +92,16 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
                         hover:bg-base-200
                         transition
                     "
-                >
-                    <ImProfile className="text-lg opacity-80" />
-                    <span>Profile</span>
-                </Link>
-            </li>
+                            >
+                                <ImProfile className="text-lg opacity-80" />
+                                <span>Profile</span>
+                            </Link>
+                        </li>
 
-            <li>
-                <Link
-                    href={`${path.author}/${user.handle}`}
-                    className="
+                        <li>
+                            <Link
+                                href={`${path.author}/${user.handle}`}
+                                className="
                         flex
                         items-center
                         gap-3
@@ -108,16 +111,16 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
                         hover:bg-base-200
                         transition
                     "
-                >
-                    <MdListAlt className="text-lg opacity-80" />
-                    <span>Posts</span>
-                </Link>
-            </li>
+                            >
+                                <MdListAlt className="text-lg opacity-80" />
+                                <span>Posts</span>
+                            </Link>
+                        </li>
 
-            <li className="mt-1 border-t border-base-200 pt-1">
-                <button
-                    onClick={handleLogout}
-                    className="
+                        <li className="mt-1 border-t border-base-200 pt-1">
+                            <button
+                                onClick={handleLogout}
+                                className="
                         flex
                         w-full
                         items-center
@@ -129,17 +132,17 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
                         hover:bg-error/10
                         transition
                     "
-                >
-                    <IoLogOutOutline className="text-lg" />
-                    <span>Logout</span>
-                </button>
-            </li>
-        </ul>
-    </div>
-) : (
-    <Link
-        href={path.signin}
-        className="
+                            >
+                                <IoLogOutOutline className="text-lg" />
+                                <span>Logout</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            ) : (
+                <Link
+                    href={path.signin}
+                    className="
             flex
             items-center
             justify-center
@@ -149,10 +152,10 @@ export default function DropdownInfoProfile({ user }: AuthorPageProps) {
             hover:bg-base-200
             transition
         "
-    >
-        <FaUser className="text-xl" />
-    </Link>
-)}
+                >
+                    <FaUser className="text-xl" />
+                </Link>
+            )}
 
         </>
     );

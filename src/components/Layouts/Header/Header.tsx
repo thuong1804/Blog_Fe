@@ -51,7 +51,7 @@ export default async function HeaderLayout() {
                             )
                         )}
 
-                        <DropdownInfoProfile user={user?.data} />
+                        <DropdownInfoProfile user={user?.data} position="left" />
                     </div>
                     <div className="lg:hidden">
                         <SideBar itemMenu={itemMenu} user={user?.data}/>
