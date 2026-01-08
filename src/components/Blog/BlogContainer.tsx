@@ -6,6 +6,9 @@ import NotFoundBlog from "../NotFoundBlog/NotFoundBlog";
 type CustomItemProps = {
     dataCustom?: ItemCardBlogProps[];
     actionDelete?: () => void;
+    totalPages: number,
+    currentPage: number,
+    handleChangePage: (page: number) => void
 };
 
 type BlogItemProp = {
@@ -29,23 +32,42 @@ const BlogContainer = ({
     description,
     dataCustom,
     actionDelete,
+    currentPage,
+    totalPages,
+    handleChangePage,
 }: BlogItemProp & CustomItemProps) => {
     return (
-        <div className="w-full pt-16 pb-20">
+        <div className="w-full lg:pt-14 py-6 px-6 lg:px-0">
             <div className="max-w-(--max-width-desktop) mx-auto">
+                {/* Breadcrumbs */}
                 <div className="text-(--text-color-title)">
                     <Breadcrumbs items={breadcrumbItem} />
                 </div>
-                <div className="flex flex-col items-center">
+
+                {/* Header */}
+                <div className="flex flex-col items-center text-center mt-10">
                     <h4>OUR BLOGS</h4>
-                    <h1 className="mt-6">{title ? title : itemPost?.name}</h1>
-                    <p className="mt-6 max-w-[1010px]">
+
+                    <h1 className="mt-6 max-w-[900px]">
+                        {title ? title : itemPost?.name}
+                    </h1>
+
+                    <p className="mt-6 max-w-[1010px] text-(--text-color-body)">
                         {description ? description : itemPost?.description}
                     </p>
                 </div>
+
                 {(dataCustom && dataCustom.length > 0) ||
-                (itemPost?.posts && itemPost.posts.length > 0) ? (
-                    <div className="grid grid-cols-3 gap-4 gap-y-10 mt-28">
+                    (itemPost?.posts && itemPost.posts.length > 0) ? (
+                    <div className="
+                    grid
+                    grid-cols-1
+                    sm:grid-cols-2
+                    lg:grid-cols-3
+                    gap-6
+                    gap-y-10
+                    mt-20
+                ">
                         {(dataCustom ? dataCustom : itemPost?.posts)?.map(
                             (post: ItemCardBlogProps, key: number) => (
                                 <ItemCardPost
@@ -60,11 +82,47 @@ const BlogContainer = ({
                                     category={post.category}
                                     actionDelete={actionDelete}
                                 />
-                            ),
+                            )
                         )}
                     </div>
                 ) : (
-                    <NotFoundBlog />
+                    <div className="mt-20">
+                        <NotFoundBlog />
+                    </div>
+                )}
+                {totalPages > 1 && (
+                    <div className="join flex justify-center mt-6">
+                        <button
+                            className="join-item btn"
+                            disabled={currentPage === 1}
+                            onClick={() => handleChangePage(currentPage - 1)}
+                        >
+                            «
+                        </button>
+
+                        {Array.from({ length: totalPages }).map((_, index) => {
+                            const pageNumber = index + 1;
+
+                            return (
+                                <button
+                                    key={pageNumber}
+                                    className={`join-item btn ${pageNumber === currentPage ? "btn-active" : ""
+                                        }`}
+                                    onClick={() => handleChangePage(pageNumber)}
+                                >
+                                    {pageNumber}
+                                </button>
+                            );
+                        })}
+
+                        <button
+                            className="join-item btn"
+                            disabled={currentPage === totalPages}
+                            onClick={() => handleChangePage(currentPage + 1)}
+                        >
+                            »
+                        </button>
+                    </div>
                 )}
             </div>
         </div>

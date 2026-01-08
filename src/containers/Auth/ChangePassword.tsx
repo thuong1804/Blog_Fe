@@ -15,6 +15,7 @@ const ChangePasswordContainer = () => {
         password: "",
         confirmPassword: "",
     });
+
     const [resetPassword] = useMutation(RESET_PASSWORD);
 
     const onChangeValueInput = (fieldName: string, value: string) => {
@@ -40,28 +41,29 @@ const ChangePasswordContainer = () => {
             if (res.data.resetPassword.success) {
                 toast.success(res.data.resetPassword.message);
                 router.push(path.signin);
-            } else if (res.data.resetPassword.message === "Token expired") {
+            } else if (
+                res.data.resetPassword.message === "Token expired"
+            ) {
                 toast.error(
                     "Your password reset link has expired. Please request a new one.",
                 );
             }
         } catch (error) {
-            const err = error as Error;
-            toast.error(err.message);
+            toast.error((error as Error).message);
         }
 
-        setForm({
-            password: "",
-            confirmPassword: "",
-        });
+        setForm({ password: "", confirmPassword: "" });
     };
 
     return (
-        <div className="w-full h-full flex justify-center items-center">
-            <div className=" bg-white rounded-box shadow-2xs p-14 flex flex-col items-center gap-10 w-[550px]">
-                <h1>Change password</h1>
+        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
+            <div className="w-full max-w-lg bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+                <h1 className="text-center text-2xl sm:text-3xl font-semibold">
+                    Change password
+                </h1>
+
                 <form
-                    className="w-full flex flex-col gap-5"
+                    className="mt-8 sm:mt-10 w-full flex flex-col gap-5"
                     onSubmit={handleSubmitForm}
                 >
                     <InputField.Password
@@ -73,6 +75,7 @@ const ChangePasswordContainer = () => {
                             onChangeValueInput("password", value)
                         }
                     />
+
                     <InputField.Password
                         title="Confirm password"
                         placeholder="Confirm password"
@@ -87,11 +90,13 @@ const ChangePasswordContainer = () => {
                                 : undefined
                         }
                     />
-                    <div className="flex justify-end mt-5">
+
+                    <div className="flex w-full mt-4 sm:mt-6 justify-center sm:justify-end">
                         <Button
                             type="submit"
                             title="Save"
                             disabled={!form.confirmPassword}
+                            classNames="w-full sm:w-max px-10"
                         />
                     </div>
                 </form>
@@ -99,4 +104,5 @@ const ChangePasswordContainer = () => {
         </div>
     );
 };
+
 export default ChangePasswordContainer;

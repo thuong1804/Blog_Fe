@@ -43,12 +43,14 @@ const OtpInput: React.FC<OtpInputProps> = ({
     };
 
     return (
-        <div className="flex gap-3 justify-center">
+        <div className="flex justify-center gap-2 sm:gap-3">
             {otp.map((digit, index) => (
                 <input
                     key={index}
                     type="text"
                     maxLength={1}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     disabled={disabled}
                     value={digit}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -59,12 +61,27 @@ const OtpInput: React.FC<OtpInputProps> = ({
                         inputsRef.current[index] = el;
                     }}
                     className={twMerge(
-                        "font-bold w-12 h-12 text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-lg bg-white",
-                        disabled && "bg-gray-300",
+                        `
+                font-bold
+                text-center
+                border
+                border-gray-300
+                rounded-lg
+                focus:outline-none
+                focus:border-blue-500
+                bg-white
+
+                w-10 h-10 text-base
+                sm:w-12 sm:h-12 sm:text-lg
+                md:w-14 md:h-14 md:text-xl
+                `,
+                        disabled &&
+                        "bg-gray-200 cursor-not-allowed focus:border-gray-300",
                     )}
                 />
             ))}
         </div>
+
     );
 };
 

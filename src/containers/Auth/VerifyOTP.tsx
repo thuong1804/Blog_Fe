@@ -21,38 +21,36 @@ const VerifyOTPContainer = () => {
     const router = useRouter();
 
     const handleOnChange = (otp: string) => {
-        if (otp) {
-            setLoading(true);
-            try {
-                setTimeout(async () => {
-                    const res = await verifyOTP({
-                        variables: { email: email, code: otp },
-                    });
+        if (!otp) return;
 
-                    if (res.data.verifyOTP.success) {
-                        toast.success(res.data.verifyOTP.message);
-                        setLoading(false);
+        setLoading(true);
+        try {
+            setTimeout(async () => {
+                const res = await verifyOTP({
+                    variables: { email, code: otp },
+                });
 
-                        localStorage.setItem(
-                            "resetToken",
-                            res.data.verifyOTP.resetToken,
-                        );
-                        router.push(path.changePassword);
-                    } else {
-                        toast.error(res.data.verifyOTP.message);
-                    }
-                }, 2000);
-            } catch (error) {
-                const err = error as Error;
-                toast.error(err.message);
-            }
+                if (res.data.verifyOTP.success) {
+                    toast.success(res.data.verifyOTP.message);
+                    localStorage.setItem(
+                        "resetToken",
+                        res.data.verifyOTP.resetToken,
+                    );
+                    router.push(path.changePassword);
+                } else {
+                    toast.error(res.data.verifyOTP.message);
+                }
+                setLoading(false);
+            }, 2000);
+        } catch (error) {
+            setLoading(false);
+            toast.error((error as Error).message);
         }
     };
 
     const handleResetOtp = async () => {
         const EXPIRE_KEY = "otp_expire_time";
         localStorage.removeItem(EXPIRE_KEY);
-
         setResetCountdown(false);
 
         try {
@@ -61,6 +59,7 @@ const VerifyOTPContainer = () => {
                 toast.success(
                     "OTP has been sent to your email. Please check your inbox!",
                 );
+
                 if (res.data.sendOTP.expiresAt) {
                     localStorage.setItem(
                         EXPIRE_KEY,
@@ -72,8 +71,7 @@ const VerifyOTPContainer = () => {
                 toast.error(res.data.sendOTP.message);
             }
         } catch (error) {
-            const err = error as Error;
-            toast.error(err.message);
+            toast.error((error as Error).message);
         }
     };
 
@@ -84,23 +82,39 @@ const VerifyOTPContainer = () => {
     }, []);
 
     return (
-        <div className="w-full h-full flex justify-center items-center">
-            <div className=" bg-white rounded-box shadow-2xs p-14 flex flex-col items-center gap-2">
-                <div className="max-w-[400px] w-[400px] mt-10 flex flex-col items-center gap-10">
-                    <h1>OTP Verification</h1>
-                    <OtpInput onChange={handleOnChange} disabled={loading} />
-                    {resetCountdown ? (
-                        <Button title="Resend OTP" onClick={handleResetOtp} />
-                    ) : (
-                        <OtpCountdown
-                            resetFlag={resetFlag}
-                            onComplete={() => setResetCountdown(true)}
-                            onResetDone={() => setResetFlag(false)}
-                        />
-                    )}
+        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
+            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+                <div className="w-full flex flex-col items-center gap-8 sm:gap-10">
+                    <h1 className="text-center text-2xl sm:text-3xl font-semibold">
+                        OTP Verification
+                    </h1>
+
+                    <OtpInput
+                        onChange={handleOnChange}
+                        disabled={loading}
+                    />
+
+                    <div className="w-full flex justify-center">
+                        {resetCountdown ? (
+                            <Button
+                                title="Resend OTP"
+                                onClick={handleResetOtp}
+                                classNames="w-full sm:w-max px-8"
+                            />
+                        ) : (
+                            <OtpCountdown
+                                resetFlag={resetFlag}
+                                onComplete={() =>
+                                    setResetCountdown(true)
+                                }
+                                onResetDone={() => setResetFlag(false)}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
+
 export default VerifyOTPContainer;

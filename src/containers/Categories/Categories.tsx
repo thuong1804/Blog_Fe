@@ -6,7 +6,11 @@ import Category from "@/components/Categories/Categories";
 import { usePathname } from "next/navigation";
 import { path } from "@/constant/path";
 
-export default function CategoriesPage() {
+type CategoriesPage = {
+    onClickLink?: () => void,
+}
+
+export default function CategoriesPage({onClickLink}: CategoriesPage) {
     const pathName = usePathname();
     const itemPath = [path.contact, path.createPost];
     const isHideCategories = itemPath.some((item) => pathName.includes(item));
@@ -30,7 +34,7 @@ export default function CategoriesPage() {
                     ))}
                 </div>
             ) : (
-                <Category items={categories} />
+                <Category items={categories} onClickLink={onClickLink}/>
             )}
         </>
     );

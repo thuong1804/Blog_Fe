@@ -33,7 +33,7 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
     const [form, setForm] = useState<FormValuesPost>({
         title: "",
         description: "",
-        readingTime: undefined,
+        readingTime: 0,
         excerpt: "",
         categoryId: undefined,
         tagIds: [],
@@ -111,7 +111,7 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
     return (
         <div className="w-full">
             <Button
-                className="btn bg-[#7c4ee4] text-white border-0"
+                className="btn bg-[#7c4ee4] text-white border-0 w-full md:w-auto"
                 onClick={() => {
                     const modal = document.getElementById(
                         "my_modal_1",
@@ -121,13 +121,19 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
             >
                 Information post
             </Button>
-            <dialog id="my_modal_1" className="modal">
-                <div className="modal-box bg-white  max-w-4xl h-[90%]">
-                    <h3 className="font-bold text-2xl text-black">
-                        Add information post!
-                    </h3>
+
+            <dialog id="my_modal_1" className="modal lg:modal-middle">
+                <div className="modal-box bg-white w-11/12 max-w-4xl h-[90vh] md:h-auto overflow-y-auto mx-auto">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold text-xl md:text-2xl text-black">
+                            Add information post!
+                        </h3>
+                        <form method="dialog">
+                            <button className="btn btn-sm btn-circle btn-ghost text-black">✕</button>
+                        </form>
+                    </div>
                     <div className="mt-4">
-                        <div className="w-1/4 h-[200px] rounded-2xl bg-gray-600 flex items-center justify-center gap-2 relative">
+                        <div className="w-full md:w-1/2 lg:w-1/3 h-[200px] rounded-2xl bg-gray-600 flex items-center justify-center gap-2 relative overflow-hidden mx-auto md:mx-0">
                             {file ? (
                                 <Image
                                     src={file}
@@ -136,46 +142,33 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
                                     className="object-cover rounded-2xl"
                                 />
                             ) : (
-                                <>
-                                    {" "}
-                                    <IoIosCamera className="text-xl" />{" "}
-                                    Thumbnail
-                                </>
+                                <div className="flex items-center gap-2 text-white">
+                                    <IoIosCamera className="text-xl" />
+                                    <span>Thumbnail</span>
+                                </div>
                             )}
                         </div>
-                        <div className="flex gap-3 mt-3">
+                        <div className="flex flex-wrap gap-3 mt-3 justify-center md:justify-start">
                             <UploadImage
-                                // onUploadSuccess={(imageURL) => setFile(imageURL)}
-                                // onLoadingUpload={(loading) => setDisabledDeleteButton(loading)}
-                                // actionUpload={updateAvatarUser}
-                                onUploadSuccess={(imageURL) =>
-                                    setFile(imageURL)
-                                }
+                                onUploadSuccess={(imageURL) => setFile(imageURL)}
                                 title="Upload thumbnail"
-                                params={{
-                                    userId: user?.user?.id,
-                                }}
+                                params={{ userId: user?.user?.id }}
                             />
                             <Button
-                                classNames="rounded-4xl bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-transparent"
+                                classNames="rounded-full bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-gray-300"
                                 title="Delete"
-                                // disabled={disabledDeleteButton || isNullAvatar}
                                 onClick={() => setFile("")}
                             />
                         </div>
                         <form
-                            className="w-full mt-3 grid grid-cols-2 gap-5"
+                            className="w-full mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
                             onSubmit={handleSubmitForm}
                             id="form-post"
                         >
                             <SelectField
                                 title="Tags"
                                 required
-                                onChange={(newValue) =>
-                                    onChangeTag(
-                                        newValue as MultiValue<OptionType>,
-                                    )
-                                }
+                                onChange={(newValue) => onChangeTag(newValue as MultiValue<OptionType>)}
                                 isMulti={true}
                                 options={optionTags}
                             />
@@ -183,34 +176,26 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
                                 title="Category"
                                 required
                                 isMulti={false}
-                                onChange={(newValue) =>
-                                    onChangeCategory(
-                                        newValue as SingleValue<OptionType>,
-                                    )
-                                }
+                                onChange={(newValue) => onChangeCategory(newValue as SingleValue<OptionType>)}
                                 options={optionCategories}
                             />
-                            <InputField.Text
-                                title="Title"
-                                required
-                                maxLength={100}
-                                customIcon={<MdOutlineSubtitles />}
-                                value={form.title}
-                                onChange={(value) =>
-                                    onChangeValueInput("title", value)
-                                }
-                            />
-
+                            <div className="md:col-span-2">
+                                <InputField.Text
+                                    title="Title"
+                                    required
+                                    maxLength={100}
+                                    customIcon={<MdOutlineSubtitles />}
+                                    value={form.title}
+                                    onChange={(value) => onChangeValueInput("title", value)}
+                                />
+                            </div>
                             <InputField.Text
                                 title="Description"
                                 customIcon={<MdOutlineDescription />}
                                 maxLength={100}
                                 required
                                 value={form.description}
-                                minLength={10}
-                                onChange={(value) =>
-                                    onChangeValueInput("description", value)
-                                }
+                                onChange={(value) => onChangeValueInput("description", value)}
                             />
                             <InputField.Text
                                 title="Excerpt"
@@ -218,42 +203,27 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
                                 required
                                 customIcon={<MdOutlineDescription />}
                                 value={form.excerpt}
-                                minLength={10}
-                                onChange={(value) =>
-                                    onChangeValueInput("excerpt", value)
-                                }
+                                onChange={(value) => onChangeValueInput("excerpt", value)}
                             />
-                            <div className="w-[200px]">
+                            <div className="w-full md:w-[240px]">
                                 <InputField.Number
-                                    title="Reading time (minutes)"
+                                    title="Reading time (min)"
                                     customIcon={<MdAccessTime />}
                                     value={form.readingTime}
                                     required
                                     placeholder="0"
-                                    onChange={(value) =>
-                                        onChangeValueInput("readingTime", value)
-                                    }
+                                    onChange={(value) => onChangeValueInput("readingTime", value)}
                                 />
                             </div>
-                            <button
-                                type="submit"
-                                form="close"
-                                className="btn btn-sm transition-transform duration-200 hover:border-1 hover:border-gray-200 text-black hover:bg-white btn-circle btn-ghost absolute right-2 top-2"
-                            >
-                                ✕
-                            </button>
                         </form>
                     </div>
-                    <div className="modal-action">
-                        <form
-                            method="dialog"
-                            className="flex items-center gap-3"
-                            id="close"
-                        >
-                            <button className="btn bg-white text-black border-1 border-gray-400">
+
+                    <div className="modal-action mt-8 sticky bottom-0 bg-white pt-4">
+                        <form method="dialog" className="flex items-center gap-3 w-full justify-end" id="close">
+                            <button className="btn bg-white text-black border-gray-400 flex-1 md:flex-none">
                                 Close
                             </button>
-                            <button className="btn" form="form-post">
+                            <button className="btn bg-[#7c4ee4] text-white border-0 flex-1 md:flex-none" form="form-post">
                                 Save
                             </button>
                         </form>

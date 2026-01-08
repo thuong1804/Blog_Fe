@@ -18,34 +18,64 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
     const isUserLogin = user.email === userLogin?.email;
     const [openModal, setOpenModal] = useState(false);
 
-    const handleDeletePost = (e) => {
+    const handleDeletePost = () => {
         setOpenModal((prev) => !prev);
     };
 
     return (
         <div className="w-full pb-20 pt-14 px-5">
             <div className="max-w-(--max-width-desktop) mx-auto">
-                <div className="flex items-center justify-center gap-10 border-b-1 border-gray-300 pb-8">
-                    <div className="relative w-[274px] h-[274px] object-cover">
+                <div
+                    className=" flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-10 border-b border-gray-300 pb-8
+                    text-center
+                    md:text-left"
+                >
+                    <div className="relative w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] md:w-[274px] md:h-[274px] shrink-0">
                         <Image
                             src={user.avatar}
                             alt="banner-post"
                             className="object-cover rounded-2xl"
                             fill
-                            sizes="(max-width: 274px)"
+                            sizes="(max-width: 768px) 160px, 274px"
                         />
                     </div>
-                    <div className="flex flex-col gap-3 max-w-[500px]">
-                        <h1>{user.handle}</h1>
-                        <p>{user.email}</p>
-                        <Link href={"/"} className="text-blue-400 underline">
+
+                    {/* User info */}
+                    <div className="flex flex-col gap-3 max-w-[500px] items-center md:items-start">
+                        <h1 className="text-xl md:text-2xl font-semibold">
+                            {user.handle}
+                        </h1>
+
+                        <p className="text-gray-600 break-all">
+                            {user.email}
+                        </p>
+
+                        <Link href="/" className="text-blue-400 underline">
                             @{user.handle}
                         </Link>
-                        <p>{user.description}</p>
+
+                        <p className="text-gray-700 leading-relaxed">
+                            {user.description}
+                        </p>
+
                         {isUserLogin && (
                             <Link
                                 href={path.editUser}
-                                className="font-medium bg-white text-gray-700 flex items-center gap-2 p-3  rounded-xl border-1 border-gray-400 w-max"
+                                className="
+                                    mt-2
+                                    font-medium
+                                    bg-white
+                                    text-gray-700
+                                    flex
+                                    items-center
+                                    gap-2
+                                    px-4
+                                    py-2
+                                    rounded-xl
+                                    border
+                                    border-gray-400
+                                    w-max
+                                    "
                             >
                                 Edit profile <CiEdit />
                             </Link>
@@ -116,7 +146,7 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                 open={openModal}
                 setOpenModal={setOpenModal}
             >
-                <h1>Are you sure you want to delete this post?</h1>
+                <h4>Are you sure you want to delete this post?</h4>
             </Modal>
         </div>
     );

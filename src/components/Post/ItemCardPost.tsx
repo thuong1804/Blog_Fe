@@ -44,6 +44,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                         <button
                             tabIndex={0}
                             className="btn btn-xs btn-ghost text-black rounded-full hover:bg-gray-600 hover:text-white"
+                            disabled
                         >
                             <IoIosMore size={20} />
                         </button>

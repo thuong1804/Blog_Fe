@@ -11,7 +11,7 @@ const PreviewPost = ({ content }: PreviewPostPost) => {
     }, [content]);
 
     return (
-        <div className="w-full h-full flex flex-col gap-3">
+        <div className="w-full flex flex-col gap-3">
             <h3 className="text-(--text-color-title) text-center text-2xl font-medium">
                 Preview
             </h3>

@@ -23,26 +23,35 @@ const items = [
 
 const CardContact = () => {
     return (
-        <div className="flex w-full items-center gap-5">
-            {items.map((item, index) => {
-                return (
-                    <div
-                        key={index}
-                        className="flex flex-col items-center p-4 rounded-2xl gap-3 min-w-[400px] h-[250px] text-white shadow-xl justify-center bg-white"
-                    >
-                        <div className="w-[70px] h-[70px] bg-[#7C4EE4] rounded-[50%] flex items-center justify-center text-2xl">
-                            {item.icon}
-                        </div>
-                        <div className="text-[17px] font-bold text-[#7C4EE4]">
-                            {item.title}
-                        </div>
-                        <p className="text-[17px] text-sm text-[#666666]">
-                            {item.content}
-                        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {items.map((item, index) => (
+                <div
+                    key={index}
+                    className="
+                        flex flex-col items-center justify-center
+                        p-6
+                        h-[220px]
+                        rounded-2xl
+                        bg-white
+                        shadow-xl
+                        text-center
+                    "
+                >
+                    <div className="w-[70px] h-[70px] bg-[#7C4EE4] rounded-full flex items-center justify-center text-2xl text-white">
+                        {item.icon}
                     </div>
-                );
-            })}
+
+                    <div className="mt-3 text-[17px] font-bold text-[#7C4EE4]">
+                        {item.title}
+                    </div>
+
+                    <p className="mt-1 text-sm text-[#666666]">
+                        {item.content}
+                    </p>
+                </div>
+            ))}
         </div>
     );
 };
+
 export default CardContact;

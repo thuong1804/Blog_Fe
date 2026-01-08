@@ -37,84 +37,125 @@ const SignupContainer = () => {
             [fieldName]: value,
         }));
     };
+return (
+    <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
+        <div
+            className="
+                w-full
+                max-w-sm
+                sm:max-w-md
+                lg:max-w-lg
+                bg-white
+                rounded-2xl
+                shadow-md
+                p-4
+                sm:p-6
+                lg:p-8
+                max-h-[85vh]
+                flex
+                flex-col
+            "
+        >
+            {/* Header cố định */}
+            <h1
+                className="
+                    text-center
+                    text-lg
+                    sm:text-xl
+                    lg:text-2xl
+                    font-semibold
+                    shrink-0
+                "
+            >
+                Sign Up
+            </h1>
 
-    return (
-        <div className="w-full h-full flex justify-center items-center">
-            <div className=" bg-white rounded-box shadow-2xs p-14 flex flex-col items-center gap-2">
-                <h1>Sign Up</h1>
-                <form
-                    onSubmit={handleSubmit}
-                    className=" opacity-90 max-w-[400px] w-[400px] mt-10"
-                >
-                    <div className="flex flex-col gap-3">
-                        <InputField.Email
-                            title="Email"
-                            placeholder="@email.com"
-                            value={form.email}
-                            required
-                            onChange={(value) =>
-                                onChangeValueInput("email", value)
-                            }
-                        />
-                        <InputField.Text
-                            title="Name"
-                            placeholder="Name"
-                            maxLength={100}
-                            required
-                            value={form.name}
-                            minLength={10}
-                            onChange={(value) =>
-                                onChangeValueInput("name", value)
-                            }
-                        />
-                        <InputField.Password
-                            title="Password"
-                            required
-                            value={form.password}
-                            placeholder="Password"
-                            onChange={(value) =>
-                                onChangeValueInput("password", value)
-                            }
-                        />
-                        <InputField.Password
-                            title="Password"
-                            placeholder="Confirm password"
-                            value={form.confirmPassword}
-                            onChange={(value) =>
-                                onChangeValueInput("confirmPassword", value)
-                            }
-                            customMsg={
-                                form.confirmPassword &&
-                                form.confirmPassword !== form.password
-                                    ? "Passwords do not match"
-                                    : undefined
-                            }
-                        />
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-full mt-8">
-                        <Button
-                            type="submit"
-                            classNames="w-full rounded-[30px]"
-                            title="Sign Up"
-                            disabled={loading}
-                        />
-                        <div className="divider before:bg-gray-300 after:bg-gray-300 text-gray-500">
-                            OR
-                        </div>
-                        <ButtonLoginGoogle />
-                    </div>
-                    <div className="w-full flex justify-center mt-5">
-                        Already have an account?{" "}
-                        <Link
-                            className="ml-2 text-blue-500 underline"
-                            href="/signin"
-                        >
-                            Sign in
-                        </Link>
-                    </div>
-                </form>
-            </div>
+            {/* Form scroll */}
+            <form
+                onSubmit={handleSubmit}
+                className="
+                    mt-4
+                    flex
+                    flex-col
+                    gap-3
+                    overflow-y-auto
+                    pr-1
+                "
+            >
+                <InputField.Email
+                    title="Email"
+                    placeholder="@email.com"
+                    value={form.email}
+                    required
+                    onChange={(value) =>
+                        onChangeValueInput("email", value)
+                    }
+                />
+
+                <InputField.Text
+                    title="Name"
+                    placeholder="Your name"
+                    maxLength={100}
+                    minLength={3}
+                    required
+                    value={form.name}
+                    onChange={(value) =>
+                        onChangeValueInput("name", value)
+                    }
+                />
+
+                <InputField.Password
+                    title="Password"
+                    required
+                    value={form.password}
+                    placeholder="Password"
+                    onChange={(value) =>
+                        onChangeValueInput("password", value)
+                    }
+                />
+
+                <InputField.Password
+                    title="Confirm password"
+                    placeholder="Confirm password"
+                    value={form.confirmPassword}
+                    onChange={(value) =>
+                        onChangeValueInput("confirmPassword", value)
+                    }
+                    customMsg={
+                        form.confirmPassword &&
+                        form.confirmPassword !== form.password
+                            ? "Passwords do not match"
+                            : undefined
+                    }
+                />
+
+                <Button
+                    type="submit"
+                    title="Sign Up"
+                    disabled={loading}
+                    classNames="w-full rounded-full mt-1"
+                />
+
+                <div className="divider text-gray-400 text-xs">
+                    OR
+                </div>
+
+                <ButtonLoginGoogle />
+
+                <p className="text-center text-xs text-gray-600 pb-2">
+                    Already have an account?
+                    <Link
+                        href="/signin"
+                        className="ml-1 text-blue-500 hover:underline"
+                    >
+                        Sign in
+                    </Link>
+                </p>
+            </form>
         </div>
-    );
+    </div>
+);
+
+
 };
 export default SignupContainer;

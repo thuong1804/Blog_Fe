@@ -42,8 +42,7 @@ const SigninContainer = () => {
                 }
             }
         } catch (err) {
-            const error = err as Error;
-            toast.error(error.message);
+            toast.error((err as Error).message);
         }
     };
 
@@ -55,12 +54,15 @@ const SigninContainer = () => {
     };
 
     return (
-        <div className="w-full h-full flex justify-center items-center">
-            <div className=" bg-white rounded-box shadow-2xs p-14 flex flex-col items-center gap-2">
-                <h1>Login</h1>
+        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
+            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+                <h1 className="text-center text-2xl sm:text-3xl font-semibold">
+                    Login
+                </h1>
+
                 <form
                     onSubmit={handleSubmit}
-                    className=" opacity-90 max-w-[400px] w-[400px] mt-10"
+                    className="mt-8 sm:mt-10 w-full opacity-90"
                 >
                     <div className="flex flex-col gap-3">
                         <InputField.Email
@@ -84,27 +86,32 @@ const SigninContainer = () => {
                             }
                         />
                     </div>
-                    <div className="w-full flex justify-end mt-5">
+
+                    <div className="w-full flex justify-end mt-4 sm:mt-5">
                         <Link
                             href={path.sendOtp}
-                            className="text-sm font-normal  hover:text-blue-400 hover:underline"
+                            className="text-sm hover:text-blue-400 hover:underline"
                         >
                             Forgot password?
                         </Link>
                     </div>
-                    <div className="flex flex-col items-center justify-center w-full mt-8">
+
+                    <div className="flex flex-col items-center justify-center w-full mt-6 sm:mt-8">
                         <Button
                             type="submit"
                             classNames="w-full rounded-[30px]"
                             title="LOGIN"
                         />
+
                         <div className="divider before:bg-gray-300 after:bg-gray-300 text-gray-500">
                             OR
                         </div>
+
                         <ButtonLoginGoogle />
                     </div>
-                    <div className="w-full flex justify-center mt-5">
-                        Don&apos;t have an account?{" "}
+
+                    <div className="w-full flex justify-center mt-4 sm:mt-5 text-sm">
+                        Don&apos;t have an account?
                         <Link
                             className="ml-2 text-blue-500 underline"
                             href="/signup"
@@ -117,4 +124,5 @@ const SigninContainer = () => {
         </div>
     );
 };
+
 export default SigninContainer;

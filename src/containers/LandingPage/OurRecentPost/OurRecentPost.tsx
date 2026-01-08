@@ -39,7 +39,6 @@ const OurRecentPost = () => {
         }
     };
 
-    console.log(posts);
     useEffect(() => {
         if (data?.postsLatest && posts.length === 0) {
             setPosts(data.postsLatest);
