@@ -101,24 +101,27 @@ const FormEditProfile = () => {
                 <div className="avatar">
                     <div className="w-18 rounded-full">{renderImage(file)}</div>
                 </div>
-                <UploadImage
-                    onUploadSuccess={(imageURL) => setFile(imageURL)}
-                    onLoadingUpload={(loading) =>
-                        setDisabledDeleteButton(loading)
-                    }
-                    actionUpload={updateAvatarUser}
-                    params={{
-                        userId: user?.id,
-                    }}
-                />
-                <Button
-                    classNames="rounded-4xl bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-transparent"
-                    title="Delete"
-                    disabled={disabledDeleteButton || isNullAvatar}
-                    onClick={handleDeleteAvatar}
-                />
+                <div className="flex flex-col gap-2 lg:flex-row">
+                    <UploadImage
+                        onUploadSuccess={(imageURL) => setFile(imageURL)}
+                        onLoadingUpload={(loading) =>
+                            setDisabledDeleteButton(loading)
+                        }
+                        actionUpload={updateAvatarUser}
+                        params={{
+                            userId: user?.id,
+                        }}
+                    />
+                    <Button
+                        classNames="rounded-4xl bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-transparent"
+                        title="Delete"
+                        disabled={disabledDeleteButton || isNullAvatar}
+                        onClick={handleDeleteAvatar}
+                    />
+                </div>
+
             </div>
-            <form className="w-[70%] mt-5" onSubmit={handleSubmitForm}>
+            <form className="w-full lg:w-3/4 mt-5" onSubmit={handleSubmitForm}>
                 <InputField.Email
                     title="Email"
                     maxLength={100}

@@ -81,7 +81,7 @@ const FormNewPostContainer = () => {
                         <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-full overflow-hidden border-2 border-white/20">
                             <Image src="/images/blog-icon.png" alt="icon" fill />
                         </div>
-                        <span className="font-bold text-xl md:text-3xl text-white md:text-black">TECHNEWS</span>
+                        <span className="font-bold text-xl md:text-3xl text-white">TECHNEWS</span>
                     </Link>
                     {user && <DropdownInfoProfile user={user} position="left" />}
                 </div>

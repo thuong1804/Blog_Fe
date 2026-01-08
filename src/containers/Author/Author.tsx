@@ -146,7 +146,7 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                 open={openModal}
                 setOpenModal={setOpenModal}
             >
-                <h1>Are you sure you want to delete this post?</h1>
+                <h4>Are you sure you want to delete this post?</h4>
             </Modal>
         </div>
     );
