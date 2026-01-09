@@ -59,7 +59,7 @@
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
-        "@tailwindcss/postcss": "^4.1.13",
+        "@tailwindcss/postcss": "^4.1.18",
         "@tailwindcss/typography": "^0.5.16",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/lodash.throttle": "^4.1.9",
