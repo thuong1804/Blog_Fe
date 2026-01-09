@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @plugin "@tailwindcss/typography" {
-   className: wysiwyg;
-};
+  className: "wysiwyg";
+}
 
 @plugin "daisyui" {
   themes: light --default;
