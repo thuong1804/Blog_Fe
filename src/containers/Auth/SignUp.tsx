@@ -4,6 +4,7 @@ import InputField from "@/components/InputField/InputField";
 import { SIGNUP } from "@/graphql/Mutation/Signup";
 import { useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,147 +16,129 @@ const SignupContainer = () => {
         confirmPassword: "",
     });
 
-    const [signup, { loading, error }] = useMutation(SIGNUP);
+    const router = useRouter()
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [signup, { loading }] = useMutation(SIGNUP);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        signup({ variables: { ...form } });
-
-        if (error) {
-            return toast.error(error.message);
+        if (form.password !== form.confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
         }
 
-        toast.success(
-            "✅ Thanks for subscribing! Check your inbox for our latest stories.",
-        );
+        try {
+            await signup({ variables: { ...form } });
+            toast.success("✅ Thanks for subscribing! Check your inbox for our latest stories.");
+            router.push('/signin')
+        } catch (err) {
+            const error = err as Error
+            toast.error(error.message || "Something went wrong");
+        }
     };
 
-    const onChangeValueInput = (fieldName: string, value: string) => {
+    const onChangeValueInput = (fieldName: keyof typeof form, value: string) => {
         setForm((prev) => ({
             ...prev,
             [fieldName]: value,
         }));
     };
-return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
-        <div
-            className="
-                w-full
-                max-w-sm
-                sm:max-w-md
-                lg:max-w-lg
-                bg-white
-                rounded-2xl
-                shadow-md
-                p-4
-                sm:p-6
-                lg:p-8
-                max-h-[85vh]
-                flex
-                flex-col
-            "
-        >
-            {/* Header cố định */}
-            <h1
-                className="
-                    text-center
-                    text-lg
-                    sm:text-xl
-                    lg:text-2xl
-                    font-semibold
-                    shrink-0
-                "
-            >
-                Sign Up
-            </h1>
 
-            {/* Form scroll */}
-            <form
-                onSubmit={handleSubmit}
+    return (
+        <div className="min-h-screen w-full flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+            <div
                 className="
-                    mt-4
+                    w-full
+                    max-w-md
+                    bg-white
+                    rounded-2xl
+                    shadow-lg
+                    p-6
+                    sm:p-8
+                    lg:p-10
                     flex
                     flex-col
-                    gap-3
-                    overflow-y-auto
-                    pr-1
+                    gap-6
                 "
             >
-                <InputField.Email
-                    title="Email"
-                    placeholder="@email.com"
-                    value={form.email}
-                    required
-                    onChange={(value) =>
-                        onChangeValueInput("email", value)
-                    }
-                />
+                {/* Header */}
+                <h1 className="text-center text-2xl sm:text-3xl font-bold text-gray-900">
+                    Sign Up
+                </h1>
 
-                <InputField.Text
-                    title="Name"
-                    placeholder="Your name"
-                    maxLength={100}
-                    minLength={3}
-                    required
-                    value={form.name}
-                    onChange={(value) =>
-                        onChangeValueInput("name", value)
-                    }
-                />
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                    <InputField.Email
+                        title="Email"
+                        placeholder="you@example.com"
+                        value={form.email}
+                        required
+                        onChange={(value) => onChangeValueInput("email", value)}
+                    />
 
-                <InputField.Password
-                    title="Password"
-                    required
-                    value={form.password}
-                    placeholder="Password"
-                    onChange={(value) =>
-                        onChangeValueInput("password", value)
-                    }
-                />
+                    <InputField.Text
+                        title="Name"
+                        placeholder="Your full name"
+                        maxLength={100}
+                        minLength={3}
+                        required
+                        value={form.name}
+                        onChange={(value) => onChangeValueInput("name", value)}
+                    />
 
-                <InputField.Password
-                    title="Confirm password"
-                    placeholder="Confirm password"
-                    value={form.confirmPassword}
-                    onChange={(value) =>
-                        onChangeValueInput("confirmPassword", value)
-                    }
-                    customMsg={
-                        form.confirmPassword &&
-                        form.confirmPassword !== form.password
-                            ? "Passwords do not match"
-                            : undefined
-                    }
-                />
+                    <InputField.Password
+                        title="Password"
+                        placeholder="••••••••"
+                        required
+                        value={form.password}
+                        onChange={(value) => onChangeValueInput("password", value)}
+                    />
 
-                <Button
-                    type="submit"
-                    title="Sign Up"
-                    disabled={loading}
-                    classNames="w-full rounded-full mt-1"
-                />
+                    <InputField.Password
+                        title="Confirm password"
+                        placeholder="••••••••"
+                        value={form.confirmPassword}
+                        onChange={(value) => onChangeValueInput("confirmPassword", value)}
+                        customMsg={
+                            form.confirmPassword && form.confirmPassword !== form.password
+                                ? "Passwords do not match"
+                                : undefined
+                        }
+                    />
 
-                <div className="divider text-gray-400 text-xs">
-                    OR
-                </div>
+                    {/* Submit button */}
+                    <Button
+                        type="submit"
+                        title={loading ? "Creating account..." : "Sign Up"}
+                        disabled={loading}
+                        classNames="w-full rounded-full py-3 text-base font-medium transition-opacity hover:opacity-90"
+                    />
 
-                <ButtonLoginGoogle />
+                    {/* Divider */}
+                    <div className="relative flex items-center py-2">
+                        <div className="flex-grow border-t border-gray-300"></div>
+                        <span className="mx-4 text-sm text-gray-500 bg-white px-2">OR</span>
+                        <div className="flex-grow border-t border-gray-300"></div>
+                    </div>
 
-                <p className="text-center text-xs text-gray-600 pb-2">
-                    Already have an account?
-                    <Link
-                        href="/signin"
-                        className="ml-1 text-blue-500 hover:underline"
-                    >
-                        Sign in
-                    </Link>
-                </p>
-            </form>
+                    {/* Google login */}
+                    <ButtonLoginGoogle />
+
+                    {/* Sign in link */}
+                    <p className="text-center text-sm text-gray-600">
+                        Already have an account?{" "}
+                        <Link
+                            href="/signin"
+                            className="font-medium text-blue-600 hover:text-blue-500 hover:underline transition-colors"
+                        >
+                            Sign in
+                        </Link>
+                    </p>
+                </form>
+            </div>
         </div>
-    </div>
-);
-
-
+    );
 };
+
 export default SignupContainer;

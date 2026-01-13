@@ -20,7 +20,7 @@ export async function getCurrentUserFromToken(token: string | undefined) {
         ) as JwtPayloadCustom;
         const queryString = print(GET_USER_BY_ID);
 
-        const response = await fetch("http://localhost:3005/graphql", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
