@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
                 code,
                 client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
                 client_secret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET!,
-                redirect_uri: `${URL_BLOG}/api/auth/callback/google`,
+                redirect_uri: `${process.env.NEXT_PUBLIC_URL_BLOG}/api/auth/callback/google`,
                 grant_type: "authorization_code",
             }),
         });
@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
         const tokens = await tokenRes.json();
 
         if (tokens.error) {
+            console.log("Google Error Details:", tokens.error);
             return NextResponse.json(tokens, { status: 400 });
         }
 
