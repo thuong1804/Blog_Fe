@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
 import { DATE_TIME_DISPLAY } from "@/constant";
-import { joinSlugCategory } from "@/utils";
+import { joinSlugCategory, renderImage } from "@/utils";
 import React from "react";
 import { IoIosMore } from "react-icons/io";
 
@@ -98,7 +98,8 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
             <div className="flex gap-3 items-center text-black text-xs font-bold mt-10 flex-wrap">
                 <div className="avatar">
                     <div className="w-[30px] object-cover rounded">
-                        <Image
+                        {renderImage(author.avatar)}
+                        {/* <Image
                             alt="avatar"
                             src={
                                 author.avatar
@@ -107,7 +108,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                             }
                             width={30}
                             height={30}
-                        />
+                        /> */}
                     </div>
                 </div>
                 <Link

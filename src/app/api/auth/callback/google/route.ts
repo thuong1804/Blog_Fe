@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(tokens, { status: 400 });
         }
 
-        const response = await fetch("http://localhost:3005/graphql", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -8,6 +8,7 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { DATE_TIME_DISPLAY } from "@/constant";
+import { renderImage } from "@/utils";
 
 const BlogCategory: React.FC<BlogCategoryProps> = ({
     title,
@@ -73,12 +74,13 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                         {/* Author */}
                         <div className="flex items-center gap-2 font-bold text-(--text-color-title)">
                             <div className="w-[30px] h-[30px] rounded overflow-hidden">
-                                <Image
+                                {/* <Image
                                     src={author.avatar}
                                     alt="avatar"
                                     width={30}
                                     height={30}
-                                />
+                                /> */}
+                                {renderImage(author.avatar)}
                             </div>
 
                             <Link

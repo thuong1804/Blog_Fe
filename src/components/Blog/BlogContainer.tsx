@@ -8,7 +8,7 @@ type CustomItemProps = {
     actionDelete?: () => void;
     totalPages?: number,
     currentPage?: number,
-    handleChangePage?: (page: number) => void;
+    handleChangePage?: (page: number) => void
 };
 
 type BlogItemProp = {
@@ -90,11 +90,12 @@ const BlogContainer = ({
                         <NotFoundBlog />
                     </div>
                 )}
-                {(currentPage && totalPages) && totalPages > 1 && (
+                {(totalPages && currentPage) && totalPages > 1 && (
                     <div className="join flex justify-center mt-6">
                         <button
                             className="join-item btn"
                             disabled={currentPage === 1}
+                            onClick={() => handleChangePage?.(currentPage - 1)}
                             onClick={() => handleChangePage?.(currentPage - 1)}
                         >
                             «
@@ -109,6 +110,7 @@ const BlogContainer = ({
                                     className={`join-item btn ${pageNumber === currentPage ? "btn-active" : ""
                                         }`}
                                     onClick={() => handleChangePage?.(pageNumber)}
+                                    onClick={() => handleChangePage?.(pageNumber)}
                                 >
                                     {pageNumber}
                                 </button>
@@ -118,6 +120,7 @@ const BlogContainer = ({
                         <button
                             className="join-item btn"
                             disabled={currentPage === totalPages}
+                            onClick={() => handleChangePage?.(currentPage + 1)}
                             onClick={() => handleChangePage?.(currentPage + 1)}
                         >
                             »
