@@ -1,3 +1,4 @@
+import { URL_BLOG } from "@/app/constanst/constanst";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -15,7 +16,7 @@ export async function GET(req: NextRequest) {
                 code,
                 client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
                 client_secret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET!,
-                redirect_uri: "http://localhost:5000/api/auth/callback/google",
+                redirect_uri: `${URL_BLOG}/api/auth/callback/google`,
                 grant_type: "authorization_code",
             }),
         });
@@ -49,7 +50,7 @@ export async function GET(req: NextRequest) {
 
         const result = await response.json();
         const { token } = result.data.loginWithGoogle;
-        const res = NextResponse.redirect("http://localhost:5000/");
+        const res = NextResponse.redirect(URL_BLOG);
 
         res.cookies.set("accessToken", token, { httpOnly: true, path: "/" });
         return res;
