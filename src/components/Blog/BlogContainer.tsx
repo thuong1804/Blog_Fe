@@ -96,7 +96,6 @@ const BlogContainer = ({
                             className="join-item btn"
                             disabled={currentPage === 1}
                             onClick={() => handleChangePage?.(currentPage - 1)}
-                            onClick={() => handleChangePage?.(currentPage - 1)}
                         >
                             «
                         </button>
@@ -110,7 +109,6 @@ const BlogContainer = ({
                                     className={`join-item btn ${pageNumber === currentPage ? "btn-active" : ""
                                         }`}
                                     onClick={() => handleChangePage?.(pageNumber)}
-                                    onClick={() => handleChangePage?.(pageNumber)}
                                 >
                                     {pageNumber}
                                 </button>
@@ -120,7 +118,6 @@ const BlogContainer = ({
                         <button
                             className="join-item btn"
                             disabled={currentPage === totalPages}
-                            onClick={() => handleChangePage?.(currentPage + 1)}
                             onClick={() => handleChangePage?.(currentPage + 1)}
                         >
                             »
