@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
 
         const result = await response.json();
         const { token } = result.data.loginWithGoogle;
-        const res = NextResponse.redirect(URL_BLOG || 'http://localhost:5000');
+        const res = NextResponse.redirect(process.env.NEXT_PUBLIC_URL_BLOG || 'http://localhost:5000');
 
         res.cookies.set("accessToken", token, { httpOnly: true, path: "/" });
         return res;
