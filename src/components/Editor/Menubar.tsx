@@ -61,7 +61,6 @@ const Menubar: React.FC<MenuBarProps> = React.memo(function Menubar({
 
     const setLink = useCallback(() => {
         const previousUrl = editor.getAttributes("link").href;
-        console.log(previousUrl);
         const url = window.prompt("URL", previousUrl);
 
         if (url === null) {
@@ -122,7 +121,6 @@ const Menubar: React.FC<MenuBarProps> = React.memo(function Menubar({
     const handleLanguageSelect = (lang: string) => {
         if (lang === "") {
             const code = editor.getText();
-            console.log(code);
             const result = hljs.highlightAuto(code, [
                 "javascript",
                 "typescript",

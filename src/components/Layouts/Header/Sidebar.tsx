@@ -29,7 +29,6 @@ const SideBar = ({ user, itemMenu }: SideBarProps) => {
     const onHandleClickLink = () => {
         setIsOpen(false)
     }
-    console.log(user)
 
     return (
         <div className="drawer drawer-end">
