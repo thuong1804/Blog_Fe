@@ -39,7 +39,7 @@ export async function middleware(req: NextRequest) {
     if (!isAccessTokenValid && refreshToken) {
         try {
             const queryString = print(REFRESH_TOKEN);
-            const response = await fetch("http://localhost:3005/graphql", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
