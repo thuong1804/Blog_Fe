@@ -1,4 +1,3 @@
-import { URL_BLOG } from "@/app/constanst/constanst";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
