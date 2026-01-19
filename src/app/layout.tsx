@@ -44,7 +44,7 @@ export default function RootLayout({
                 <ApolloWrapper>
                     <GoogleOAuthProvider
                         clientId={
-                            process.env.GOOGLE_CLIENT_ID as string
+                            process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string
                         }
                     >
                         <ToastProvider>

@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 
 export default function ButtonLoginGoogle() {
-    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const redirectUri = `${process.env.NEXT_PUBLIC_URL_BLOG}/api/auth/callback/google`;
     const scope = "openid email profile";
     const responseType = "code";
