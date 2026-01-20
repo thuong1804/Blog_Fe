@@ -52,7 +52,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
             {/* Main Content */}
             <div className="flex flex-col items-center mt-10">
                 {/* Title */}
-                <h1 className="w-full max-w-[1024px]">
+                <h1 className="w-full max-w-[1024px] text-center">
                     {title}
                 </h1>
 
