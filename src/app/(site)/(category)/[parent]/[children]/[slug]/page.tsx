@@ -3,6 +3,7 @@ import { GET_ALL_POST_POPULAR, GET_ALL_POST_SLUGS, GET_POST_BY_SLUG } from "@/gr
 import { createApolloClient } from "@/lib/apolloClient";
 import { GetAllPostSlugsData, PostSlugData } from "@/type/typeProps";
 
+
 export const revalidate = 300;
 
 type tParams = Promise<{ slug: string }>;
