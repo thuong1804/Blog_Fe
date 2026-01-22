@@ -104,7 +104,7 @@ const FormNewPostContainer = () => {
                 <div className="w-full">
                     <div className="flex flex-col lg:flex-row gap-5 lg:h-[78vh]">
 
-                        <div className={`flex flex-col w-full lg:w-[60%] bg-white rounded-2xl shadow-xl overflow-hidden h-full 
+                        <div className={`flex flex-col w-full lg:w-[60%] bg-white rounded-2xl shadow-xl overflow-hidden h-full
                             ${activeTab === "preview" ? "hidden lg:flex" : "flex"}`}>
                             <div className="p-4 flex flex-col h-full">
                                 <h1 className="text-center font-bold text-gray-700 mb-2 hidden lg:block">New post</h1>

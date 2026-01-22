@@ -30,14 +30,24 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                     text-center
                     md:text-left"
                 >
-                    <div className="relative w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] md:w-[274px] md:h-[274px] shrink-0">
-                        <Image
-                            src={user.avatar}
-                            alt="banner-post"
-                            className="object-cover rounded-2xl"
-                            fill
-                            sizes="(max-width: 768px) 160px, 274px"
-                        />
+                    <div className="relative w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] md:w-[274px] md:h-[274px] shrink-0 border rounded-2xl border-gray-200">
+                        {user.avatar ? (
+                            <Image
+                                src={user.avatar}
+                                alt="banner-post"
+                                className="object-cover rounded-2xl"
+                                fill
+                                sizes="(max-width: 768px) 160px, 274px"
+                            />
+                        ) : (
+                             <Image
+                                src={'/avatar-default.svg'}
+                                alt="banner-post"
+                                className="object-cover rounded-2xl"
+                                fill
+                                sizes="(max-width: 768px) 160px, 274px"
+                            />
+                        )}
                     </div>
 
                     {/* User info */}
@@ -61,21 +71,8 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                         {isUserLogin && (
                             <Link
                                 href={path.editUser}
-                                className="
-                                    mt-2
-                                    font-medium
-                                    bg-white
-                                    text-gray-700
-                                    flex
-                                    items-center
-                                    gap-2
-                                    px-4
-                                    py-2
-                                    rounded-xl
-                                    border
-                                    border-gray-400
-                                    w-max
-                                    "
+                                className="mt-2 font-medium bg-white text-gray-700 flex items-center gap-2 px-4 py-2
+                                    rounded-xl border border-gray-400 w-max"
                             >
                                 Edit profile <CiEdit />
                             </Link>

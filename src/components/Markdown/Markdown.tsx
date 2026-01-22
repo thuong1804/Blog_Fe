@@ -13,8 +13,7 @@ export const MarkdownExtra: React.FC<MarkDownProps> = ({ content }) => {
         <div className="wysiwyg wysiwyg-slate :wysiwyg-2xl w-full max-w-none tiptap">
             <ReactMarkdown
                 components={{
-                    code({ node, className, children, ...props }) {
-                        console.log(node, className, children);
+                    code({className, children, ...props }) {
                         const match = /language-(\w+)/.exec(className || "");
 
                         if (match) {

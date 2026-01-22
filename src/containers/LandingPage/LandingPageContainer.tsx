@@ -1,29 +1,38 @@
-"use client";
-
 import Button from "@/components/Button/Button";
 import AnotherPost from "@/containers/LandingPage/AnotherPost/AnotherPost";
 import Image from "next/image";
-import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { joinSlugCategory } from "@/utils";
 import PopularPost from "./PopularPost/PopularPost";
-import { GET_ALL_POST_POPULAR, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
-import LoadingLandingPage from "@/components/Loading/LoadingLandingPage";
+import { GET_ALL_POST_POPULAR, GET_LATEST_POSTS, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
 import OurRecentPost from "./OurRecentPost/OurRecentPost";
+import { createApolloClient } from "@/lib/apolloClient";
 
-const LandingPage = () => {
+export const revalidate = 300;
+
+export default async function LandingPage() {
+    const client = createApolloClient({ isServer: true });
     const FEATURED_POST_SLUG = 'ethical-hacking-techniques'
-    const { data } = useQuery(GET_POST_BY_SLUG, {
-        variables: {
-            slug: FEATURED_POST_SLUG,
-        },
-    });
-    const { data: dataPopular } = useQuery(GET_ALL_POST_POPULAR);
 
-    const blogFeatured = data?.post
+    const [ { data: dataFeatured }, { data: dataPopular }, {data: dataLatest } ] = await Promise.all([
+        client.query({
+            query: GET_POST_BY_SLUG,
+            variables: { slug: FEATURED_POST_SLUG }
+        }),
+        client.query({
+            query: GET_ALL_POST_POPULAR
+        }),
+        client.query({
+            query: GET_LATEST_POSTS,
+            variables: { skip: 0, take: 6 },
+        }),
+    ]);
+
+    const initialPosts = dataLatest?.postsLatest || [];
+
+    const blogFeatured = dataFeatured?.post
 
     const postDataAnother = dataPopular?.popularPosts?.[4];
-    if (!data) return <LoadingLandingPage />;
 
     return (
         <div className="w-full pb-24">
@@ -64,6 +73,7 @@ const LandingPage = () => {
                                     src={blogFeatured.image}
                                     alt="featured-post"
                                     width={608}
+                                    priority
                                     height={576}
                                     className="w-full h-full object-cover rounded-xl"
                                     sizes="(max-width: 1024px) 100vw, 608px"
@@ -78,7 +88,7 @@ const LandingPage = () => {
             </section>
 
             <section className="max-w-desktop mx-auto px-6 pb-20">
-                <OurRecentPost />
+                <OurRecentPost initialPosts={initialPosts} />
             </section>
 
             <section className="max-w-desktop mx-auto px-6">
@@ -87,5 +97,3 @@ const LandingPage = () => {
         </div>
     );
 };
-
-export default LandingPage;

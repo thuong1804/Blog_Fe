@@ -93,7 +93,6 @@ export const GET_ALL_POST_POPULAR = gql`
             id
             title
             slug
-            content
             description
             excerpt
             image
@@ -110,8 +109,6 @@ export const GET_ALL_POST_POPULAR = gql`
                 name
             }
             views
-            readingTime
-            isFeatured
             createdAt
             updatedAt
             author {
@@ -120,12 +117,6 @@ export const GET_ALL_POST_POPULAR = gql`
                 email
                 handle
                 avatar
-            }
-            authorId
-            comments {
-                id
-                content
-                createdAt
             }
         }
     }
@@ -152,8 +143,11 @@ export const GET_ALL_POSTS = gql`
         image
         createdAt
         author {
-          name
-          avatar
+            id
+            name
+            email
+            avatar
+            handle
         }
         category {
           name
@@ -178,7 +172,6 @@ export const GET_LATEST_POSTS = gql`
             id
             title
             slug
-            content
             description
             excerpt
             image
@@ -190,13 +183,8 @@ export const GET_LATEST_POSTS = gql`
                     name
                 }
             }
-            tags {
-                id
-                name
-            }
             views
             readingTime
-            isFeatured
             createdAt
             updatedAt
             author {
@@ -206,7 +194,20 @@ export const GET_LATEST_POSTS = gql`
                 avatar
                 handle
             }
-            authorId
         }
     }
 `;
+
+export const GET_ALL_POST_SLUGS = gql `
+    query PostAllSlugs {
+        postAllSlugs {
+            slug
+            category {
+            slug
+            parent {
+                slug
+            }
+        }
+    }
+}
+`

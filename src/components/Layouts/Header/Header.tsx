@@ -1,13 +1,15 @@
 import { FaBlogger } from "react-icons/fa";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import CategoriesPage from "@/containers/Categories/Categories";
 import Button from "@/components/Button/Button";
 import { cookies } from "next/headers";
 import { getCurrentUserFromToken } from "@/lib/Session";
 import DropdownInfoProfile from "./DropdownInfoProfile";
 import { path } from "@/constant/path";
 import SideBar from "./Sidebar";
+import { createApolloClient } from "@/lib/apolloClient";
+import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
+import Category from "@/components/Categories/Categories";
 
 const itemMenu = [
     { title: "Blog", href: "/blog" },
@@ -18,6 +20,9 @@ const itemMenu = [
 export default async function HeaderLayout() {
     const token = (await cookies()).get("accessToken")?.value;
     const user = await getCurrentUserFromToken(token);
+    const client = createApolloClient({isServer: true});
+    const { data } = await client.query({ query: GET_ALL_CATEGORIES });
+    const categories = data?.categories || [];
 
     return (
         <header className="w-full bg-white text-title">
@@ -51,17 +56,17 @@ export default async function HeaderLayout() {
                             )
                         )}
 
-                        <DropdownInfoProfile user={user?.data} position="left" />
+                        <DropdownInfoProfile user={user?.data} position="end" />
                     </div>
                     <div className="lg:hidden">
-                        <SideBar itemMenu={itemMenu} user={user?.data}/>
+                        <SideBar itemMenu={itemMenu} user={user?.data} categories={categories}/>
                     </div>
                 </div>
             </div>
 
             <div className="hidden lg:flex justify-center">
                 <div className="max-w-desktop w-full px-6 py-2">
-                    <CategoriesPage />
+                    <Category items={categories} />
                 </div>
             </div>
         </header>

@@ -29,7 +29,6 @@ const AboutPage = () => {
                         workplace diversity and empowerment.
                     </p>
 
-                    {/* IMAGE */}
                     <div className="relative w-full mt-12
                                     h-[220px]
                                     md:h-[320px]
@@ -38,6 +37,7 @@ const AboutPage = () => {
                             src="/images/image-about.jpg"
                             alt="about"
                             fill
+                            priority
                             className="object-cover rounded-xl"
                         />
                     </div>

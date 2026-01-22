@@ -129,16 +129,13 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                     </div>
                 </div>
 
-                {/* Divider */}
                 <div className="w-full max-w-(--max-width-desktop) h-px border border-[#7c4ee4] mt-5"></div>
 
-                {/* Content */}
                 <div className="w-full max-w-[1024px] mt-10 text-(--text-color-body)">
                     <MarkdownExtra content={content} />
                 </div>
             </div>
 
-            {/* Popular Post */}
             <div className="max-w-(--max-width-desktop) mx-auto mt-10">
                 <PostCard title="Popular Post" itemCards={data} />
             </div>
