@@ -15,6 +15,8 @@ export async function generateStaticParams() {
 
     if (!data || !data.postAllSlugs) return [];
 
+return [{ parent: 'web-development', children: 'fullstack', slug: 'fullstack-development' }];
+
     return data.postAllSlugs.map((post: PostSlugData) => {
         const parentSlug = post.category?.parent?.slug || "general";
         const childrenSlug = post.category?.slug || "post";
