@@ -83,7 +83,7 @@ const FormNewPostContainer = () => {
                         </div>
                         <span className="font-bold text-xl md:text-3xl text-white">TECHNEWS</span>
                     </Link>
-                    {user && <DropdownInfoProfile user={user} position="left" />}
+                    {user && <DropdownInfoProfile user={user} position="end" />}
                 </div>
 
                 <div className="flex lg:hidden mb-4 bg-black/10 p-1 rounded-xl backdrop-blur-sm">
