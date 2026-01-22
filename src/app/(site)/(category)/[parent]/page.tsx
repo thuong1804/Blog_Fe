@@ -1,11 +1,10 @@
 import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_ALL_POSTS_BY_CATEGORY } from "@/graphql/Query/CategoryQuery";
-// import { GET_ALL_POST_SLUGS } from "@/graphql/Query/PostQuery";
+import { GET_ALL_POST_SLUGS } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
-import { ItemCardBlogProps } from "@/type/typeProps";
+import { ItemCardBlogProps, PostSlugData } from "@/type/typeProps";
 
 export const revalidate = 300;
-export const dynamicParams = true;
 
 export type ChildrenPost = {
     posts: ItemCardBlogProps[];
@@ -13,21 +12,21 @@ export type ChildrenPost = {
 
 type tParams = Promise<{ parent: string }>;
 
-// export async function generateStaticParams() {
-//     const client = createApolloClient({isServer: true});
-//     const { data } = await client.query({
-//         query: GET_ALL_POST_SLUGS,
-//     });
+export async function generateStaticParams() {
+    const client = createApolloClient({isServer: true});
+    const { data } = await client.query({
+        query: GET_ALL_POST_SLUGS,
+    });
 
-//     const paths = data.postAllSlugs
-//         .map((cat: PostSlugData) => {
-//             const slug = cat.category?.parent?.slug;
-//             return slug ? { parent: slug } : null;
-//         })
-//         .filter(Boolean);
+    const paths = data.postAllSlugs
+        .map((cat: PostSlugData) => {
+            const slug = cat.category?.parent?.slug;
+            return slug ? { parent: slug } : null;
+        })
+        .filter(Boolean);
 
-//     return paths;
-// }
+    return paths;
+}
 
 export default async function BlogSlug(props: { params: tParams }) {
     const { parent } = await props.params;
