@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+    staticPageGenerationTimeout: 300,
+    experimental: {
+        workerThreads: false,
+        cpus: 1
+    } ,
     images: {
         remotePatterns: [
             {
