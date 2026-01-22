@@ -38,7 +38,6 @@ export default async function BlogDetail(props: { params: tParams }) {
         query: GET_POST_BY_SLUG,
         variables: { slug: slug },
     });
-    console.log(dataByPost)
 
     const { data: popularPosts } = await client.query({
         query: GET_ALL_POST_POPULAR,
