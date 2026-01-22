@@ -1,16 +1,23 @@
+'use client'
+
 import PostCard from "@/components/Post/PostCard";
 import { GET_LATEST_POSTS } from "@/graphql/Query/PostQuery";
 import { ItemCardBlogProps } from "@/type/typeProps";
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
-const OurRecentPost = () => {
-    const [posts, setPosts] = useState<ItemCardBlogProps[]>([]);
+interface OurRecentPostProps {
+    initialPosts: ItemCardBlogProps[];
+}
+
+const OurRecentPost = ({initialPosts}: OurRecentPostProps) => {
+    const [posts, setPosts] = useState<ItemCardBlogProps[]>(initialPosts);
     const [hasMore, setHasMore] = useState(true);
     const take = 6;
 
     const { data, loading, fetchMore } = useQuery(GET_LATEST_POSTS, {
         variables: { skip: 0, take },
+        skip: true,
     });
 
     const handelLoadMore = async () => {

@@ -8,6 +8,7 @@ import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
 import { GET_TAGS } from "@/graphql/Query/TagQuery";
 import {
     AuthorPageProps,
+    CategoryOptionProps,
     FormValuesPost,
     optionProps,
     OptionType,
@@ -51,10 +52,14 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
     }, [data]);
 
     const optionCategories = useMemo(() => {
-        return dataCategory?.categories?.map((category: optionProps) => ({
-            label: category.name,
-            value: category.id,
-        }));
+        return dataCategory?.categories
+            ?.filter((category: CategoryOptionProps) => category.children?.length)
+            .flatMap((category: CategoryOptionProps) =>
+                category.children!.map((child: optionProps) => ({
+                    label: child.name,
+                    value: child.id,
+                }))
+            );
     }, [dataCategory]);
 
     const onChangeValueInput = (fieldName: string, value: string) => {
@@ -122,7 +127,7 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
                 Information post
             </Button>
 
-            <dialog id="my_modal_1" className="modal lg:modal-middle">
+            <dialog id="my_modal_1" className="modal md:modal-middle ">
                 <div className="modal-box bg-white w-11/12 max-w-4xl h-[90vh] md:h-auto overflow-y-auto mx-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="font-bold text-xl md:text-2xl text-black">
@@ -133,7 +138,7 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
                         </form>
                     </div>
                     <div className="mt-4">
-                        <div className="w-full md:w-1/2 lg:w-1/3 h-[200px] rounded-2xl bg-gray-600 flex items-center justify-center gap-2 relative overflow-hidden mx-auto md:mx-0">
+                        <div className="w-full md:w-1/2 lg:w-1/3 h-50 rounded-2xl bg-gray-600 flex items-center justify-center gap-2 relative overflow-hidden mx-auto md:mx-0">
                             {file ? (
                                 <Image
                                     src={file}
@@ -154,11 +159,13 @@ const FormPostField = ({ user, onSubmit }: FormProps) => {
                                 title="Upload thumbnail"
                                 params={{ userId: user?.user?.id }}
                             />
-                            <Button
-                                classNames="rounded-full bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-gray-300"
-                                title="Delete"
-                                onClick={() => setFile("")}
-                            />
+                            {file && (
+                                <Button
+                                    classNames="rounded-full bg-gray-200 py-[10px] px-[25px] text-sm text-black hover:bg-gray-300"
+                                    title="Delete"
+                                    onClick={() => setFile("")}
+                                />
+                            )}
                         </div>
                         <form
                             className="w-full mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"

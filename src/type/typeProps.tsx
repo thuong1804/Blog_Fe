@@ -104,6 +104,25 @@ export type optionProps = {
     id: number | string;
 };
 
+export type CategoryOptionProps = {
+    id: number | string;
+    name: string;
+    children: optionProps[];
+};
+
+export interface CategoryItem {
+    id?: number;
+    name: string;
+    description: string;
+    slug: string;
+    posts: ItemCardBlogProps[];
+    children: {
+        name: string;
+        description: string;
+        slug: string;
+        posts: ItemCardBlogProps[];
+    }[];
+}
 export interface OptionType {
     readonly value: string;
     readonly label: string;
@@ -131,6 +150,21 @@ export type UploadSignatureResponse = {
         folder?: string;
     };
 };
+
+export interface CategoryRelation {
+  slug: string;
+  parent: {
+    slug: string;
+  } | null;
+}
+
+export interface PostSlugData {
+  slug: string;
+  category: CategoryRelation | null;
+}
+export interface GetAllPostSlugsData {
+  postAllSlugs: PostSlugData[];
+}
 
 export type GetUploadSignatureFn = (params: {
     variables: { folder: string };

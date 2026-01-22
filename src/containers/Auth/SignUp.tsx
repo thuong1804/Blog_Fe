@@ -107,12 +107,11 @@ const SignupContainer = () => {
                         }
                     />
 
-                    {/* Submit button */}
                     <Button
                         type="submit"
                         title={loading ? "Creating account..." : "Sign Up"}
                         disabled={loading}
-                        classNames="w-full rounded-full py-3 text-base font-medium transition-opacity hover:opacity-90"
+                        classNames="w-full rounded-full py-3 text-base font-medium hover:opacity-90"
                     />
 
                     {/* Divider */}
@@ -122,7 +121,6 @@ const SignupContainer = () => {
                         <div className="flex-grow border-t border-gray-300"></div>
                     </div>
 
-                    {/* Google login */}
                     <ButtonLoginGoogle />
 
                     {/* Sign in link */}

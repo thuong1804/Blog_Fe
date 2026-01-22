@@ -31,8 +31,15 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(() => {
+        if (typeof window !== "undefined") {
+            const savedUser = localStorage.getItem("auth_user");
+            return savedUser ? JSON.parse(savedUser) : null;
+        }
+        return null;
+    });
+
+    const [loading, setLoading] = useState(!user);
 
     useEffect(() => {
         async function fetchUser() {
@@ -44,13 +51,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 });
                 if (!res.ok) {
                     setUser(null);
+                    localStorage.removeItem("auth_user");
                     return;
                 }
                 const data = await res.json();
-                setUser(data.userDetail.data);
+                const userData = data.userDetail.data;
+                setUser(userData);
+                localStorage.setItem("auth_user", JSON.stringify(userData));
             } catch (err) {
                 console.log(err);
                 setUser(null);
+                localStorage.removeItem("auth_user");
             } finally {
                 setLoading(false);
             }

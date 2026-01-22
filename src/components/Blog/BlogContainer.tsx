@@ -1,3 +1,6 @@
+'use client'
+
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcumbs/Breadcumbs";
 import ItemCardPost from "@/components/Post/ItemCardPost";
 import { ItemCardBlogProps } from "@/type/typeProps";
@@ -34,8 +37,20 @@ const BlogContainer = ({
     actionDelete,
     currentPage,
     totalPages,
-    handleChangePage,
 }: BlogItemProp & CustomItemProps) => {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const handleChangePage = (page: number) => {
+        if (page === currentPage) return;
+        const params = new URLSearchParams(searchParams.toString());
+
+        params.set("page", String(page));
+
+        router.push(`${pathname}?${params.toString()}`);
+    };
+
     return (
         <div className="w-full lg:pt-14 py-6 px-6 lg:px-0">
             <div className="max-w-(--max-width-desktop) mx-auto">

@@ -1,20 +1,28 @@
 "use client";
 
-import { path } from "@/constant/path";
-import { AuthorPageProps } from "@/type/typeProps";
-import { renderImage } from "@/utils";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
 import { ImProfile } from "react-icons/im";
 import { MdListAlt } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
 
+import { path } from "@/constant/path";
+import { AuthorPageProps } from "@/type/typeProps";
+import { renderImage } from "@/utils";
+
 type DropdownInfoProfileProps = {
-    user: AuthorPageProps["user"];
-    position?: "left" | "right" | "top" | "bottom";
+    user: AuthorPageProps["user"] | null;
+    position?: "start" | "end"
 };
 
-export default function DropdownInfoProfile({ user, position }: DropdownInfoProfileProps) {
+export default function DropdownInfoProfile({ user, position = "start" }: DropdownInfoProfileProps) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const handleLogout = async () => {
         try {
             const response = await fetch("/api/auth/logout", {
@@ -22,141 +30,82 @@ export default function DropdownInfoProfile({ user, position }: DropdownInfoProf
                 credentials: "include",
             });
             if (response.ok) {
-                console.log("Logout successful");
                 window.location.href = "/";
-            } else {
-                console.error("Logout failed:", await response.text());
             }
         } catch (error) {
             console.error("Error during logout:", error);
         }
     };
 
+    if (!mounted) {
+        return (
+            <div className="w-10 h-10 rounded-full bg-base-300 animate-pulse opacity-50" />
+        );
+    }
+
+    if (!user) {
+        return (
+            <Link
+                href={path.signin}
+                className="flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-base-200"
+            >
+                <FaUser className="text-xl" />
+            </Link>
+        );
+    }
+
+    // 3. Render Dropdown Profile chính
     return (
-        <>
-            {user ? (
-                <div className={`dropdown ${position ? `dropdown-${position}` : ''}  `}>
-                    <div
-                        tabIndex={0}
-                        role="button"
-                        className="
-                btn
-                btn-ghost
-                btn-circle
-                avatar
-                hover:bg-transparent
-                focus:bg-transparent
-                active:bg-transparent
-            "
-                    >
-                        <div className="
-                w-10
-                h-10
-                rounded-full
-                ring-2
-                ring-primary
-                ring-offset-2
-                ring-offset-base-100
-                overflow-hidden
-            ">
-                            {renderImage(user.avatar)}
-                        </div>
-                    </div>
-
-                    <ul
-                        tabIndex={0}
-                        className="
-                dropdown-content
-                z-50
-                mt-3
-                w-52
-                rounded-xl
-                bg-base-100
-                p-2
-                shadow-lg
-                border
-                border-base-200
-                text-base-content
-            "
-                    >
-                        <li>
-                            <Link
-                                href={path.editUser}
-                                className="
-                        flex
-                        items-center
-                        gap-3
-                        rounded-lg
-                        px-3
-                        py-2
-                        hover:bg-base-200
-                        transition
-                    "
-                            >
-                                <ImProfile className="text-lg opacity-80" />
-                                <span>Profile</span>
-                            </Link>
-                        </li>
-
-                        <li>
-                            <Link
-                                href={`${path.author}/${user.handle}`}
-                                className="
-                        flex
-                        items-center
-                        gap-3
-                        rounded-lg
-                        px-3
-                        py-2
-                        hover:bg-base-200
-                        transition
-                    "
-                            >
-                                <MdListAlt className="text-lg opacity-80" />
-                                <span>Posts</span>
-                            </Link>
-                        </li>
-
-                        <li className="mt-1 border-t border-base-200 pt-1">
-                            <button
-                                onClick={handleLogout}
-                                className="
-                        flex
-                        w-full
-                        items-center
-                        gap-3
-                        rounded-lg
-                        px-3
-                        py-2
-                        text-error
-                        hover:bg-error/10
-                        transition
-                    "
-                            >
-                                <IoLogOutOutline className="text-lg" />
-                                <span>Logout</span>
-                            </button>
-                        </li>
-                    </ul>
+        <div className={`dropdown dropdown-${position}`}>
+            <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-circle btn-ghost avatar ring-primary ring-offset-base-100 hover:bg-transparent focus:bg-transparent ring-2 ring-offset-2"
+            >
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                    {renderImage(user.avatar)}
                 </div>
-            ) : (
-                <Link
-                    href={path.signin}
-                    className="
-            flex
-            items-center
-            justify-center
-            w-10
-            h-10
-            rounded-full
-            hover:bg-base-200
-            transition
-        "
-                >
-                    <FaUser className="text-xl" />
-                </Link>
-            )}
+            </div>
 
-        </>
+            <ul
+                tabIndex={0}
+                className="dropdown-content z-[50] mt-3 w-52 rounded-xl border border-base-200 bg-base-100 p-2 shadow-lg"
+            >
+                <DropdownItem
+                    href={path.editUser}
+                    icon={<ImProfile />}
+                    label="Profile"
+                />
+                <DropdownItem
+                    href={`${path.author}/${user.handle}`}
+                    icon={<MdListAlt />}
+                    label="Posts"
+                />
+
+                <li className="mt-1 border-t border-base-200 pt-1">
+                    <button
+                        onClick={handleLogout}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-error transition hover:bg-error/10"
+                    >
+                        <IoLogOutOutline className="text-lg" />
+                        <span className="font-medium">Logout</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    );
+}
+
+function DropdownItem({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+    return (
+        <li>
+            <Link
+                href={href}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-base-200"
+            >
+                <span className="text-lg opacity-80">{icon}</span>
+                <span className="font-medium">{label}</span>
+            </Link>
+        </li>
     );
 }

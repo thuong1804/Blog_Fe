@@ -13,13 +13,11 @@ export const GET_POST_BY_AUTHOR = gql`
                 id
                 title
                 slug
-                content
                 description
                 excerpt
                 image
                 views
                 readingTime
-                isFeatured
                 createdAt
                 updatedAt
                 author {
@@ -29,24 +27,16 @@ export const GET_POST_BY_AUTHOR = gql`
                     avatar
                     handle
                 }
-                authorId
                 tags {
                     id
                     name
                 }
-                comments {
-                    id
-                    content
-                    createdAt
-                }
                 category {
                     id
-                    slug
                     name
                     parent {
                         id
                         name
-                        slug
                     }
                 }
             }

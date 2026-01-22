@@ -2,6 +2,8 @@ import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_ALL_POSTS_BY_CATEGORY } from "@/graphql/Query/CategoryQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 
+export const revalidate = 300;
+
 type tParams = Promise<{ children: string }>;
 
 export default async function BlogSlug(props: { params: tParams }) {

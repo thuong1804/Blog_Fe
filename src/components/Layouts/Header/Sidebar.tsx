@@ -4,13 +4,14 @@ import SearchBar from "@/components/SearchBar/SearchBar";
 import { IoIosMenu } from "react-icons/io";
 import DropdownInfoProfile from "./DropdownInfoProfile";
 import Link from "next/link";
-import { AuthorPageProps } from "@/type/typeProps";
-import CategoriesPage from "@/containers/Categories/Categories";
+import { AuthorPageProps, CategoryItem } from "@/type/typeProps";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { path } from "@/constant/path";
+import Category from "@/components/Categories/Categories";
 
 type SidebarUser = AuthorPageProps["user"];
+
 
 type SideBarProps = {
     user:SidebarUser;
@@ -18,9 +19,10 @@ type SideBarProps = {
         href: string;
         title: string;
     }[];
+    categories: CategoryItem[]
 };
 
-const SideBar = ({ user, itemMenu }: SideBarProps) => {
+const SideBar = ({ user, itemMenu, categories}: SideBarProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const pathName = usePathname();
     const itemPath = [path.contact, path.createPost];
@@ -60,7 +62,7 @@ const SideBar = ({ user, itemMenu }: SideBarProps) => {
                     {!isHideCategories && (
                         <React.Fragment>
                             <div className="mt-2">Categories</div>
-                            <CategoriesPage onClickLink={onHandleClickLink} />
+                            <Category items={categories} onClickLink={onHandleClickLink}/>
                         </React.Fragment>
                     )}
 
