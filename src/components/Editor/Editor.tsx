@@ -172,11 +172,11 @@ const TiptapEditor = ({
     });
 
     return (
-        <div className="w-full p-3 ">
+        <div className="w-full p-3 flex flex-col h-full">
             {renderMenuBar()}
             <EditorContent
                 editor={editor}
-                className="wysiwyg wysiwyg-slate :wysiwyg-2xl w-full max-w-none mt-3"
+                className="wysiwyg wysiwyg-slate :wysiwyg-2xl w-full max-w-none mt-3 flex-1 overflow-auto"
             />
         </div>
     );

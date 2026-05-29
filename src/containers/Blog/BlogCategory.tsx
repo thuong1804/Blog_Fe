@@ -43,7 +43,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
     ];
 
     return (
-        <div className="w-full lg:pt-14 py-6 px-6 lg:px-0">
+        <div className="w-full lg:pt-14 py-6 px-6 lg:px-6">
             {/* Breadcrumbs */}
             <div className="max-w-(--max-width-desktop) mx-auto">
                 <Breadcrumbs items={breadcrumbsCategories} />

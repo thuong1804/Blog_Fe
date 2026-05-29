@@ -4,7 +4,8 @@ import { createApolloClient } from "@/lib/apolloClient";
 import { GetAllPostSlugsData, PostSlugData } from "@/type/typeProps";
 
 
-export const revalidate = 300;
+export const revalidate = 60;
+export const dynamicParams = true
 
 type tParams = Promise<{ slug: string }>;
 

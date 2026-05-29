@@ -8,6 +8,9 @@ type ModalProps = {
     modal_id: string;
     open: boolean;
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    onSubmit: () => void,
+    objectName?: string,
+    loading?: boolean,
 };
 
 const Modal = ({
@@ -18,7 +21,15 @@ const Modal = ({
     modal_id,
     setOpenModal,
     open = false,
+    onSubmit,
+    objectName,
+    loading,
 }: ModalProps) => {
+
+    const handleSubmit = () => {
+        onSubmit?.()
+    }
+
     useEffect(() => {
         if (open) {
             (
@@ -38,12 +49,20 @@ const Modal = ({
                     <h3 className="font-bold text-lg">{title}</h3>
                     {children}
                     <div className="modal-action">
-                        <form method="dialog">
+                        <form method="dialog" onSubmit={handleSubmit} className="flex gap-2.5">
                             <button
                                 className="btn"
+                                type="button"
                                 onClick={() => setOpenModal(false)}
                             >
                                 Close
+                            </button>
+                            <button
+                                className="btn bg-red-500 text-white"
+                                type="submit"
+                                disabled={loading}
+                            >
+                                {objectName || 'Confirm'}
                             </button>
                         </form>
                     </div>

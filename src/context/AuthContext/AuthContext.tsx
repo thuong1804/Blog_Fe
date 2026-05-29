@@ -31,17 +31,15 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(() => {
-        if (typeof window !== "undefined") {
-            const savedUser = localStorage.getItem("auth_user");
-            return savedUser ? JSON.parse(savedUser) : null;
-        }
-        return null;
-    });
-
+   const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(!user);
 
     useEffect(() => {
+        const savedUser = localStorage.getItem("auth_user");
+        if (savedUser) {
+            setUser(JSON.parse(savedUser));
+        }
+
         async function fetchUser() {
             try {
                 const res = await fetch("/api/me", {

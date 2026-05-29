@@ -3,24 +3,35 @@
 import PostCard from "@/components/Post/PostCard";
 import { path } from "@/constant/path";
 import { useAuth } from "@/context/AuthContext/AuthContext";
-import { AuthorPageProps } from "@/type/typeProps";
 import { CiEdit } from "react-icons/ci";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
 import { IoMdCreate } from "react-icons/io";
-import Modal from "@/components/Modal/Modal";
-import { useState } from "react";
+import { useSuspenseQuery } from "@apollo/client";
+import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
+import { AuthorPageProps } from "@/type/typeProps";
 
-const AuthorPage = ({ user }: AuthorPageProps) => {
+type GetPostByAuthorData = {
+  userByPosts: AuthorPageProps["user"];
+};
+
+const AuthorPage = ({ handle }: { handle: string }) => {
     const { user: userLogin } = useAuth();
-    const posts = user.posts ?? [];
-    const isUserLogin = user.email === userLogin?.email;
-    const [openModal, setOpenModal] = useState(false);
 
-    const handleDeletePost = () => {
-        setOpenModal((prev) => !prev);
-    };
+    const { data } = useSuspenseQuery<GetPostByAuthorData>(
+        GET_POST_BY_AUTHOR,
+        {
+            variables: { handle },
+        }
+    );
+    console.log(data)
+
+    const user = data?.userByPosts;
+    if (!user) return null;
+
+    const posts = user.posts ?? [];
+    const isUserLogin = userLogin?.email === user.email;
 
     return (
         <div className="w-full pb-20 pt-14 px-5">
@@ -40,7 +51,7 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                                 sizes="(max-width: 768px) 160px, 274px"
                             />
                         ) : (
-                             <Image
+                            <Image
                                 src={'/avatar-default.svg'}
                                 alt="banner-post"
                                 className="object-cover rounded-2xl"
@@ -93,7 +104,6 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                                     itemCards={posts}
                                     isOutstanding={true}
                                     isViewAll={false}
-                                    actionDelete={handleDeletePost}
                                 />
                                 <Link href={"/post/new"}>
                                     <div className="absolute top-0 right-0">
@@ -137,14 +147,6 @@ const AuthorPage = ({ user }: AuthorPageProps) => {
                     )}
                 </div>
             </div>
-            <Modal
-                modal_id="delete_modal"
-                title="Delete post"
-                open={openModal}
-                setOpenModal={setOpenModal}
-            >
-                <h4>Are you sure you want to delete this post?</h4>
-            </Modal>
         </div>
     );
 };

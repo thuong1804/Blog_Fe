@@ -34,7 +34,6 @@ const BlogContainer = ({
     title,
     description,
     dataCustom,
-    actionDelete,
     currentPage,
     totalPages,
 }: BlogItemProp & CustomItemProps) => {
@@ -52,7 +51,7 @@ const BlogContainer = ({
     };
 
     return (
-        <div className="w-full lg:pt-14 py-6 px-6 lg:px-0">
+        <div className="w-full lg:pt-14 py-6 px-6 lg:px-6">
             <div className="max-w-(--max-width-desktop) mx-auto">
                 {/* Breadcrumbs */}
                 <div className="text-(--text-color-title)">
@@ -95,7 +94,6 @@ const BlogContainer = ({
                                     createdAt={post.createdAt}
                                     author={post.author}
                                     category={post.category}
-                                    actionDelete={actionDelete}
                                 />
                             )
                         )}

@@ -14,7 +14,6 @@ type PostCardProps = {
     itemCards: ItemCardBlogProps[];
     isViewAll?: boolean;
     isLogin?: boolean;
-    actionDelete?: () => void;
     actionLoadMore?: () => void;
     totalItem?: number;
 };
@@ -25,12 +24,10 @@ const PostCard: React.FC<PostCardProps> = ({
     isOutstanding = false,
     isViewAll = true,
     isLogin = false,
-    actionDelete,
     actionLoadMore,
     totalItem,
 }) => {
     const cardAnother = itemCards?.[0];
-
     const handleLoadMore = () => {
         actionLoadMore?.();
     };
@@ -154,6 +151,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 {itemCards?.map((item, key) => (
                     <ItemCardPost
                         key={key}
+                        id={item.id}
                         title={item.title}
                         slug={item.slug}
                         description={item.description}
@@ -164,7 +162,6 @@ const PostCard: React.FC<PostCardProps> = ({
                         author={item.author}
                         excerpt={item.excerpt}
                         isLogin={isLogin}
-                        actionDelete={actionDelete}
                     />
                 ))}
             </div>

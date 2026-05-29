@@ -5,6 +5,7 @@ import ApolloWrapper from "@/lib/ApolloWrapper";
 import ToastProvider from "@/context/ToastProvider/ToastProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "@/context/AuthContext/AuthContext";
+import ProgressProviders from "@/context/ProgressProvider/ProgressProvider";
 
 const raleway = Raleway({
     subsets: ["latin"],
@@ -48,7 +49,11 @@ export default function RootLayout({
                         }
                     >
                         <ToastProvider>
-                            <AuthProvider>{children}</AuthProvider>
+                            <AuthProvider>
+                                <ProgressProviders>
+                                    {children}
+                                </ProgressProviders>
+                            </AuthProvider>
                         </ToastProvider>
                     </GoogleOAuthProvider>
                 </ApolloWrapper>
