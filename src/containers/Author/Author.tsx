@@ -25,13 +25,12 @@ const AuthorPage = ({ handle }: { handle: string }) => {
             variables: { handle },
         }
     );
-    console.log(data)
 
     const user = data?.userByPosts;
     if (!user) return null;
 
-    const posts = user.posts ?? [];
-    const isUserLogin = userLogin?.email === user.email;
+    const posts = user?.posts ?? [];
+    const isUserLogin = userLogin?.email === user?.email;
 
     return (
         <div className="w-full pb-20 pt-14 px-5">

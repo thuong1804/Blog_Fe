@@ -142,6 +142,7 @@ export const GET_ALL_POSTS = gql`
         excerpt
         image
         createdAt
+        description
         author {
             id
             name

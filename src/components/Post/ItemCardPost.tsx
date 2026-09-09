@@ -9,6 +9,7 @@ import { joinSlugCategory, renderImage } from "@/utils";
 import React, { useState, useCallback, useMemo } from "react";
 import { IoIosMore } from "react-icons/io";
 import Modal from "../Modal/Modal";
+import TextClamp from "../TextClamp/TextClamp";
 import { DELETE_POST } from "@/graphql/Mutation/Post";
 import { useMutation } from "@apollo/client";
 import { useAuth } from "@/context/AuthContext/AuthContext";
@@ -120,18 +121,26 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                         sizes="(max-width: 768px) 100vw, 400px"
                     />
                 </div>
-                <h4 className="group-hover:underline group-hover:text-[--text-color-primary] text-2xl font-bold text-black mt-4 line-clamp-2">
-                    {title}
-                </h4>
-                <p className="text-[#999999] text-base font-normal mt-2 truncate w-full">
-                    {description}
-                </p>
-                <p className="text-[#999999] text-base font-normal mt-2 line-clamp-3">
-                    {excerpt}
-                </p>
+                <TextClamp
+                    text={title}
+                    maxLines={2}
+                    as="h4"
+                    tooltip
+                    className="group-hover:underline group-hover:text-[--text-color-primary] text-2xl font-bold text-black mt-4"
+                />
+                <TextClamp
+                    text={description || ''}
+                    maxLines={2}
+                    className="text-body text-base font-normal"
+                />
+                <TextClamp
+                    text={excerpt || ''}
+                    maxLines={2}
+                    className="text-body text-base font-normal"
+                />
             </Link>
 
-            <div className="flex gap-3 items-center text-black text-xs font-bold mt-10 flex-wrap">
+            <div className="flex gap-3 items-center text-black text-xs font-bold mt-2 flex-wrap">
                 <div className="avatar">
                     <div className="w-[30px] h-[30px] relative rounded overflow-hidden">
                         {renderImage(author.avatar)}

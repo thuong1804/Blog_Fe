@@ -6,6 +6,7 @@ import ToastProvider from "@/context/ToastProvider/ToastProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "@/context/AuthContext/AuthContext";
 import ProgressProviders from "@/context/ProgressProvider/ProgressProvider";
+import Script from "next/script";
 
 const raleway = Raleway({
     subsets: ["latin"],
@@ -33,15 +34,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <script
-                src="https://accounts.google.com/gsi/client"
-                async
-                defer
-            ></script>
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={`${raleway.variable} ${roboto.variable} antialiased`}
+                suppressHydrationWarning={true}
             >
+                <Script
+                    src="https://accounts.google.com/gsi/client"
+                    strategy="afterInteractive"
+                />
                 <ApolloWrapper>
                     <GoogleOAuthProvider
                         clientId={
