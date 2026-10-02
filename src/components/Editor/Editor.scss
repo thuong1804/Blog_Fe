@@ -1,49 +1,63 @@
-// .tiptap {
-//   :first-child {
-//     margin-top: 0;
-//   }
+/* ===== Code block overflow fix ===== */
+.tiptap pre,
+.wysiwyg pre {
+    overflow-x: auto;
+    max-width: 100%;
+    white-space: pre;
+    word-break: normal;
+    word-wrap: normal;
+}
 
-//   ul,
-//   ol {
-//     padding: 0 1rem;
-//     margin: 1.25rem 1rem 1.25rem 0.4rem;
+.tiptap pre code,
+.wysiwyg pre code {
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+}
 
-//     li p {
-//       margin-top: 0.25em;
-//       margin-bottom: 0.25em;
-//     }
-//   }
+/* ===== Image max width ===== */
+.tiptap img,
+.wysiwyg img {
+    max-width: 100%;
+    height: auto;
+}
 
-//   blockquote {
-//     border-left: 3px solid var(--gray-3);
-//     margin: 1.5rem 0;
-//     padding-left: 1rem;
-//   }
+/* ===== YouTube embed responsive ===== */
+.tiptap div[data-youtube-video],
+.wysiwyg div[data-youtube-video] {
+    max-width: 100%;
+    overflow: hidden;
+}
 
-//   div[data-youtube-video] {
-//     cursor: move;
-//     padding-right: 1.5rem;
+.tiptap div[data-youtube-video] iframe,
+.wysiwyg div[data-youtube-video] iframe {
+    max-width: 100%;
+}
 
-//     iframe {
-//       border: 0.5rem solid var(--black-contrast);
-//       display: block;
-//       min-height: 200px;
-//       min-width: 200px;
-//       outline: 0px solid transparent;
-//     }
+/* ===== Menubar button active state ===== */
+.is-active {
+    background-color: #6d28d9 !important;
+    color: white !important;
+}
 
-//     &.ProseMirror-selectednode iframe {
-//       outline: 3px solid var(--purple);
-//       transition: outline 0.15s;
-//     }
-//   }
+/* ===== Paragraph line breaks & multiline formatting ===== */
+.tiptap p,
+.wysiwyg p,
+.preview-content p {
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 1.5rem;
+    margin: 0.75rem 0;
+}
 
-//   a {
-//     color: var(--purple);
-//     cursor: pointer;
+.tiptap p:empty::before,
+.wysiwyg p:empty::before,
+.preview-content p:empty::before {
+    content: "\00a0";
+}
 
-//     &:hover {
-//       color: var(--purple-contrast);
-//     }
-//   }
-// }
+.preview-content {
+    line-height: 1.75;
+    color: #374151;
+}
+

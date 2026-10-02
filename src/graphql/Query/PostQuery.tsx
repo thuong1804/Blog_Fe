@@ -199,16 +199,57 @@ export const GET_LATEST_POSTS = gql`
     }
 `;
 
-export const GET_ALL_POST_SLUGS = gql `
+export const GET_ALL_POST_SLUGS = gql`
     query PostAllSlugs {
         postAllSlugs {
             slug
             category {
-            slug
-            parent {
                 slug
+                parent {
+                    slug
+                }
             }
         }
     }
-}
-`
+`;
+
+export const GET_POST_BY_ID = gql`
+    query GetPostById($id: Int!) {
+        post(id: $id) {
+            id
+            title
+            slug
+            content
+            description
+            excerpt
+            image
+            imagePublicId
+            views
+            readingTime
+            isFeatured
+            isPopular
+            createdAt
+            updatedAt
+            author {
+                id
+                name
+                email
+                avatar
+                handle
+            }
+            authorId
+            tags {
+                id
+                name
+            }
+            category {
+                id
+                name
+                parent {
+                    id
+                    name
+                }
+            }
+        }
+    }
+`;

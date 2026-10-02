@@ -222,8 +222,90 @@ const BaseInput: React.FC<BaseInputProps> = ({
     );
 };
 
+export interface BaseTextareaProps
+    extends Omit<
+        React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+        "onChange"
+    > {
+    title?: string;
+    classNames?: string;
+    disabled?: boolean;
+    required?: boolean;
+    customIcon?: ReactNode;
+    onChange?: (value: string) => void;
+    showCount?: boolean;
+}
+
+const BaseTextarea: React.FC<BaseTextareaProps> = ({
+    value = "",
+    required,
+    placeholder,
+    customIcon,
+    name,
+    onChange,
+    title,
+    maxLength,
+    disabled,
+    rows = 3,
+    classNames,
+    showCount = true,
+    ...rest
+}) => {
+    const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onChange?.(e.target.value);
+    };
+
+    const currentLength = String(value ?? "").length;
+
+    return (
+        <fieldset className="fieldset relative w-full">
+            {title && (
+                <legend className="fieldset-legend text-black text-sm gap-1 font-medium">
+                    {title}
+                    {required && <span className="text-red-500 p-0 m-0">*</span>}
+                </legend>
+            )}
+            <div
+                className={twMerge(
+                    "relative bg-white border border-gray-300 rounded-xl p-3 focus-within:border-[#6D28D9] focus-within:ring-2 focus-within:ring-[#6D28D9]/20 transition-all flex gap-2.5",
+                    disabled && "bg-gray-100 opacity-60 pointer-events-none",
+                    classNames
+                )}
+            >
+                {customIcon && (
+                    <span className="text-gray-400 mt-0.5 shrink-0 text-base">
+                        {customIcon}
+                    </span>
+                )}
+                <div className="flex-1 flex flex-col">
+                    <textarea
+                        name={name}
+                        placeholder={placeholder}
+                        required={required}
+                        value={value}
+                        onChange={handleOnChange}
+                        maxLength={maxLength}
+                        rows={rows}
+                        disabled={disabled}
+                        className="w-full bg-transparent outline-none text-gray-800 text-sm placeholder:text-gray-400 resize-y leading-relaxed"
+                        {...rest}
+                    />
+                    {showCount && maxLength && (
+                        <div className="flex justify-end pt-1">
+                            <span className="text-[11px] text-gray-400 font-medium">
+                                {currentLength}/{maxLength}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </fieldset>
+    );
+};
+
 const InputField = {
     Text: (props: BaseInputProps) => <BaseInput {...props} type="text" />,
+    Textarea: (props: BaseTextareaProps) => <BaseTextarea {...props} />,
     Email: (props: BaseInputProps) => <BaseInput {...props} type="email" />,
     Password: (props: BaseInputProps) => (
         <BaseInput
@@ -247,3 +329,4 @@ const InputField = {
 };
 
 export default InputField;
+

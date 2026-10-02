@@ -57,16 +57,16 @@ const SideBar = ({ user, itemMenu, categories}: SideBarProps) => {
                     onClick={() => setIsOpen(false)}
                 />
 
-                <ul className="menu bg-white min-h-full w-[90%] p-6 pt-7 gap-3">
+                <div className="bg-white min-h-full w-[90%] p-6 pt-7 flex flex-col gap-3">
                     <div><SearchBar /></div>
                     {!isHideCategories && (
-                        <React.Fragment>
-                            <div className="mt-2">Categories</div>
+                        <div>
+                            <div className="mt-2 font-semibold">Categories</div>
                             <Category items={categories} onClickLink={onHandleClickLink}/>
-                        </React.Fragment>
+                        </div>
                     )}
 
-                    <div className="border-t-2">
+                    <ul className="menu border-t-2 border-base-200 pt-2 p-0">
                         {itemMenu.map((item, key) => (
                             <li key={key}>
                                 <Link
@@ -78,12 +78,12 @@ const SideBar = ({ user, itemMenu, categories}: SideBarProps) => {
                                 </Link>
                             </li>
                         ))}
-                    </div>
+                    </ul>
 
-                    <li className="pt-2 w-max">
+                    <div className="pt-2 w-max">
                         <DropdownInfoProfile user={user} />
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </div>
     )

@@ -3,6 +3,6 @@ type MainLayoutProps = {
 };
 
 const MainLayout = ({ children }: MainLayoutProps) => {
-    return <div className="bg-[#FAFAFA] h-auto w-full">{children}</div>;
+    return <div className="bg-[#FAF9F7] h-auto w-full">{children}</div>;
 };
 export default MainLayout;

@@ -39,26 +39,58 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
     const [openModal, setOpenModal] = useState(false);
     const { user: userLogin } = useAuth();
 
+    const isAuthor = Boolean(
+        isLogin ?? (
+            userLogin?.id && (
+                (author?.id && Number(userLogin.id) === Number(author.id)) ||
+                (author?.email && userLogin.email === author.email) ||
+                (author?.handle && userLogin.handle === author.handle)
+            )
+        )
+    );
+
+    const targetHandle = author?.handle || userLogin?.handle;
+
     const [deletePost, { loading }] = useMutation(DELETE_POST, {
-        refetchQueries: [
-        {
-            query: GET_POST_BY_AUTHOR,
-            variables: { handle: 'thuong123tvt' }
-        }
-    ],
-        onCompleted: () => {
-            toast.success("Deleted post successfully");
-            setOpenModal(false);
+        update(cache, { data }) {
+            if (data?.deletePost?.success && id) {
+                const normalizedId = cache.identify({ __typename: "Post", id: Number(id) });
+                cache.evict({ id: normalizedId });
+                cache.gc();
+            }
+        },
+        refetchQueries: targetHandle
+            ? [
+                  {
+                      query: GET_POST_BY_AUTHOR,
+                      variables: { handle: targetHandle },
+                  },
+              ]
+            : [],
+        onCompleted: (data) => {
+            if (data?.deletePost?.success) {
+                toast.success(data.deletePost.message || "Deleted post successfully");
+                setOpenModal(false);
+            } else {
+                toast.error(data?.deletePost?.message || "Failed to delete post");
+            }
         },
         onError: (error) => {
-            toast.error(error.message);
-        }
+            toast.error(error.message || "Failed to delete post");
+        },
     });
 
     const handleDeletePost = useCallback(async () => {
-        if (!id || !userLogin?.id) return;
+        if (!id) {
+            toast.error("Post ID is missing");
+            return;
+        }
+        if (!userLogin?.id) {
+            toast.error("Please login to delete this post");
+            return;
+        }
         await deletePost({
-            variables: { postId: id, authorId: userLogin.id },
+            variables: { postId: Number(id), authorId: Number(userLogin.id) },
         });
     }, [id, userLogin?.id, deletePost]);
 
@@ -80,11 +112,12 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
 
     return (
         <div className="max-w-[400px] max-h-[700px] flex flex-col border-b border-gray-300 pb-10 relative">
-            {isLogin && (
+            {isAuthor && (
                 <div className="absolute top-1 right-0 z-50">
                     <div className="dropdown dropdown-end">
                         <button
                             tabIndex={0}
+                            aria-label="Post options"
                             className="btn btn-xs btn-ghost text-black rounded-full hover:bg-gray-600 hover:text-white transition-all"
                         >
                             <IoIosMore size={20} />
@@ -94,7 +127,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                             className="dropdown-content menu bg-white text-gray-700 rounded-xl shadow-lg w-28 p-2 border border-gray-400"
                         >
                             <li>
-                                <Link href={`/edit-post/${id}`} className="hover:bg-gray-400 hover:text-white rounded-lg px-3 py-2 transition-colors">
+                                <Link href={`/post/edit/${id}`} className="hover:bg-gray-400 hover:text-white rounded-lg px-3 py-2 transition-colors">
                                     Edit
                                 </Link>
                             </li>
@@ -157,7 +190,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                 </span>
             </div>
 
-            <Link href={postUrl} className="text-[#7C4EE4] text-lg font-bold underline mt-5 hover:text-opacity-80">
+            <Link href={postUrl} className="text-[#6D28D9] text-lg font-bold underline mt-5 hover:text-opacity-80">
                 Read more...
             </Link>
 

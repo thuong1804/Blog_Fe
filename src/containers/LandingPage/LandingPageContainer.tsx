@@ -36,7 +36,7 @@ export default async function LandingPage() {
 
     return (
         <div className="w-full pb-24">
-            <section className="bg-[#7C4EE4] relative">
+            <section className="bg-[#6D28D9] relative overflow-hidden">
                 <div className="max-w-desktop mx-auto px-6 py-10">
                     {blogFeatured && (
                         <div className="flex flex-col lg:flex-row gap-12 relative z-10">
@@ -68,7 +68,8 @@ export default async function LandingPage() {
                             </div>
 
                             {/* Right image */}
-                            <div className="w-full lg:w-[608px] h-[360px] lg:h-[576px]">
+                            <div className="w-full lg:w-[608px] h-[360px] lg:h-[576px] relative">
+                                <div className="absolute -inset-2 rounded-2xl bg-[#A3E635]/30 blur-xl -z-0"></div>
                                 <Image
                                     src={blogFeatured.image}
                                     alt="featured-post"

@@ -22,10 +22,11 @@ export default async function BlogSlug(props: { params: tParams }) {
             slug: category?.parent?.slug,
         },
         {
-            path: category.name,
-            slug: category.slug,
+            path: category?.name,
+            slug: category?.slug,
         },
     ];
+    console.log(category)
 
     return (
         <BlogContainer

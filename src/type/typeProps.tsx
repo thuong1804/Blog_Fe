@@ -52,10 +52,11 @@ export type ItemCardBlogProps = {
 };
 
 export type BlogCategoryProps = {
+    id?: number | string;
     title: string;
     category?: CategoryProps;
     author: {
-        id: string;
+        id?: string | number;
         name: string;
         email: string;
         avatar: string;

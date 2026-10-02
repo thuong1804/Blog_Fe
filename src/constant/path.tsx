@@ -11,4 +11,6 @@ export const path = {
     verifyOtp: "/verify-otp",
     changePassword: "/change-password",
     createPost: "/post/new",
+    editPost: (id: number | string) => `/post/edit/${id}`,
 };
+

@@ -1,16 +1,28 @@
+"use client";
+
+import React, { useState, useCallback } from "react";
 import Breadcrumbs from "@/components/Breadcumbs/Breadcumbs";
 import { MarkdownExtra } from "@/components/Markdown/Markdown";
 import { LuEye } from "react-icons/lu";
+import { CiEdit } from "react-icons/ci";
+import { IoIosTrash } from "react-icons/io";
 import PostCard from "@/components/Post/PostCard";
+import Modal from "@/components/Modal/Modal";
 import { BlogCategoryProps } from "@/type/typeProps";
 import dayjs from "dayjs";
 import Image from "next/image";
-import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DATE_TIME_DISPLAY } from "@/constant";
 import { renderImage } from "@/utils";
+import { useAuth } from "@/context/AuthContext/AuthContext";
+import { useMutation } from "@apollo/client";
+import { DELETE_POST } from "@/graphql/Mutation/Post";
+import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
+import { toast } from "sonner";
 
 const BlogCategory: React.FC<BlogCategoryProps> = ({
+    id,
     title,
     category,
     createdAt,
@@ -22,6 +34,63 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
     image,
     data,
 }) => {
+    const router = useRouter();
+    const { user: userLogin } = useAuth();
+    const [openModal, setOpenModal] = useState(false);
+
+    const isAuthor = Boolean(
+        userLogin?.id && author && (
+            (author.id && Number(userLogin.id) === Number(author.id)) ||
+            (author.email && userLogin.email === author.email) ||
+            (author.handle && userLogin.handle === author.handle)
+        )
+    );
+
+    const targetHandle = author?.handle || userLogin?.handle;
+
+    const [deletePost, { loading }] = useMutation(DELETE_POST, {
+        update(cache, { data }) {
+            if (data?.deletePost?.success && id) {
+                const normalizedId = cache.identify({ __typename: "Post", id: Number(id) });
+                cache.evict({ id: normalizedId });
+                cache.gc();
+            }
+        },
+        refetchQueries: targetHandle
+            ? [
+                  {
+                      query: GET_POST_BY_AUTHOR,
+                      variables: { handle: targetHandle },
+                  },
+              ]
+            : [],
+        onCompleted: (data) => {
+            if (data?.deletePost?.success) {
+                toast.success(data.deletePost.message || "Deleted post successfully");
+                setOpenModal(false);
+                router.push(author?.handle ? `/author/${author.handle}` : "/blog");
+            } else {
+                toast.error(data?.deletePost?.message || "Failed to delete post");
+            }
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to delete post");
+        },
+    });
+
+    const handleDeletePost = useCallback(async () => {
+        if (!id) {
+            toast.error("Post ID is missing");
+            return;
+        }
+        if (!userLogin?.id) {
+            toast.error("Please login to delete this post");
+            return;
+        }
+        await deletePost({
+            variables: { postId: Number(id), authorId: Number(userLogin.id) },
+        });
+    }, [id, userLogin?.id, deletePost]);
     const formatCategory = (slug: string) => {
         return slug.toLowerCase().replace(/\s+/g, "-");
     };
@@ -98,7 +167,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                             {tags.map((tag, index) => (
                                 <span
                                     key={index}
-                                    className="px-3 py-1 border border-[#7c4ee4] rounded-xl shadow text-(--text-color-title)"
+                                    className="px-3 py-1 border border-[#6D28D9]/30 bg-[#A3E635]/15 rounded-xl shadow text-(--text-color-title) hover:bg-[#A3E635]/30 transition-colors"
                                 >
                                     {tag.name}
                                 </span>
@@ -122,14 +191,49 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                         </span>
                     </div>
 
-                    {/* Views */}
-                    <div className="flex items-center gap-1 font-bold text-(--text-color-title)">
-                        Views: {views}
-                        <LuEye />
+                    {/* Views & Author Actions */}
+                    <div className="flex justify-between items-center flex-wrap gap-4 pt-1">
+                        <div className="flex items-center gap-1 font-bold text-(--text-color-title)">
+                            Views: {views}
+                            <LuEye />
+                        </div>
+
+                        {isAuthor && id && (
+                            <div className="flex items-center gap-2.5">
+                                <Link
+                                    href={`/post/edit/${id}`}
+                                    className="btn btn-sm btn-outline border-gray-300 text-gray-700 hover:bg-gray-100 rounded-xl flex items-center gap-1.5"
+                                >
+                                    <CiEdit size={16} /> Edit
+                                </Link>
+                                <button
+                                    onClick={() => setOpenModal(true)}
+                                    className="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded-xl flex items-center gap-1.5"
+                                >
+                                    <IoIosTrash size={16} /> Delete
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                <div className="w-full max-w-(--max-width-desktop) h-px border border-[#7c4ee4] mt-5"></div>
+                {id && (
+                    <Modal
+                        modal_id={`delete_detail_modal_${id}`}
+                        title="Delete post"
+                        open={openModal}
+                        setOpenModal={setOpenModal}
+                        onSubmit={handleDeletePost}
+                        objectName="Delete"
+                        loading={loading}
+                    >
+                        <p className="text-gray-600">
+                            Are you sure you want to delete <strong>{title}</strong>? This action cannot be undone.
+                        </p>
+                    </Modal>
+                )}
+
+                <div className="w-full max-w-(--max-width-desktop) h-[2px] bg-gradient-to-r from-[#6D28D9] via-[#A3E635] to-[#6D28D9] mt-5 rounded-full"></div>
 
                 <div className="w-full max-w-[1024px] mt-10 text-(--text-color-body)">
                     <MarkdownExtra content={content} />

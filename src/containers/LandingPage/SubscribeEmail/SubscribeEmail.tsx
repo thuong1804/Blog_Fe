@@ -23,7 +23,8 @@ const SubscribeEmail = () => {
     };
 
     return (
-        <section className="w-full bg-[#7C4EE4] relative">
+        <section className="w-full bg-[#6D28D9] relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-[#A3E635]"></div>
             <div className="max-w-desktop mx-auto px-6 py-12 flex flex-col items-center text-center text-white">
 
                 {/* Title */}
@@ -63,7 +64,7 @@ const SubscribeEmail = () => {
                     <Button
                         title="Get started"
                         type="submit"
-                        classNames="border border-white text-white self-end"
+                        classNames="border-0 bg-[#A3E635] text-[#18181B] font-bold hover:bg-[#bef264] self-end"
                     />
                 </form>
 

@@ -28,6 +28,7 @@ import Link from "@tiptap/extension-link";
 import { all, createLowlight } from "lowlight";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 
+import { markdownToHtml } from "@/utils";
 import Menubar from "./Menubar";
 import "./Editor.scss";
 
@@ -35,17 +36,20 @@ type EditorProps = {
     setContentPost: React.Dispatch<React.SetStateAction<string>>;
     onAddFile: (file: File) => void;
     editorRef: RefObject<Editor | null>;
+    initialContent?: string;
 };
 
 const TiptapEditor = ({
     setContentPost,
     editorRef,
     onAddFile,
+    initialContent,
 }: EditorProps) => {
     const lowlight = createLowlight(all);
 
     const editor = useEditor({
         immediatelyRender: false,
+        content: initialContent ? markdownToHtml(initialContent) : "",
         editorProps: {
             attributes: {
                 class: "focus:outline-none",
@@ -162,7 +166,18 @@ const TiptapEditor = ({
 
     useEffect(() => {
         if (editorRef) editorRef.current = editor;
-    }, [editor]);
+    }, [editor, editorRef]);
+
+    useEffect(() => {
+        if (editor && initialContent) {
+            const html = markdownToHtml(initialContent);
+            const currentHTML = editor.getHTML();
+            if (currentHTML === "<p></p>" || !editor.getText()) {
+                editor.commands.setContent(html);
+                setContentPost(html);
+            }
+        }
+    }, [editor, initialContent, setContentPost]);
 
     if (!editor) return;
 
@@ -172,11 +187,11 @@ const TiptapEditor = ({
     });
 
     return (
-        <div className="w-full p-3 flex flex-col h-full">
+        <div className="w-full flex flex-col h-full overflow-hidden">
             {renderMenuBar()}
             <EditorContent
                 editor={editor}
-                className="wysiwyg wysiwyg-slate :wysiwyg-2xl w-full max-w-none mt-3 flex-1 overflow-auto"
+                className="wysiwyg wysiwyg-slate :wysiwyg-2xl w-full max-w-none flex-1 overflow-auto p-4"
             />
         </div>
     );
@@ -186,12 +201,14 @@ export default function EditorForm({
     setContentPost,
     onAddFile,
     editorRef,
+    initialContent,
 }: EditorProps) {
     return (
         <TiptapEditor
             setContentPost={setContentPost}
             onAddFile={onAddFile}
             editorRef={editorRef}
+            initialContent={initialContent}
         />
     );
 }

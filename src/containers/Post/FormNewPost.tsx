@@ -7,14 +7,16 @@ import Image from "next/image";
 import Link from "next/link";
 import FormPostField from "./FormPostField";
 import { FormValuesPost } from "@/type/typeProps";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import PreviewPost from "./PreviewPost";
 import Button from "@/components/Button/Button";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_POST } from "@/graphql/Mutation/Post";
 import { Editor } from "@tiptap/react";
 import { uploadImageToCloud } from "@/utils/api";
 import { GET_UPLOAD_SIGNATURE } from "@/graphql/Mutation/UploadImage";
+import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
+import { GET_TAGS } from "@/graphql/Query/TagQuery";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -23,12 +25,33 @@ const FormNewPostContainer = () => {
     const [contentPost, setContentPost] = useState<string>("");
     const [infoForm, setInFoForm] = useState<FormValuesPost>();
     const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
-    const router = useRouter()
+    const router = useRouter();
 
     const [createPost] = useMutation(CREATE_POST);
     const [filesToUpload, setFilesToUpload] = useState<{ file: File; localUrl: string }[]>([]);
     const editorRef = useRef<Editor>(null);
     const [getUploadSignature] = useMutation(GET_UPLOAD_SIGNATURE);
+
+    const { data: dataTags } = useQuery(GET_TAGS);
+    const { data: dataCategory } = useQuery(GET_ALL_CATEGORIES);
+
+    const categoryName = useMemo(() => {
+        if (!infoForm?.categoryId || !dataCategory?.categories) return undefined;
+        for (const cat of dataCategory.categories) {
+            const found = cat.children?.find(
+                (c: { id: number; name: string }) => Number(c.id) === Number(infoForm.categoryId)
+            );
+            if (found) return found.name;
+        }
+        return undefined;
+    }, [infoForm?.categoryId, dataCategory]);
+
+    const tagNames = useMemo(() => {
+        if (!infoForm?.tagIds?.length || !dataTags?.getTags) return [];
+        return dataTags.getTags
+            .filter((t: { id: number; name: string }) => infoForm.tagIds?.includes(Number(t.id)))
+            .map((t: { name: string }) => t.name);
+    }, [infoForm?.tagIds, dataTags]);
 
     const handleAddFile = (file: File) => {
         const localUrl = URL.createObjectURL(file);
@@ -38,9 +61,15 @@ const FormNewPostContainer = () => {
 
     const handleSubmitForm = (values: FormValuesPost) => {
         setInFoForm(values);
+        toast.success("Post information configured!");
     };
 
     const handleSavePost = async () => {
+        if (!infoForm?.title) {
+            toast.error("Please add post information and a title first!");
+            return;
+        }
+
         const uploadPromises = filesToUpload.map((item) =>
             uploadImageToCloud(item.file, getUploadSignature),
         );
@@ -62,103 +91,128 @@ const FormNewPostContainer = () => {
                 authorId: user?.id,
             },
         });
-        console.log(res);
 
         if (res.data) {
-            console.log(res.data)
-            toast.success("Create post success")
-            if (user)
-            router.push(`/author/${user.handle}`)
+            toast.success("Create post success");
+            if (user) router.push(`/author/${user.handle}`);
         }
     };
 
-    return (
-        <div className="min-h-screen bg-[#7c4ee4]">
-            <div className="max-w-[1400px] mx-auto p-3 md:p-5">
+    const hasPreviewContent = Boolean(contentPost || infoForm?.title || infoForm?.image || infoForm?.description);
 
+    return (
+        <div className="min-h-screen bg-[#6D28D9] flex flex-col">
+            <div className="max-w-[1200px] w-full mx-auto px-4 py-4 flex flex-col flex-1">
+
+                {/* ── Header ── */}
                 <div className="flex items-center justify-between mb-4">
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-full overflow-hidden border-2 border-white/20">
+                        <div className="w-10 h-10 relative rounded-full overflow-hidden border-2 border-white/20">
                             <Image src="/images/blog-icon.png" alt="icon" fill />
                         </div>
-                        <span className="font-bold text-xl md:text-3xl text-white">TECHNEWS</span>
+                        <span className="font-bold text-xl text-white">TECHNEWS</span>
                     </Link>
                     {user && <DropdownInfoProfile user={user} position="end" />}
                 </div>
 
-                <div className="flex lg:hidden mb-4 bg-black/10 p-1 rounded-xl backdrop-blur-sm">
-                    <button
-                        onClick={() => setActiveTab("edit")}
-                        className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${activeTab === "edit" ? "bg-white text-[#7c4ee4] shadow-md" : "text-white/80"}`}
+                {/* ── Main Panel ── */}
+                <div className="flex-1 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col min-h-0">
+
+                    {/* Panel Header: title + tab switcher */}
+                    <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 shrink-0">
+                        <h1 className="font-bold text-gray-700 text-base">New post</h1>
+                        <div className="flex bg-gray-100 p-0.5 rounded-lg gap-0.5">
+                            <button
+                                onClick={() => setActiveTab("edit")}
+                                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
+                                    activeTab === "edit"
+                                        ? "bg-white text-[#6D28D9] shadow-sm"
+                                        : "text-gray-500 hover:text-gray-700"
+                                }`}
+                            >
+                                ✏️ Edit
+                            </button>
+                            <button
+                                onClick={() => setActiveTab("preview")}
+                                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
+                                    activeTab === "preview"
+                                        ? "bg-white text-[#6D28D9] shadow-sm"
+                                        : "text-gray-500 hover:text-gray-700"
+                                }`}
+                            >
+                                👁 Preview
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* ── Edit Tab ── */}
+                    <div
+                        className={`flex flex-col flex-1 min-h-0 ${
+                            activeTab === "edit" ? "flex" : "hidden"
+                        }`}
                     >
-                        Post
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("preview")}
-                        className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${activeTab === "preview" ? "bg-white text-[#7c4ee4] shadow-md" : "text-white/80"}`}
+                        {/* Post info fields */}
+                        {user && (
+                            <div className="px-5 pt-3 pb-2 border-b border-gray-100 shrink-0">
+                                <FormPostField
+                                    user={{ user }}
+                                    onSubmit={handleSubmitForm}
+                                    initialData={infoForm}
+                                    initialImage={infoForm?.image}
+                                    buttonTitle="Edit Information"
+                                    modalTitle="Post Information"
+                                />
+                            </div>
+                        )}
+
+                        {/* Editor */}
+                        <div className="flex-1 min-h-0 overflow-hidden">
+                            <EditorForm
+                                setContentPost={setContentPost}
+                                onAddFile={handleAddFile}
+                                editorRef={editorRef}
+                            />
+                        </div>
+                    </div>
+
+                    {/* ── Preview Tab ── */}
+                    <div
+                        className={`flex-1 min-h-0 overflow-hidden ${
+                            activeTab === "preview" ? "flex flex-col" : "hidden"
+                        }`}
                     >
-                        Preview
-                    </button>
+                        {hasPreviewContent ? (
+                            <PreviewPost
+                                content={contentPost}
+                                info={infoForm}
+                                categoryName={categoryName}
+                                tagNames={tagNames}
+                                author={user ? {
+                                    name: user.name || user.handle,
+                                    email: user.email,
+                                    avatar: user.avatar,
+                                    handle: user.handle,
+                                } : null}
+                            />
+                        ) : (
+                            <div className="flex-1 flex flex-col items-center justify-center text-gray-300 gap-3 p-8">
+                                <svg className="w-12 h-12 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <p className="text-sm italic text-gray-400">Nothing to preview yet. Start writing in the Edit tab or add post information.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <div className="w-full">
-                    <div className="flex flex-col lg:flex-row gap-5 lg:h-[78vh]">
-
-                        <div className={`flex flex-col w-full lg:w-[60%] bg-white rounded-2xl shadow-xl overflow-hidden h-full
-                            ${activeTab === "preview" ? "hidden lg:flex" : "flex"}`}>
-                            <div className="p-4 flex flex-col h-full">
-                                <h1 className="text-center font-bold text-gray-700 mb-2 hidden lg:block">New post</h1>
-                                {user && (
-                                    <div className="mb-4">
-                                        <FormPostField user={{ user }} onSubmit={handleSubmitForm} />
-                                    </div>
-                                )}
-
-                                <div className="flex-1 border border-gray-100 rounded-xl overflow-hidden min-h-[500px] lg:min-h-0 bg-gray-50">
-                                    <EditorForm
-                                        setContentPost={setContentPost}
-                                        onAddFile={handleAddFile}
-                                        editorRef={editorRef}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={`flex flex-col w-full lg:flex-1 bg-white rounded-2xl shadow-xl overflow-hidden h-full
-                            ${activeTab === "edit" ? "hidden lg:flex" : "flex"}`}>
-                            <div className="p-4 flex flex-col h-full">
-                                <div className="flex items-center justify-between mb-2 border-b pb-2 border-gray-100">
-                                    <span className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-                                        Live Preview Mode
-                                    </span>
-                                    <div className="flex gap-1">
-                                        <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                                        <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-                                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                                    </div>
-                                </div>
-
-                                <div className="flex-1 overflow-y-auto min-h-[500px] lg:min-h-0 py-2">
-                                    {contentPost ? (
-                                        <PreviewPost content={contentPost} />
-                                    ) : (
-                                        <div className="h-full flex flex-col items-center justify-center text-gray-300 italic">
-                                            <p>...</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full flex justify-end mt-6 pb-12">
-                        <Button
-                            title="Save Post"
-                            type="button"
-                            classNames="w-full md:w-auto bg-white md:bg-[#7c4ee4] text-[#7c4ee4] md:text-white font-black py-4 md:py-3 px-12 rounded-xl shadow-2xl active:scale-95 transition-all"
-                            onClick={handleSavePost}
-                        />
-                    </div>
+                {/* ── Footer actions ── */}
+                <div className="flex justify-end mt-4 pb-6">
+                    <Button
+                        title="Save Post"
+                        type="button"
+                        classNames="bg-white text-[#6D28D9] font-black py-3 px-10 rounded-xl shadow-xl active:scale-95 transition-all hover:bg-white/90 cursor-pointer"
+                        onClick={handleSavePost}
+                    />
                 </div>
             </div>
         </div>

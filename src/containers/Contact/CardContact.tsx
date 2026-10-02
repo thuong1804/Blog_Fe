@@ -37,15 +37,15 @@ const CardContact = () => {
                         text-center
                     "
                 >
-                    <div className="w-[70px] h-[70px] bg-[#7C4EE4] rounded-full flex items-center justify-center text-2xl text-white">
+                    <div className="w-[70px] h-[70px] bg-[#6D28D9] rounded-full flex items-center justify-center text-2xl text-white">
                         {item.icon}
                     </div>
 
-                    <div className="mt-3 text-[17px] font-bold text-[#7C4EE4]">
+                    <div className="mt-3 text-[17px] font-bold text-[#6D28D9]">
                         {item.title}
                     </div>
 
-                    <p className="mt-1 text-sm text-[#666666]">
+                    <p className="mt-1 text-sm text-[#52525B]">
                         {item.content}
                     </p>
                 </div>

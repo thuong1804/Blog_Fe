@@ -50,4 +50,69 @@ export const DELETE_POST = gql`
             message
         }
     }
-`
+`;
+
+export const UPDATE_POST = gql`
+    mutation UpdatePost(
+        $id: Int!
+        $title: String
+        $content: String
+        $description: String
+        $excerpt: String
+        $image: String
+        $imagePublicId: String
+        $categoryId: Int
+        $authorId: Int
+        $tagIds: [Int!]
+        $isPopular: Boolean
+        $isFeatured: Boolean
+        $readingTime: Int
+        $slug: String
+    ) {
+        updatePost(
+            id: $id
+            title: $title
+            content: $content
+            description: $description
+            excerpt: $excerpt
+            image: $image
+            imagePublicId: $imagePublicId
+            categoryId: $categoryId
+            authorId: $authorId
+            tagIds: $tagIds
+            isPopular: $isPopular
+            isFeatured: $isFeatured
+            readingTime: $readingTime
+            slug: $slug
+        ) {
+            id
+            title
+            slug
+            description
+            excerpt
+            content
+            image
+            readingTime
+            isPopular
+            isFeatured
+            tags {
+                id
+                name
+            }
+            category {
+                id
+                name
+                parent {
+                    id
+                    name
+                }
+            }
+            author {
+                id
+                name
+                handle
+                avatar
+            }
+        }
+    }
+`;

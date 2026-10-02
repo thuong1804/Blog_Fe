@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import Button from "../Button/Button";
 import ItemCardPost from "./ItemCardPost";
@@ -7,6 +10,13 @@ import "dayjs/locale/en";
 import { DATE_TIME_DISPLAY } from "@/constant";
 import Link from "next/link";
 import { joinSlugCategory } from "@/utils";
+import { IoIosMore } from "react-icons/io";
+import Modal from "../Modal/Modal";
+import { DELETE_POST } from "@/graphql/Mutation/Post";
+import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
+import { useMutation } from "@apollo/client";
+import { useAuth } from "@/context/AuthContext/AuthContext";
+import { toast } from "sonner";
 
 type PostCardProps = {
     title: string;
@@ -28,6 +38,64 @@ const PostCard: React.FC<PostCardProps> = ({
     totalItem,
 }) => {
     const cardAnother = itemCards?.[0];
+    const [openModal, setOpenModal] = useState(false);
+    const { user: userLogin } = useAuth();
+
+    const isCardAnotherAuthor = Boolean(
+        isLogin ?? (
+            userLogin?.id && cardAnother?.author && (
+                (cardAnother.author.id && Number(userLogin.id) === Number(cardAnother.author.id)) ||
+                (cardAnother.author.email && userLogin.email === cardAnother.author.email) ||
+                (cardAnother.author.handle && userLogin.handle === cardAnother.author.handle)
+            )
+        )
+    );
+
+    const targetHandle = cardAnother?.author?.handle || userLogin?.handle;
+
+    const [deletePost, { loading }] = useMutation(DELETE_POST, {
+        update(cache, { data }) {
+            if (data?.deletePost?.success && cardAnother?.id) {
+                const normalizedId = cache.identify({ __typename: "Post", id: Number(cardAnother.id) });
+                cache.evict({ id: normalizedId });
+                cache.gc();
+            }
+        },
+        refetchQueries: targetHandle
+            ? [
+                  {
+                      query: GET_POST_BY_AUTHOR,
+                      variables: { handle: targetHandle },
+                  },
+              ]
+            : [],
+        onCompleted: (data) => {
+            if (data?.deletePost?.success) {
+                toast.success(data.deletePost.message || "Deleted post successfully");
+                setOpenModal(false);
+            } else {
+                toast.error(data?.deletePost?.message || "Failed to delete post");
+            }
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to delete post");
+        },
+    });
+
+    const handleDeleteCardAnother = useCallback(async () => {
+        if (!cardAnother?.id) {
+            toast.error("Post ID is missing");
+            return;
+        }
+        if (!userLogin?.id) {
+            toast.error("Please login to delete this post");
+            return;
+        }
+        await deletePost({
+            variables: { postId: Number(cardAnother.id), authorId: Number(userLogin.id) },
+        });
+    }, [cardAnother?.id, userLogin?.id, deletePost]);
+
     const handleLoadMore = () => {
         actionLoadMore?.();
     };
@@ -45,7 +113,41 @@ const PostCard: React.FC<PostCardProps> = ({
                 )}
             </div>
             {isOutstanding && cardAnother && (
-                <div className="mt-16 flex flex-col lg:flex-row gap-12 text-black">
+                <div className="mt-16 flex flex-col lg:flex-row gap-12 text-black relative">
+                    {isCardAnotherAuthor && (
+                        <div className="absolute top-2 right-2 z-20">
+                            <div className="dropdown dropdown-end">
+                                <button
+                                    tabIndex={0}
+                                    aria-label="Post options"
+                                    className="btn btn-sm btn-circle btn-ghost bg-white/80 backdrop-blur-xs text-black hover:bg-gray-700 hover:text-white transition-all shadow"
+                                >
+                                    <IoIosMore size={20} />
+                                </button>
+                                <ul
+                                    tabIndex={0}
+                                    className="dropdown-content menu bg-white text-gray-700 rounded-xl shadow-lg w-28 p-2 border border-gray-400"
+                                >
+                                    <li>
+                                        <Link
+                                            href={`/post/edit/${cardAnother.id}`}
+                                            className="hover:bg-gray-400 hover:text-white rounded-lg px-3 py-2 transition-colors"
+                                        >
+                                            Edit
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => setOpenModal(true)}
+                                            className="hover:bg-red-500 hover:text-white rounded-lg px-3 py-2 transition-colors text-left"
+                                        >
+                                            Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Image */}
                     <div className="relative w-full lg:w-3/5 h-[260px] md:h-[360px] lg:h-[456px] overflow-hidden rounded-2xl">
@@ -88,7 +190,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             {cardAnother.title}
                         </Link>
 
-                        <p className="text-[#666666] text-base">
+                        <p className="text-[#52525B] text-base">
                             {cardAnother.description}
                         </p>
 
@@ -136,6 +238,22 @@ const PostCard: React.FC<PostCardProps> = ({
                             </Link>
                         </div>
                     </div>
+
+                    {cardAnother && (
+                        <Modal
+                            modal_id={`delete_modal_outstanding_${cardAnother.id}`}
+                            title="Delete post"
+                            open={openModal}
+                            setOpenModal={setOpenModal}
+                            onSubmit={handleDeleteCardAnother}
+                            objectName="Delete"
+                            loading={loading}
+                        >
+                            <p className="text-gray-600">
+                                Are you sure you want to delete <strong>{cardAnother.title}</strong>? This action cannot be undone.
+                            </p>
+                        </Modal>
+                    )}
                 </div>
             )}
 
@@ -150,7 +268,7 @@ const PostCard: React.FC<PostCardProps> = ({
             ">
                 {itemCards?.map((item, key) => (
                     <ItemCardPost
-                        key={key}
+                        key={item.id ?? key}
                         id={item.id}
                         title={item.title}
                         slug={item.slug}

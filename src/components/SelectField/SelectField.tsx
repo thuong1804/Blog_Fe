@@ -16,6 +16,7 @@ type SelectFieldProps = {
     isMulti?: boolean;
     placeholder?: string;
     defaultValue?: OptionType | OptionType[];
+    value?: OptionType | OptionType[] | null;
     isClearable?: boolean;
     required?: boolean;
     onChange?: (
@@ -115,6 +116,7 @@ const SelectField = ({
     isMulti = false,
     placeholder = "Select...",
     defaultValue,
+    value,
     isClearable = true,
     onChange,
     required = false,
@@ -144,6 +146,7 @@ const SelectField = ({
                 styles={customStyles}
                 placeholder={placeholder}
                 defaultValue={defaultValue}
+                {...(value !== undefined ? { value } : {})}
                 isClearable={isClearable}
                 isMulti={isMulti}
                 closeMenuOnSelect={false}

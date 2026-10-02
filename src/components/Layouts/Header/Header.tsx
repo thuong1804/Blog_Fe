@@ -1,7 +1,7 @@
 import { FaBlogger } from "react-icons/fa";
 import Link from "next/link";
-import SearchBar from "@/components/SearchBar/SearchBar";
-import Button from "@/components/Button/Button";
+import SearchBar from "@/components/SearchBar/SearchBarClient";
+
 import { cookies } from "next/headers";
 import { getCurrentUserFromToken } from "@/lib/Session";
 import DropdownInfoProfile from "./DropdownInfoProfile";
@@ -42,8 +42,12 @@ export default async function HeaderLayout() {
 
                         {itemMenu.map((item) =>
                             item.href === path.contact ? (
-                                <Link key={item.href} href={item.href}>
-                                    <Button title="Contact us" />
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="btn bg-[#6D28D9] hover:bg-[#4C1D95] text-white rounded-[8px] shadow border-0 flex items-center justify-center px-[38px] py-[26px] w-max transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105"
+                                >
+                                    Contact us
                                 </Link>
                             ) : (
                                 <Link

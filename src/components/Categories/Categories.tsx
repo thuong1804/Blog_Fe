@@ -67,7 +67,7 @@ const Category: React.FC<CategoryProp> = ({ items, onClickLink }) => {
     };
 
     return (
-        <div className="flex-col justify-between items-center w-full lg:flex-row lg:flex lg:relative text-[#333333] flex-wrap">
+        <div className="flex-col justify-between items-center w-full lg:flex-row lg:flex lg:relative text-[#18181B] flex-wrap">
             {items.map((itemCategory, key) => {
                 const itemCardByWithCategory =
                     itemCategory.children[0]?.posts[0];
@@ -156,6 +156,7 @@ const Category: React.FC<CategoryProp> = ({ items, onClickLink }) => {
                                         {itemCardByWithCategory && (
                                             <div className="bg-[#f6f8fa] p-9 rounded-r-2xl hidden lg:block" onClick={() => onClickLink?.()}>
                                                 <ItemCardPost
+                                                    id={itemCardByWithCategory.id}
                                                     title={
                                                         itemCardByWithCategory.title
                                                     }

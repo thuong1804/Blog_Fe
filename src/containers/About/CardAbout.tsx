@@ -54,8 +54,8 @@ const CardAbout = () => {
                             lg:min-h-[300px]
                             `,
                             isActive
-                                ? "bg-[#7C4EE4] text-white shadow-xl"
-                                : "bg-white text-[#7C4EE4] border border-gray-100"
+                                ? "bg-[#6D28D9] text-white shadow-xl"
+                                : "bg-white text-[#6D28D9] border border-gray-100"
                         )}
                     >
                         {/* NUMBER */}
@@ -69,7 +69,7 @@ const CardAbout = () => {
                                 `,
                                 isActive
                                     ? "text-white"
-                                    : "text-[#666666] opacity-20"
+                                    : "text-[#52525B] opacity-20"
                             )}
                         >
                             0{item.key}
@@ -83,7 +83,7 @@ const CardAbout = () => {
                                 text-base
                                 md:text-lg
                                 `,
-                                isActive ? "text-white" : "text-[#7C4EE4]"
+                                isActive ? "text-white" : "text-[#6D28D9]"
                             )}
                         >
                             {item.title}
@@ -96,7 +96,7 @@ const CardAbout = () => {
                                 text-sm
                                 leading-6
                                 `,
-                                isActive ? "text-white" : "text-[#666666]"
+                                isActive ? "text-white" : "text-[#52525B]"
                             )}
                         >
                             {item.content}

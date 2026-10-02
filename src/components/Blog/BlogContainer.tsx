@@ -81,12 +81,12 @@ const BlogContainer = ({
                     gap-6
                     gap-y-10
                     mt-20
-                ">
-                    {console.log(dataCustom)}
+                    ">
                         {(dataCustom ? dataCustom : itemPost?.posts)?.map(
                             (post: ItemCardBlogProps, key: number) => (
                                 <ItemCardPost
-                                    key={key}
+                                    key={post.id ?? key}
+                                    id={post.id}
                                     title={post.title}
                                     image={post.image}
                                     description={post.description}
@@ -95,6 +95,7 @@ const BlogContainer = ({
                                     createdAt={post.createdAt}
                                     author={post.author}
                                     category={post.category}
+                                    content={post.content}
                                 />
                             )
                         )}

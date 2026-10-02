@@ -2,7 +2,7 @@ export default function LoadingLandingPage() {
     return (
         <div className="w-full pb-24 animate-pulse">
             {/* ===== Featured Banner ===== */}
-            <section className="bg-[#7C4EE4] relative">
+            <section className="bg-[#6D28D9] relative">
                 <div className="max-w-desktop mx-auto px-6 py-12 lg:py-24 relative z-10">
                     <div className="flex flex-col lg:flex-row gap-12">
                         {/* Left content */}

@@ -26,49 +26,57 @@ const Modal = ({
     loading,
 }: ModalProps) => {
 
-    const handleSubmit = () => {
-        onSubmit?.()
-    }
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSubmit?.();
+    };
 
     useEffect(() => {
+        const dialog = document.getElementById(modal_id) as HTMLDialogElement | null;
+        if (!dialog) return;
+
         if (open) {
-            (
-                document.getElementById(modal_id!) as HTMLDialogElement | null
-            )?.showModal();
+            if (!dialog.open) {
+                dialog.showModal();
+            }
         } else {
-            (
-                document.getElementById(modal_id!) as HTMLDialogElement | null
-            )?.close();
+            if (dialog.open) {
+                dialog.close();
+            }
         }
     }, [open, modal_id]);
 
     return (
-        <>
-            <dialog id={modal_id} className={`modal ${className}`}>
-                <div className={`modal-box ${containerClassName}`}>
-                    <h3 className="font-bold text-lg">{title}</h3>
-                    {children}
-                    <div className="modal-action">
-                        <form method="dialog" onSubmit={handleSubmit} className="flex gap-2.5">
-                            <button
-                                className="btn"
-                                type="button"
-                                onClick={() => setOpenModal(false)}
-                            >
-                                Close
-                            </button>
-                            <button
-                                className="btn bg-red-500 text-white"
-                                type="submit"
-                                disabled={loading}
-                            >
-                                {objectName || 'Confirm'}
-                            </button>
-                        </form>
-                    </div>
+        <dialog
+            id={modal_id}
+            className={`modal ${className || ""}`}
+            onClose={() => setOpenModal(false)}
+        >
+            <div className={`modal-box ${containerClassName || ""}`}>
+                <h3 className="font-bold text-lg">{title}</h3>
+                <div className="py-4">{children}</div>
+                <div className="modal-action">
+                    <form onSubmit={handleSubmit} className="flex gap-2.5">
+                        <button
+                            className="btn"
+                            type="button"
+                            disabled={loading}
+                            onClick={() => setOpenModal(false)}
+                        >
+                            Close
+                        </button>
+                        <button
+                            className="btn bg-red-500 hover:bg-red-600 text-white flex items-center gap-2"
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading && <span className="loading loading-spinner loading-sm"></span>}
+                            {objectName || "Confirm"}
+                        </button>
+                    </form>
                 </div>
-            </dialog>
-        </>
+            </div>
+        </dialog>
     );
 };
 export default Modal;

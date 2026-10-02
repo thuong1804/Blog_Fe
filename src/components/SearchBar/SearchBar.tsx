@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState, Suspense } from "react";
+import { useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const SearchBarFields = () => {
@@ -67,12 +67,4 @@ const SearchBarFields = () => {
     );
 };
 
-const SearchBar = () => {
-    return (
-        <Suspense fallback={null}>
-            <SearchBarFields />
-        </Suspense>
-    );
-};
-
-export default SearchBar;
+export default SearchBarFields;

@@ -63,6 +63,7 @@ export default async function BlogDetail(props: { params: tParams }) {
 
     return (
         <BlogCategory
+            id={dataByPost.data.post.id}
             title={title}
             views={views}
             category={category}
