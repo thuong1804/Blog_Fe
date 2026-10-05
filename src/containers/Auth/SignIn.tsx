@@ -110,7 +110,7 @@ const SigninContainer = () => {
                         <ButtonLoginGoogle />
                     </div>
 
-                    <div className="w-full flex justify-center mt-4 sm:mt-5 text-sm">
+                    <div className="w-full flex justify-center mt-4 sm:mt-5 text-sm text-black">
                         Don&apos;t have an account?
                         <Link
                             className="ml-2 text-blue-500 underline"

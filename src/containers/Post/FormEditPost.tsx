@@ -189,7 +189,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#6D28D9] flex flex-col items-center justify-center text-white">
+            <div className="min-h-screen bg-gradient-to-br from-[#080D1A] via-[#0F172A] to-[#1E293B] flex flex-col items-center justify-center text-white">
                 <span className="loading loading-spinner loading-lg text-white"></span>
                 <p className="mt-4 font-semibold text-lg">Loading post data...</p>
             </div>
@@ -198,14 +198,14 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
 
     if (error || !post) {
         return (
-            <div className="min-h-screen bg-[#6D28D9] flex flex-col items-center justify-center text-white p-4">
+            <div className="min-h-screen bg-gradient-to-br from-[#080D1A] via-[#0F172A] to-[#1E293B] flex flex-col items-center justify-center text-white p-4">
                 <div className="bg-white text-gray-800 p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
                     <h2 className="text-2xl font-bold text-red-600 mb-2">Error</h2>
                     <p className="text-gray-600 mb-6">
                         {error?.message || "Post not found or has been removed."}
                     </p>
                     <Link href="/">
-                        <Button classNames="w-full bg-[#6D28D9] text-white font-bold py-3 rounded-xl">
+                        <Button classNames="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
                             Back to Home
                         </Button>
                     </Link>
@@ -216,7 +216,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
 
     if (!isAuthor && isLogin) {
         return (
-            <div className="min-h-screen bg-[#6D28D9] flex flex-col items-center justify-center text-white p-4">
+            <div className="min-h-screen bg-gradient-to-br from-[#080D1A] via-[#0F172A] to-[#1E293B] flex flex-col items-center justify-center text-white p-4">
                 <div className="bg-white text-gray-800 p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
                     <h2 className="text-2xl font-bold text-red-600 mb-2">
                         Permission Denied
@@ -225,7 +225,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                         You do not have permission to edit this post.
                     </p>
                     <Link href="/">
-                        <Button classNames="w-full bg-[#6D28D9] text-white font-bold py-3 rounded-xl">
+                        <Button classNames="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
                             Back to Home
                         </Button>
                     </Link>
@@ -235,7 +235,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
     }
 
     return (
-        <div className="min-h-screen bg-[#6D28D9] flex flex-col">
+        <div className="min-h-screen bg-transparent flex flex-col">
             <div className="max-w-[1200px] w-full mx-auto px-4 py-4 flex flex-col flex-1">
 
                 {/* ── Header ── */}
@@ -267,7 +267,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                                 onClick={() => setActiveTab("edit")}
                                 className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
                                     activeTab === "edit"
-                                        ? "bg-white text-[#6D28D9] shadow-sm"
+                                        ? "bg-white text-blue-600 shadow-sm"
                                         : "text-gray-500 hover:text-gray-700"
                                 }`}
                             >
@@ -277,7 +277,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                                 onClick={() => setActiveTab("preview")}
                                 className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
                                     activeTab === "preview"
-                                        ? "bg-white text-[#6D28D9] shadow-sm"
+                                        ? "bg-white text-blue-600 shadow-sm"
                                         : "text-gray-500 hover:text-gray-700"
                                 }`}
                             >
@@ -359,7 +359,7 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                     <Button
                         title={isSaving ? "Saving..." : "Update Post"}
                         type="button"
-                        classNames="bg-white text-[#6D28D9] font-black py-3 px-10 rounded-xl shadow-xl active:scale-95 transition-all hover:bg-white/90 disabled:opacity-60"
+                        classNames="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-10 rounded-xl shadow-lg shadow-blue-500/25 active:scale-95 transition-all disabled:opacity-60 cursor-pointer"
                         onClick={handleSavePost}
                         disabled={isSaving}
                     />

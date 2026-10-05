@@ -101,7 +101,7 @@ const FormNewPostContainer = () => {
     const hasPreviewContent = Boolean(contentPost || infoForm?.title || infoForm?.image || infoForm?.description);
 
     return (
-        <div className="min-h-screen bg-[#6D28D9] flex flex-col">
+        <div className="min-h-screen bg-transparent flex flex-col">
             <div className="max-w-[1200px] w-full mx-auto px-4 py-4 flex flex-col flex-1">
 
                 {/* ── Header ── */}
@@ -126,7 +126,7 @@ const FormNewPostContainer = () => {
                                 onClick={() => setActiveTab("edit")}
                                 className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
                                     activeTab === "edit"
-                                        ? "bg-white text-[#6D28D9] shadow-sm"
+                                        ? "bg-white text-blue-600 shadow-sm"
                                         : "text-gray-500 hover:text-gray-700"
                                 }`}
                             >
@@ -136,7 +136,7 @@ const FormNewPostContainer = () => {
                                 onClick={() => setActiveTab("preview")}
                                 className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
                                     activeTab === "preview"
-                                        ? "bg-white text-[#6D28D9] shadow-sm"
+                                        ? "bg-white text-blue-600 shadow-sm"
                                         : "text-gray-500 hover:text-gray-700"
                                 }`}
                             >
@@ -210,7 +210,7 @@ const FormNewPostContainer = () => {
                     <Button
                         title="Save Post"
                         type="button"
-                        classNames="bg-white text-[#6D28D9] font-black py-3 px-10 rounded-xl shadow-xl active:scale-95 transition-all hover:bg-white/90 cursor-pointer"
+                        classNames="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-10 rounded-xl shadow-lg shadow-blue-500/25 active:scale-95 transition-all cursor-pointer"
                         onClick={handleSavePost}
                     />
                 </div>

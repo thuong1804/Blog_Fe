@@ -7,13 +7,15 @@ export default function SiteLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="max-w-(--max-width-desktop) mx-auto py-6 px-6">
-            <HeaderProfile />
-            <div className="flex flex-col lg:flex-row w-full mt-10">
-                <div className="w-full lg:w-1/4">
-                    <MenuProfile />
+        <div className="min-h-[80vh] bg-slate-50/70">
+            <div className="mx-auto max-w-(--max-width-desktop) px-4 py-6 sm:px-6 sm:py-8">
+                <HeaderProfile />
+                <div className="mt-5 flex w-full flex-col gap-5 lg:flex-row">
+                    <aside className="w-full shrink-0 lg:sticky lg:top-24 lg:h-fit lg:w-72">
+                        <MenuProfile />
+                    </aside>
+                    <div className="min-w-0 flex-1">{children}</div>
                 </div>
-                <div className="flex-1">{children}</div>
             </div>
         </div>
     );

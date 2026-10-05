@@ -3,5 +3,9 @@ export default function LayoutForm({
 }: {
     children: React.ReactNode;
 }) {
-    return <div className="bg-[#6D28D9]">{children}</div>;
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-[#080D1A] via-[#0F172A] to-[#1E293B]">
+            {children}
+        </div>
+    );
 }

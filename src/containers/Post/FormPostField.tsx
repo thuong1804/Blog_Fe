@@ -15,6 +15,7 @@ import {
 import { useQuery } from "@apollo/client";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { FaUserCog } from "react-icons/fa";
 import { IoIosCamera, IoIosTrash } from "react-icons/io";
 import {
     MdAccessTime,
@@ -184,7 +185,7 @@ const FormPostField = ({
                             </h4>
                             <div className="flex flex-wrap items-center gap-1.5 mt-1">
                                 {selectedCategoryName && (
-                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#6D28D9]/10 text-[#6D28D9]">
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
                                         <MdOutlineCategory className="text-xs" />
                                         {selectedCategoryName}
                                     </span>
@@ -216,17 +217,17 @@ const FormPostField = ({
                     <button
                         type="button"
                         onClick={openModal}
-                        className="btn btn-sm bg-[#6D28D9] hover:bg-[#4C1D95] text-white border-0 rounded-xl px-4 font-semibold shadow-sm flex items-center gap-1.5 shrink-0 active:scale-95 transition-all"
+                        className="btn btn-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white border-0 rounded-xl px-4 font-semibold shadow-sm flex items-center gap-1.5 shrink-0 active:scale-95 transition-all"
                     >
                         <MdEdit size={14} />
                         {buttonTitle}
                     </button>
                 </div>
             ) : (
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 bg-gradient-to-r from-purple-50/80 to-indigo-50/50 rounded-2xl border border-dashed border-purple-200">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-2xl border border-slate-200/80">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#6D28D9]/10 flex items-center justify-center text-[#6D28D9] text-lg shrink-0">
-                            ✨
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-lg shrink-0">
+                            <FaUserCog />
                         </div>
                         <div>
                             <p className="font-semibold text-gray-800 text-sm">Post details not configured</p>
@@ -236,7 +237,7 @@ const FormPostField = ({
                     <button
                         type="button"
                         onClick={openModal}
-                        className="btn btn-sm bg-[#6D28D9] hover:bg-[#4C1D95] text-white border-0 rounded-xl px-4 font-semibold shadow-sm flex items-center gap-1.5 shrink-0 active:scale-95 transition-all"
+                        className="btn btn-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white border-0 rounded-xl px-4 font-semibold shadow-sm flex items-center gap-1.5 shrink-0 active:scale-95 transition-all cursor-pointer"
                     >
                         + Add Information
                     </button>
@@ -245,12 +246,13 @@ const FormPostField = ({
 
             {/* ── Modal Dialog ── */}
             <dialog id="my_modal_1" className="modal modal-middle backdrop-blur-xs">
-                <div className="modal-box bg-white w-11/12 max-w-4xl p-6 sm:p-8 rounded-3xl shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto">
-                    {/* Modal Header */}
+                <div className="modal-box bg-white w-11/12 max-w-4xl p-0 rounded-3xl shadow-2xl border border-gray-100 max-h-[90vh] overflow-hidden">
+                    <div className="overflow-y-auto max-h-[90vh] p-6 sm:p-8 pr-4 sm:pr-6 mr-1.5 my-1.5 custom-scrollbar">
+                        {/* Modal Header */}
                     <div className="flex justify-between items-start pb-4 border-b border-gray-100 mb-6">
                         <div>
                             <h3 className="font-bold text-xl sm:text-2xl text-gray-900 flex items-center gap-2">
-                                <span className="text-[#6D28D9]">⚙️</span> {modalTitle}
+                                <span className="text-blue-600">⚙️</span> {modalTitle}
                             </h3>
                             <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
                                 Set up metadata, thumbnail, category, tags, and summary for your post
@@ -407,10 +409,11 @@ const FormPostField = ({
                         <button
                             type="submit"
                             form="form-post"
-                            className="btn bg-[#6D28D9] hover:bg-[#4C1D95] text-white border-0 rounded-xl px-7 font-bold shadow-lg shadow-purple-500/20 active:scale-95 transition-all"
+                            className="btn bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white border-0 rounded-xl px-7 font-bold shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer"
                         >
                             Save Information
                         </button>
+                    </div>
                     </div>
                 </div>
             </dialog>

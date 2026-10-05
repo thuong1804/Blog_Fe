@@ -39,7 +39,7 @@ const FooterLayout = () => {
                                 <Link
                                     key={item.path}
                                     href={item.path}
-                                    className="text-sm md:text-base text-(--text-color-title) hover:text-[#6D28D9]"
+                                    className="text-sm md:text-base text-slate-700 hover:text-blue-600 transition-colors"
                                 >
                                     {item.title}
                                 </Link>
@@ -57,12 +57,13 @@ const FooterLayout = () => {
                                         w-9 h-9
                                         md:w-10 md:h-10
                                         rounded-full
-                                        bg-[#6D28D9]
-                                        hover:bg-[#4C1D95]
+                                        bg-slate-900
+                                        hover:bg-blue-600
                                         text-white
                                         flex items-center justify-center
-                                        transition-all duration-200
-                                        hover:scale-105
+                                        transition-all duration-300
+                                        hover:scale-110
+                                        shadow-sm
                                     "
                                 >
                                     {item.title}
@@ -71,7 +72,7 @@ const FooterLayout = () => {
                         </div>
 
                         {/* DIVIDER */}
-                        <div className="w-full h-[2px] bg-gradient-to-r from-[#6D28D9] via-[#A3E635] to-[#6D28D9]" />
+                        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
                         {/* COPYRIGHT */}
                         <p className="text-xs md:text-sm text-(--text-color-title) text-center">

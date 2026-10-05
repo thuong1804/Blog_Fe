@@ -26,8 +26,11 @@ export default async function HeaderLayout() {
 
     return (
         <header className="w-full bg-white text-title">
-            <div className="flex justify-center">
-                <div className="max-w-desktop w-full px-6 py-4 flex items-center justify-between gap-2">
+            <div className="flex justify-center" suppressHydrationWarning>
+                <div
+                    className="max-w-desktop w-full px-6 py-4 flex items-center justify-between gap-2"
+                    suppressHydrationWarning
+                >
                     <Link href="/" className="flex items-center gap-2">
                         <FaBlogger className="text-5xl" />
                         <span className="font-bold text-xl md:text-3xl">
@@ -45,7 +48,7 @@ export default async function HeaderLayout() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="btn bg-[#6D28D9] hover:bg-[#4C1D95] text-white rounded-[8px] shadow border-0 flex items-center justify-center px-[38px] py-[26px] w-max transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105"
+                                    className="btn bg-[#0F172A] text-white rounded-xl shadow-sm border border-slate-800/20 flex items-center justify-center px-6 py-2.5 h-auto min-h-0 w-max font-semibold transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-indigo-500/20 hover:scale-105"
                                 >
                                     Contact us
                                 </Link>
@@ -53,7 +56,7 @@ export default async function HeaderLayout() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="font-bold hover:text-primary"
+                                    className="font-semibold text-slate-700 hover:text-[#0F172A] transition-colors"
                                 >
                                     {item.title}
                                 </Link>

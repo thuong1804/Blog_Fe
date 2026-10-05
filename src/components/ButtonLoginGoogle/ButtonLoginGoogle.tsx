@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "../Button/Button";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 
@@ -18,20 +17,13 @@ export default function ButtonLoginGoogle() {
     )}&prompt=${prompt}`;
 
     return (
-        <Button
-            type="button"
-            classNames="bg-white w-full rounded-[30px] w-full  hover:bg-gray-100 transition"
+        <Link
+            href={googleAuthUrl}
+            target="_blank"
+            className="btn flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-gray-700 shadow-sm transition hover:bg-gray-50 hover:shadow"
         >
-            <Link
-                href={googleAuthUrl}
-                target="_blank"
-                className="flex items-center justify-center gap-2"
-            >
-                <FcGoogle className="text-xl" />
-                <span className="text-gray-700 font-medium">
-                    Login with Google
-                </span>
-            </Link>
-        </Button>
+            <FcGoogle className="text-xl" />
+            <span className="font-medium text-gray-700">Login with Google</span>
+        </Link>
     );
 }

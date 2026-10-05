@@ -27,8 +27,8 @@ const AnotherPost = ({ post }: { post: ItemCardBlogProps }) => {
     return (
         <>
             <div className="max-w-desktop mx-auto px-6">
-                <div className="relative rounded-xl  shadow">
-                    <div className="h-[220px] sm:h-[320px] lg:h-[567px] bg-center bg-cover bg-no-repeat"
+                <div className="relative shadow">
+                    <div className=" rounded-xl h-[220px] sm:h-[320px] lg:h-[567px] bg-center bg-cover bg-no-repeat"
                         style={{ backgroundImage: `url(${post.image})` }}
                     />
                     <div className="relative w-full">
@@ -59,12 +59,7 @@ const AnotherPost = ({ post }: { post: ItemCardBlogProps }) => {
                             >
                                 <Button
                                     title="Read more"
-                                    classNames="
-                            border
-                            border-primary
-                            bg-white
-                            text-primary
-                        "
+                                    classNames="border border-blue-600 bg-white text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-xl px-7 py-3"
                                 />
                             </Link>
                         </div>

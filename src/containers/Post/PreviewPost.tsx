@@ -151,6 +151,7 @@ const PreviewPost: React.FC<PreviewPostProps> = ({
                                     fill
                                     className="object-cover"
                                     priority
+                                    unoptimized={Boolean(typeof info.image === "string" && info.image.endsWith(".gif"))}
                                 />
                             </div>
                         )}

@@ -26,6 +26,7 @@ type PostCardProps = {
     isLogin?: boolean;
     actionLoadMore?: () => void;
     totalItem?: number;
+    gridColsClass?: string;
 };
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -36,6 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({
     isLogin = false,
     actionLoadMore,
     totalItem,
+    gridColsClass,
 }) => {
     const cardAnother = itemCards?.[0];
     const [openModal, setOpenModal] = useState(false);
@@ -102,13 +104,16 @@ const PostCard: React.FC<PostCardProps> = ({
 
     return (
         <section className="max-w-desktop mx-auto">
-            <div className="flex items-center justify-between flex-wrap">
-                <h1 className="text-black text-2xl md:text-3xl lg:text-4xl font-bold">
+            <div className="flex items-center justify-between flex-wrap gap-4 pb-2 border-b border-slate-100">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
                     {title}
-                </h1>
+                </h2>
                 {isViewAll && (
                     <Link href="/blog">
-                        <Button title="View all" />
+                        <Button
+                            title="View all"
+                            classNames="px-5 py-2.5 h-auto min-h-0 text-sm font-semibold rounded-xl bg-slate-900 text-white shadow-sm border border-slate-800/10 transition-all duration-300 hover:scale-105"
+                        />
                     </Link>
                 )}
             </div>
@@ -159,11 +164,12 @@ const PostCard: React.FC<PostCardProps> = ({
                             )}
                         >
                             <Image
-                                src={cardAnother.image}
+                                src={cardAnother.image || "/images/banner.jpg"}
                                 alt="banner-post"
                                 fill
                                 className="object-cover transition-transform duration-300 hover:scale-105"
                                 sizes="(max-width: 1024px) 100vw, 60vw"
+                                unoptimized={Boolean(typeof cardAnother.image === "string" && cardAnother.image.endsWith(".gif"))}
                             />
                         </Link>
                     </div>
@@ -257,15 +263,13 @@ const PostCard: React.FC<PostCardProps> = ({
                 </div>
             )}
 
-            <div className="
+            <div className={`
                 mt-16
                 grid
-                grid-cols-1
-                sm:grid-cols-2
-                lg:grid-cols-3
+                ${gridColsClass || "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}
                 gap-6
                 gap-y-10
-            ">
+            `}>
                 {itemCards?.map((item, key) => (
                     <ItemCardPost
                         key={item.id ?? key}

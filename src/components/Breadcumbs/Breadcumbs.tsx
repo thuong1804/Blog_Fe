@@ -26,7 +26,7 @@ const Breadcrumbs: React.FC<ItemBreadcrumbsProps> = ({ items }) => {
         const splitPathName = pathName.split("/");
         const isLast =
             splitPathName[splitPathName.length - 1] ===
-            path.toLocaleLowerCase();
+            path.toLowerCase();
         return isLast;
     };
 

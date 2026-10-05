@@ -128,12 +128,13 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                 {/* Banner Image */}
                 <div className="relative w-full max-w-(--max-width-desktop) h-[300px] sm:h-[450px] lg:h-[600px] mt-14">
                     <Image
-                        src={image}
+                        src={image || "/images/banner.jpg"}
                         alt="banner-post"
                         fill
                         sizes="(max-width: 1232px)"
                         className="object-cover rounded-2xl"
                         priority
+                        unoptimized={Boolean(typeof image === "string" && image.endsWith(".gif"))}
                     />
                 </div>
 

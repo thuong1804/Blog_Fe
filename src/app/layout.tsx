@@ -6,6 +6,7 @@ import ToastProvider from "@/context/ToastProvider/ToastProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "@/context/AuthContext/AuthContext";
 import ProgressProviders from "@/context/ProgressProvider/ProgressProvider";
+import HydrationScrubber from "@/components/HydrationScrubber/HydrationScrubber";
 import Script from "next/script";
 
 const raleway = Raleway({
@@ -52,6 +53,7 @@ export default function RootLayout({
                         <ToastProvider>
                             <AuthProvider>
                                 <ProgressProviders>
+                                    <HydrationScrubber />
                                     {children}
                                 </ProgressProviders>
                             </AuthProvider>

@@ -81,7 +81,9 @@ const BlogContainer = ({
                     gap-6
                     gap-y-10
                     mt-20
-                    ">
+                    "
+                        suppressHydrationWarning
+                    >
                         {(dataCustom ? dataCustom : itemPost?.posts)?.map(
                             (post: ItemCardBlogProps, key: number) => (
                                 <ItemCardPost

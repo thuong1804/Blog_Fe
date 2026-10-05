@@ -5,9 +5,10 @@ type PropsPopularPost = {
     data: {
         popularPosts: ItemCardBlogProps[];
     };
+    gridColsClass?: string;
 };
 
-const PopularPost = ({data} : PropsPopularPost) => {
-    return <PostCard title="Popular Post" itemCards={data?.popularPosts} />;
+const PopularPost = ({ data, gridColsClass }: PropsPopularPost) => {
+    return <PostCard title="Popular Post" itemCards={data?.popularPosts} gridColsClass={gridColsClass} />;
 };
 export default PopularPost;
