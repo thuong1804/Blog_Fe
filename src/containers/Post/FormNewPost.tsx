@@ -63,7 +63,6 @@ const FormNewPostContainer = () => {
 
     const handleSubmitForm = (values: FormValuesPost) => {
         setInfoForm(values);
-        toast.success("Post information configured!");
     };
 
     const handleSavePost = async () => {

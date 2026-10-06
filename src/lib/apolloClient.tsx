@@ -26,7 +26,13 @@ export function createApolloClient({
     // auth cookies reach the backend (cross-origin cookies are never sent).
     // Server components call the backend directly (public queries need no
     // auth, and relative URLs don't work server-side).
-    const uri = isServer ? getApiUri() : "/api/graphql";
+    // NOTE: during SSR prerender there is no `window`, so fall back to the
+    // absolute backend URL — a relative URL makes fetch() throw
+    // "Failed to parse URL from /api/graphql" on the server.
+    const uri =
+        isServer || typeof window === "undefined"
+            ? getApiUri()
+            : `${window.location.origin}/api/graphql`;
     return new ApolloClient({
         ssrMode: isServer,
         link: new HttpLink({
