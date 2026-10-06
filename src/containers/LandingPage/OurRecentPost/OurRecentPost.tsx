@@ -5,6 +5,7 @@ import { GET_LATEST_POSTS } from "@/graphql/Query/PostQuery";
 import { ItemCardBlogProps } from "@/type/typeProps";
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface OurRecentPostProps {
     initialPosts: ItemCardBlogProps[];
@@ -20,7 +21,7 @@ const OurRecentPost = ({initialPosts}: OurRecentPostProps) => {
         skip: true,
     });
 
-    const handelLoadMore = async () => {
+    const handleLoadMore = async () => {
         const currentSkip = posts.length;
 
         if (!hasMore) return;
@@ -41,8 +42,8 @@ const OurRecentPost = ({initialPosts}: OurRecentPostProps) => {
             if (newPosts.length < take) {
                 setHasMore(false);
             }
-        } catch (error) {
-            console.error("Error fetching more posts:", error);
+        } catch {
+            toast.error("Could not load more posts. Please try again.");
         }
     };
 
@@ -69,7 +70,7 @@ const OurRecentPost = ({initialPosts}: OurRecentPostProps) => {
                     itemCards={posts}
                     totalItem={posts.length}
                     isOutstanding
-                    actionLoadMore={hasMore ? handelLoadMore : undefined}
+                    actionLoadMore={hasMore ? handleLoadMore : undefined}
                 />
             )}
         </>

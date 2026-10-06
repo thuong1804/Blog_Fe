@@ -10,6 +10,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { path } from "@/constant/path";
 import { AuthorPageProps } from "@/type/typeProps";
 import { renderImage } from "@/utils";
+import { toast } from "sonner";
 
 type DropdownInfoProfileProps = {
     user: AuthorPageProps["user"] | null;
@@ -31,9 +32,11 @@ export default function DropdownInfoProfile({ user, position = "start" }: Dropdo
             });
             if (response.ok) {
                 window.location.href = "/";
+            } else {
+                toast.error("Logout failed. Please try again.");
             }
-        } catch (error) {
-            console.error("Error during logout:", error);
+        } catch {
+            toast.error("Logout failed. Please try again.");
         }
     };
 

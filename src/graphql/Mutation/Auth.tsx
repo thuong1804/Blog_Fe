@@ -60,3 +60,18 @@ export const RESET_PASSWORD = gql`
         }
     }
 `;
+
+export const LOGIN_WITH_GOOGLE = gql`
+    mutation LoginWithGoogle($idToken: String!) {
+        loginWithGoogle(idToken: $idToken) {
+            token
+            refreshToken
+            user {
+                id
+                email
+                name
+                avatar
+            }
+        }
+    }
+`;

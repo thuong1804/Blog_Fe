@@ -1,28 +1,25 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Breadcrumbs from "@/components/Breadcumbs/Breadcumbs";
+import React, { useState } from "react";
+import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 import { MarkdownExtra } from "@/components/Markdown/Markdown";
 import { LuEye } from "react-icons/lu";
 import { CiEdit } from "react-icons/ci";
 import { IoIosTrash } from "react-icons/io";
 import PostCard from "@/components/Post/PostCard";
 import PostViewTracker from "@/components/Post/PostViewTracker";
-import Modal from "@/components/Modal/Modal";
-import { BlogCategoryProps } from "@/type/typeProps";
+import DeletePostModal from "@/components/Post/DeletePostModal";
+import { PostDetailProps } from "@/type/typeProps";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DATE_TIME_DISPLAY } from "@/constant";
-import { renderImage } from "@/utils";
+import { DATE_TIME_DISPLAY, GENERAL_CATEGORY_SLUG } from "@/constant";
+import { formatSlug, renderImage, isPostAuthor } from "@/utils";
 import { useAuth } from "@/context/AuthContext/AuthContext";
-import { useMutation } from "@apollo/client";
-import { DELETE_POST } from "@/graphql/Mutation/Post";
-import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
-import { toast } from "sonner";
+import { useDeletePost } from "@/hooks/useDeletePost";
 
-const BlogCategory: React.FC<BlogCategoryProps> = ({
+const PostDetail: React.FC<PostDetailProps> = ({
     id,
     title,
     category,
@@ -37,72 +34,32 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
 }) => {
     const router = useRouter();
     const { user: userLogin } = useAuth();
-    const [openModal, setOpenModal] = useState(false);
     const [displayViews, setDisplayViews] = useState<number>(views ?? 0);
 
     const isAuthor = Boolean(
-        userLogin?.id && author && (
-            (author.id && Number(userLogin.id) === Number(author.id)) ||
-            (author.email && userLogin.email === author.email) ||
-            (author.handle && userLogin.handle === author.handle)
-        )
+        userLogin && isPostAuthor(userLogin, author)
     );
 
     const targetHandle = author?.handle || userLogin?.handle;
 
-    const [deletePost, { loading }] = useMutation(DELETE_POST, {
-        update(cache, { data }) {
-            if (data?.deletePost?.success && id) {
-                const normalizedId = cache.identify({ __typename: "Post", id: Number(id) });
-                cache.evict({ id: normalizedId });
-                cache.gc();
-            }
-        },
-        refetchQueries: targetHandle
-            ? [
-                  {
-                      query: GET_POST_BY_AUTHOR,
-                      variables: { handle: targetHandle },
-                  },
-              ]
-            : [],
-        onCompleted: (data) => {
-            if (data?.deletePost?.success) {
-                toast.success(data.deletePost.message || "Deleted post successfully");
-                setOpenModal(false);
-                router.push(author?.handle ? `/author/${author.handle}` : "/blog");
-            } else {
-                toast.error("Failed to delete post");
-            }
-        },
-        onError: () => {
-            toast.error("Failed to delete post");
-        },
-    });
-
-    const handleDeletePost = useCallback(async () => {
-        if (!id) {
-            toast.error("Post ID is missing");
-            return;
-        }
-        if (!userLogin?.id) {
-            toast.error("Please login to delete this post");
-            return;
-        }
-        await deletePost({
-            variables: { postId: Number(id) },
+    const { openModal, setOpenModal, loading, handleDeletePost } =
+        useDeletePost({
+            postId: id,
+            authorHandle: targetHandle,
+            userId: userLogin?.id,
+            onDeleted: () => {
+                router.push(
+                    author?.handle ? `/author/${author.handle}` : "/blog",
+                );
+            },
         });
-    }, [id, userLogin?.id, deletePost]);
-    const formatCategory = (slug: string) => {
-        return slug.toLowerCase().replace(/\s+/g, "-");
-    };
 
     if (!category) return null;
 
     const parentSlug = category.parent
-        ? formatCategory(category.parent.name)
-        : "general";
-    const childrenSlug = formatCategory(category.name);
+        ? formatSlug(category.parent.name)
+        : GENERAL_CATEGORY_SLUG;
+    const childrenSlug = formatSlug(category.name);
 
     const breadcrumbsCategories = [
         ...(category.parent
@@ -158,12 +115,6 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                         {/* Author */}
                         <div className="flex items-center gap-2 font-bold text-(--text-color-title)">
                             <div className="w-[30px] h-[30px] rounded overflow-hidden">
-                                {/* <Image
-                                    src={author.avatar}
-                                    alt="avatar"
-                                    width={30}
-                                    height={30}
-                                /> */}
                                 {renderImage(author.avatar)}
                             </div>
 
@@ -233,19 +184,14 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                     </div>
                 </div>
                 {id && (
-                    <Modal
-                        modal_id={`delete_detail_modal_${id}`}
-                        title="Delete post"
+                    <DeletePostModal
+                        modalId={`delete_detail_modal_${id}`}
+                        postTitle={title}
                         open={openModal}
                         setOpenModal={setOpenModal}
                         onSubmit={handleDeletePost}
-                        objectName="Delete"
                         loading={loading}
-                    >
-                        <p className="text-gray-600">
-                            Are you sure you want to delete <strong>{title}</strong>? This action cannot be undone.
-                        </p>
-                    </Modal>
+                    />
                 )}
 
                 <div className="w-full max-w-(--max-width-desktop) h-[2px] bg-gradient-to-r from-[#6D28D9] via-[#A3E635] to-[#6D28D9] mt-5 rounded-full"></div>
@@ -262,4 +208,4 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
     );
 
 };
-export default BlogCategory;
+export default PostDetail;

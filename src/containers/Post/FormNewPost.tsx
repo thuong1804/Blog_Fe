@@ -12,6 +12,7 @@ import PreviewPost from "./PreviewPost";
 import Button from "@/components/Button/Button";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_POST } from "@/graphql/Mutation/Post";
+import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
 import { Editor } from "@tiptap/react";
 import { uploadImageToCloud } from "@/utils/api";
 import { GET_UPLOAD_SIGNATURE } from "@/graphql/Mutation/UploadImage";
@@ -23,11 +24,12 @@ import { useRouter } from "next/navigation";
 const FormNewPostContainer = () => {
     const { user } = useAuth();
     const [contentPost, setContentPost] = useState<string>("");
-    const [infoForm, setInFoForm] = useState<FormValuesPost>();
+    const [infoForm, setInfoForm] = useState<FormValuesPost>();
     const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
     const router = useRouter();
 
     const [createPost] = useMutation(CREATE_POST);
+    const [isSaving, setIsSaving] = useState(false);
     const [filesToUpload, setFilesToUpload] = useState<{ file: File; localUrl: string }[]>([]);
     const editorRef = useRef<Editor>(null);
     const [getUploadSignature] = useMutation(GET_UPLOAD_SIGNATURE);
@@ -60,40 +62,61 @@ const FormNewPostContainer = () => {
     };
 
     const handleSubmitForm = (values: FormValuesPost) => {
-        setInFoForm(values);
+        setInfoForm(values);
         toast.success("Post information configured!");
     };
 
     const handleSavePost = async () => {
+        if (isSaving) return;
         if (!infoForm?.title) {
             toast.error("Please add post information and a title first!");
             return;
         }
 
-        const uploadPromises = filesToUpload.map((item) =>
-            uploadImageToCloud(item.file, getUploadSignature),
-        );
-        const urls = await Promise.all(uploadPromises);
+        setIsSaving(true);
+        try {
+            const uploadPromises = filesToUpload.map((item) =>
+                uploadImageToCloud(item.file, getUploadSignature),
+            );
+            const urls = await Promise.all(uploadPromises);
 
-        let html = editorRef.current?.getHTML() || "";
-        urls.forEach((url, i) => {
-            const localUrl = filesToUpload[i].localUrl;
-            html = html.replaceAll(localUrl, url);
-        });
+            let html = editorRef.current?.getHTML() || "";
+            urls.forEach((url, i) => {
+                const localUrl = filesToUpload[i].localUrl;
+                html = html.replaceAll(localUrl, url);
+            });
 
-        editorRef.current?.commands.setContent(html);
-        setContentPost(html);
+            editorRef.current?.commands.setContent(html);
+            setContentPost(html);
 
-        const res = await createPost({
-            variables: {
-                ...infoForm,
-                content: html,
-            },
-        });
+            const res = await createPost({
+                variables: {
+                    ...infoForm,
+                    content: html,
+                },
+                // Author page is client-cached: refetch so the new post
+                // appears immediately instead of after cache expiry.
+                refetchQueries:
+                    user?.handle
+                        ? [
+                              {
+                                  query: GET_POST_BY_AUTHOR,
+                                  variables: { handle: user.handle },
+                              },
+                          ]
+                        : [],
+            });
 
-        if (res.data) {
-            toast.success("Create post success");
-            if (user) router.push(`/author/${user.handle}`);
+            if (res.data) {
+                toast.success("Create post success");
+                if (user) router.push(`/author/${user.handle}`);
+            } else {
+                toast.error("Failed to create post. Please try again.");
+            }
+        } catch {
+            toast.error("Failed to create post. Please try again.");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -206,8 +229,10 @@ const FormNewPostContainer = () => {
                 {/* ── Footer actions ── */}
                 <div className="flex justify-end mt-4 pb-6">
                     <Button
-                        title="Save Post"
+                        title={isSaving ? "Saving..." : "Save Post"}
                         type="button"
+                        disabled={isSaving}
+                        loading={isSaving}
                         classNames="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-10 rounded-xl shadow-lg shadow-blue-500/25 active:scale-95 transition-all cursor-pointer"
                         onClick={handleSavePost}
                     />

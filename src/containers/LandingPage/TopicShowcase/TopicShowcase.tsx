@@ -10,15 +10,7 @@ import {
     HiOutlineGlobeAlt,
     HiOutlineSparkles
 } from "react-icons/hi";
-
-type CategoryItem = {
-    id?: number;
-    name: string;
-    description?: string;
-    slug: string;
-    posts?: any[];
-    children?: any[];
-};
+import { CategoryItem } from "@/type/typeProps";
 
 interface TopicShowcaseProps {
     categories: CategoryItem[];
@@ -71,7 +63,7 @@ const TopicShowcase: React.FC<TopicShowcaseProps> = ({ categories }) => {
                     {displayCategories.map((cat) => {
                         const style = getCategoryIcon(cat.name || cat.slug);
                         const Icon = style.icon;
-                        const postCount = (cat.posts?.length || 0) + (cat.children?.reduce((acc: number, c: any) => acc + (c.posts?.length || 0), 0) || 0);
+                        const postCount = (cat.posts?.length || 0) + (cat.children?.reduce((acc: number, c) => acc + (c.posts?.length || 0), 0) || 0);
 
                         return (
                             <Link

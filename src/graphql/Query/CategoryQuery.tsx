@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { CATEGORY_POST_FIELDS } from "@/graphql/Fragments/PostFragments";
 
 export const GET_ALL_CATEGORIES = gql`
     query Categories {
@@ -80,54 +81,13 @@ export const GET_ALL_POSTS_BY_CATEGORY = gql`
                 name
                 description
                 posts {
-                    id
-                    title
-                    excerpt
-                    image
-                    description
-                    category {
-                        id
-                        slug
-                        name
-                        parent {
-                            id
-                            name
-                            slug
-                        }
-                    }
-                    slug
-                    createdAt
-                    author {
-                        name
-                        avatar
-                        handle
-                    }
+                    ...CategoryPostFields
                 }
             }
             posts {
-                id
-                title
-                excerpt
-                image
-                description
-                slug
-                createdAt
-                category {
-                    id
-                    slug
-                    name
-                    parent {
-                        id
-                        name
-                        slug
-                    }
-                }
-                author {
-                    name
-                    avatar
-                    handle
-                }
+                ...CategoryPostFields
             }
         }
     }
+    ${CATEGORY_POST_FIELDS}
 `;

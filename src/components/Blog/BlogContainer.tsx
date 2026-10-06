@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import Breadcrumbs from "@/components/Breadcumbs/Breadcumbs";
+import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 import ItemCardPost from "@/components/Post/ItemCardPost";
 import { ItemCardBlogProps } from "@/type/typeProps";
 import NotFoundBlog from "../NotFoundBlog/NotFoundBlog";

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { print } from "graphql";
+import { LOGIN_WITH_GOOGLE } from "@/graphql/Mutation/Auth";
 
 const STATE_COOKIE = "g_oauth_state";
 const isProd = process.env.NODE_ENV === "production";
@@ -20,9 +22,10 @@ export async function GET(req: NextRequest) {
         );
     }
 
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    if (!clientSecret) {
-        console.error("Google login misconfigured: missing client secret");
+    if (!clientId || !clientSecret) {
+        console.error("Google login misconfigured: missing client id/secret");
         return NextResponse.json(
             { error: "OAuth misconfigured" },
             { status: 500 },
@@ -35,16 +38,23 @@ export async function GET(req: NextRequest) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
                 code,
-                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+                client_id: clientId,
                 client_secret: clientSecret,
                 redirect_uri: `${process.env.NEXT_PUBLIC_URL_BLOG}/api/auth/callback/google`,
                 grant_type: "authorization_code",
             }),
         });
 
-        const tokens = await tokenRes.json();
+        if (!tokenRes.ok) {
+            console.error("Google token exchange failed");
+            return NextResponse.json(
+                { error: "OAuth failed" },
+                { status: 400 },
+            );
+        }
+        const tokens = await tokenRes.json().catch(() => null);
 
-        if (!tokenRes.ok || tokens.error || !tokens.id_token) {
+        if (!tokens || tokens.error || !tokens.id_token) {
             console.error("Google token exchange failed");
             return NextResponse.json(
                 { error: "OAuth failed" },
@@ -55,26 +65,21 @@ export async function GET(req: NextRequest) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            cache: "no-store",
             body: JSON.stringify({
-                query: `
-          mutation LoginWithGoogle($idToken: String!) {
-            loginWithGoogle(idToken: $idToken) {
-              token
-              refreshToken
-              user {
-                id
-                email
-                name
-                avatar
-              }
-            }
-          }
-        `,
+                query: print(LOGIN_WITH_GOOGLE),
                 variables: { idToken: tokens.id_token },
             }),
         });
 
-        const result = await response.json();
+        if (!response.ok) {
+            console.error("Backend Google login failed");
+            return NextResponse.json(
+                { error: "OAuth failed" },
+                { status: 502 },
+            );
+        }
+        const result = await response.json().catch(() => null);
         const session = result?.data?.loginWithGoogle;
         if (!session?.token) {
             console.error("Backend Google login failed");
@@ -108,7 +113,11 @@ export async function GET(req: NextRequest) {
         res.cookies.set(STATE_COOKIE, "", { path: "/", maxAge: 0 });
         return res;
     } catch (err) {
-        console.error("Google login error:", err);
+        // Log message only — the error object may contain the OAuth `code`.
+        console.error(
+            "Google login error:",
+            err instanceof Error ? err.message : "unknown",
+        );
         return NextResponse.json({ error: "OAuth failed" }, { status: 500 });
     }
 }

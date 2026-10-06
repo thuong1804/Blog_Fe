@@ -77,13 +77,25 @@ export default function UploadImage<TData, TVariables>({
                 },
             );
 
-            const uploadData = await uploadRes.json();
+            // Check status BEFORE parsing: an error page isn't JSON and
+            // would throw a misleading SyntaxError.
             if (!uploadRes.ok) {
-                throw new Error("Upload failed");
+                const text = await uploadRes.text().catch(() => "");
+                throw new Error(text || "Upload failed");
             }
+            const uploadData = await uploadRes.json().catch(() => null);
 
-            const imageUrl = uploadData.secure_url;
-            const publicId = uploadData.public_id;
+            const imageUrl =
+                typeof uploadData?.secure_url === "string"
+                    ? uploadData.secure_url
+                    : null;
+            const publicId =
+                typeof uploadData?.public_id === "string"
+                    ? uploadData.public_id
+                    : null;
+            if (!imageUrl || !publicId) {
+                throw new Error("Upload failed: invalid response");
+            }
 
             onUploadSuccess?.(imageUrl);
 

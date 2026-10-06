@@ -4,7 +4,7 @@ import Button from "@/components/Button/Button";
 import InputField from "@/components/InputField/InputField";
 import UploadImage from "@/components/UploadImage/UploadImage";
 import { useAuth } from "@/context/AuthContext/AuthContext";
-import { UPDATE_USER_DETAIL } from "@/graphql/Mutation/AuthorQuery";
+import { UPDATE_USER_DETAIL } from "@/graphql/Mutation/User";
 import {
     DELETE_AVATAR_IMAGE,
     UPDATE_AVATAR_IMAGE,
@@ -59,10 +59,15 @@ const FormEditProfile = () => {
     };
 
     const handleDeleteAvatar = async () => {
+        if (!user?.id || !user?.avatarPublicId) {
+            toast.error("No avatar to delete. Please sign in again.");
+            return;
+        }
         try {
             await deleteAvatar({
                 variables: {
-                    publicId: user!.avatarPublicId,
+                    publicId: user.avatarPublicId,
+                    userId: user.id,
                 },
             });
             setFile(null);

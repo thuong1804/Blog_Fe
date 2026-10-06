@@ -60,13 +60,19 @@ export async function middleware(req: NextRequest) {
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                // Token refresh must never be cached.
+                cache: "no-store",
                 body: JSON.stringify({
                     query: queryString,
                     variables: { refreshToken },
                 }),
             });
 
-            const { data } = await response.json();
+            if (!response.ok) {
+                url.pathname = "/";
+                return NextResponse.redirect(url);
+            }
+            const { data } = await response.json().catch(() => ({}));
 
             if (data?.refreshToken?.token) {
                 const newAccessToken = data.refreshToken.token;
@@ -79,6 +85,18 @@ export async function middleware(req: NextRequest) {
                     path: "/",
                     maxAge: 60 * 60,
                 });
+                // Persist the rotated refresh token — otherwise the rotation
+                // chain breaks and the user is logged out on next refresh.
+                const newRefreshToken = data.refreshToken.refreshToken;
+                if (typeof newRefreshToken === "string" && newRefreshToken) {
+                    res.cookies.set("refreshToken", newRefreshToken, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                        sameSite: "strict",
+                        path: "/",
+                        maxAge: 30 * 24 * 60 * 60,
+                    });
+                }
                 return res;
             } else {
                 url.pathname = "/";
@@ -98,6 +116,7 @@ export const config = {
         "/profile/:path*",
         "/verify-otp",
         "/post/new",
+        "/post/:id",
         "/post/edit/:path*",
         "/edit-post/:path*",
     ],

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import DOMPurify from "isomorphic-dompurify";
+import { GENERAL_CATEGORY_SLUG } from "@/constant";
 
 const formatSlug = (slug: string): string => {
     return slug.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
@@ -14,7 +15,7 @@ const joinSlugCategory = (
     // thì dùng "general" làm segment đầu — khớp với fallback "general" trong
     // generateStaticParams của trang chi tiết bài viết. Không để parent rỗng
     // vì sẽ sinh URL 2 đoạn (//children/slug) rơi nhầm vào route category.
-    return `/${formatSlug(parent || "general")}/${formatSlug(children || "")}/${slug}`;
+    return `/${formatSlug(parent || GENERAL_CATEGORY_SLUG)}/${formatSlug(children || "")}/${slug}`;
 };
 
 const renderImage = (file: string | null | undefined) => {
@@ -123,5 +124,39 @@ const sanitizeHtml = (dirty: string): string => {
     });
 };
 
-export { formatSlug, joinSlugCategory, renderImage, markdownToHtml };
+type IdentityLike = {
+    id?: string | number | null;
+    email?: string | null;
+    handle?: string | null;
+} | null | undefined;
+
+/**
+ * Single ownership check used by every "is author?" gate (cards, detail,
+ * edit form). Match by id first, fall back to email/handle for posts whose
+ * author object is partially populated.
+ */
+const isPostAuthor = (
+    user: IdentityLike,
+    author: IdentityLike,
+): boolean => {
+    if (!user?.id || !author) return false;
+    if (author.id != null && Number(user.id) === Number(author.id)) {
+        return true;
+    }
+    if (author.email && user.email && user.email === author.email) {
+        return true;
+    }
+    if (author.handle && user.handle && user.handle === author.handle) {
+        return true;
+    }
+    return false;
+};
+
+export {
+    formatSlug,
+    joinSlugCategory,
+    renderImage,
+    markdownToHtml,
+    isPostAuthor,
+};
 

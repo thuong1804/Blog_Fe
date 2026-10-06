@@ -1,90 +1,16 @@
 import { gql } from "@apollo/client";
-
-export const GET_POST_BY_TITLE = gql`
-    query GetPostByTitle($search: String!) {
-        postsByTitle(search: $search) {
-            id
-            title
-            slug
-            content
-            description
-            excerpt
-            image
-            views
-            readingTime
-            isFeatured
-            createdAt
-            updatedAt
-            author {
-                id
-                name
-                email
-                avatar
-            }
-            authorId
-            tags {
-                id
-                name
-            }
-            comments {
-                id
-                content
-                createdAt
-            }
-            category {
-                id
-                name
-                parent {
-                    id
-                    name
-                }
-            }
-        }
-    }
-`;
+import {
+    POST_DETAIL_FIELDS,
+    POST_LIST_ITEM_FIELDS,
+} from "@/graphql/Fragments/PostFragments";
 
 export const GET_POST_BY_SLUG = gql`
     query GetPostBySlug($slug: String!) {
         post(slug: $slug) {
-            id
-            title
-            slug
-            content
-            description
-            excerpt
-            image
-            views
-            readingTime
-            isFeatured
-            createdAt
-            updatedAt
-            author {
-                id
-                name
-                email
-                avatar
-                handle
-            }
-            authorId
-            tags {
-                id
-                name
-            }
-            comments {
-                id
-                content
-                createdAt
-            }
-            category {
-                id
-                name
-                parent {
-                    id
-                    name
-                }
-            }
+            ...PostDetailFields
         }
     }
+    ${POST_DETAIL_FIELDS}
 `;
 
 export const GET_ALL_POST_POPULAR = gql`
@@ -136,26 +62,7 @@ export const GET_ALL_POSTS = gql`
       search: $search
     ) {
       items {
-        id
-        title
-        slug
-        excerpt
-        image
-        createdAt
-        description
-        author {
-            id
-            name
-            email
-            avatar
-            handle
-        }
-        category {
-          name
-          parent {
-            name
-          }
-        }
+        ...PostListItemFields
       }
       meta {
         total
@@ -164,6 +71,7 @@ export const GET_ALL_POSTS = gql`
       }
     }
   }
+  ${POST_LIST_ITEM_FIELDS}
 `;
 
 
@@ -179,26 +87,7 @@ export const GET_POSTS_BY_TAG = gql`
       tag: $tag
     ) {
       items {
-        id
-        title
-        slug
-        excerpt
-        image
-        createdAt
-        description
-        author {
-            id
-            name
-            email
-            avatar
-            handle
-        }
-        category {
-          name
-          parent {
-            name
-          }
-        }
+        ...PostListItemFields
       }
       meta {
         total
@@ -207,6 +96,7 @@ export const GET_POSTS_BY_TAG = gql`
       }
     }
   }
+  ${POST_LIST_ITEM_FIELDS}
 `;
 
 export const GET_SITE_STATS = gql`
@@ -267,40 +157,8 @@ export const GET_ALL_POST_SLUGS = gql`
 export const GET_POST_BY_ID = gql`
     query GetPostById($id: Int!) {
         post(id: $id) {
-            id
-            title
-            slug
-            content
-            description
-            excerpt
-            image
-            imagePublicId
-            views
-            readingTime
-            isFeatured
-            isPopular
-            createdAt
-            updatedAt
-            author {
-                id
-                name
-                email
-                avatar
-                handle
-            }
-            authorId
-            tags {
-                id
-                name
-            }
-            category {
-                id
-                name
-                parent {
-                    id
-                    name
-                }
-            }
+            ...PostDetailFields
         }
     }
+    ${POST_DETAIL_FIELDS}
 `;

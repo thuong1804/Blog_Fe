@@ -25,8 +25,10 @@ const VerifyOTPContainer = () => {
         if (!otp) return;
 
         setLoading(true);
-        try {
-            setTimeout(async () => {
+        // try/catch phải nằm TRONG callback async — bọc ngoài setTimeout
+        // sẽ không bắt được lỗi của verifyOTP/fetch.
+        setTimeout(async () => {
+            try {
                 const res = await verifyOTP({
                     variables: { email, code: otp },
                 });
@@ -45,12 +47,12 @@ const VerifyOTPContainer = () => {
                 } else {
                     toast.error(res.data.verifyOTP.message);
                 }
+            } catch {
+                toast.error("Verification failed. Please try again.");
+            } finally {
                 setLoading(false);
-            }, 2000);
-        } catch {
-            setLoading(false);
-            toast.error("Verification failed. Please try again.");
-        }
+            }
+        }, 2000);
     };
 
     const handleResetOtp = async () => {

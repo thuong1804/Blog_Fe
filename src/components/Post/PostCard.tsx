@@ -1,22 +1,19 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React from "react";
 import Image from "next/image";
 import Button from "../Button/Button";
 import ItemCardPost from "./ItemCardPost";
+import DeletePostModal from "./DeletePostModal";
 import { ItemCardBlogProps } from "@/type/typeProps";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
-import { DATE_TIME_DISPLAY } from "@/constant";
+import { DATE_TIME_DISPLAY, FALLBACK_POST_IMAGE } from "@/constant";
 import Link from "next/link";
-import { joinSlugCategory } from "@/utils";
+import { joinSlugCategory, isPostAuthor } from "@/utils";
 import { IoIosMore } from "react-icons/io";
-import Modal from "../Modal/Modal";
-import { DELETE_POST } from "@/graphql/Mutation/Post";
-import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
-import { useMutation } from "@apollo/client";
+import { useDeletePost } from "@/hooks/useDeletePost";
 import { useAuth } from "@/context/AuthContext/AuthContext";
-import { toast } from "sonner";
 
 type PostCardProps = {
     title: string;
@@ -40,63 +37,25 @@ const PostCard: React.FC<PostCardProps> = ({
     gridColsClass,
 }) => {
     const cardAnother = itemCards?.[0];
-    const [openModal, setOpenModal] = useState(false);
     const { user: userLogin } = useAuth();
 
     const isCardAnotherAuthor = Boolean(
-        isLogin ?? (
-            userLogin?.id && cardAnother?.author && (
-                (cardAnother.author.id && Number(userLogin.id) === Number(cardAnother.author.id)) ||
-                (cardAnother.author.email && userLogin.email === cardAnother.author.email) ||
-                (cardAnother.author.handle && userLogin.handle === cardAnother.author.handle)
-            )
-        )
+        isLogin ??
+            (userLogin && isPostAuthor(userLogin, cardAnother?.author))
     );
 
     const targetHandle = cardAnother?.author?.handle || userLogin?.handle;
 
-    const [deletePost, { loading }] = useMutation(DELETE_POST, {
-        update(cache, { data }) {
-            if (data?.deletePost?.success && cardAnother?.id) {
-                const normalizedId = cache.identify({ __typename: "Post", id: Number(cardAnother.id) });
-                cache.evict({ id: normalizedId });
-                cache.gc();
-            }
-        },
-        refetchQueries: targetHandle
-            ? [
-                  {
-                      query: GET_POST_BY_AUTHOR,
-                      variables: { handle: targetHandle },
-                  },
-              ]
-            : [],
-        onCompleted: (data) => {
-            if (data?.deletePost?.success) {
-                toast.success(data.deletePost.message || "Deleted post successfully");
-                setOpenModal(false);
-            } else {
-                toast.error("Failed to delete post");
-            }
-        },
-        onError: () => {
-            toast.error("Failed to delete post");
-        },
+    const {
+        openModal,
+        setOpenModal,
+        loading,
+        handleDeletePost: handleDeleteCardAnother,
+    } = useDeletePost({
+        postId: cardAnother?.id,
+        authorHandle: targetHandle,
+        userId: userLogin?.id,
     });
-
-    const handleDeleteCardAnother = useCallback(async () => {
-        if (!cardAnother?.id) {
-            toast.error("Post ID is missing");
-            return;
-        }
-        if (!userLogin?.id) {
-            toast.error("Please login to delete this post");
-            return;
-        }
-        await deletePost({
-            variables: { postId: Number(cardAnother.id) },
-        });
-    }, [cardAnother?.id, userLogin?.id, deletePost]);
 
     const handleLoadMore = () => {
         actionLoadMore?.();
@@ -164,7 +123,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             )}
                         >
                             <Image
-                                src={cardAnother.image || "/images/banner.jpg"}
+                                src={cardAnother.image || FALLBACK_POST_IMAGE}
                                 alt="banner-post"
                                 fill
                                 className="object-cover transition-transform duration-300 hover:scale-105"
@@ -246,19 +205,14 @@ const PostCard: React.FC<PostCardProps> = ({
                     </div>
 
                     {cardAnother && (
-                        <Modal
-                            modal_id={`delete_modal_outstanding_${cardAnother.id}`}
-                            title="Delete post"
+                        <DeletePostModal
+                            modalId={`delete_modal_outstanding_${cardAnother.id}`}
+                            postTitle={cardAnother.title}
                             open={openModal}
                             setOpenModal={setOpenModal}
                             onSubmit={handleDeleteCardAnother}
-                            objectName="Delete"
                             loading={loading}
-                        >
-                            <p className="text-gray-600">
-                                Are you sure you want to delete <strong>{cardAnother.title}</strong>? This action cannot be undone.
-                            </p>
-                        </Modal>
+                        />
                     )}
                 </div>
             )}

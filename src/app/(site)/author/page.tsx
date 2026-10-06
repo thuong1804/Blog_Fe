@@ -3,7 +3,7 @@ import { createApolloClient } from "@/lib/apolloClient";
 import Image from "next/image";
 import Link from "next/link";
 
-const client = createApolloClient({ isServer: true });
+export const revalidate = 300;
 
 interface User {
     id: number;
@@ -17,8 +17,14 @@ interface UsersData {
 }
 
 export default async function AuthorListPage() {
+    // Client per request — a module-level client would leak cached data
+    // across users.
+    const client = createApolloClient({ isServer: true });
     const { data } = await client.query<UsersData>({
         query: GET_LIST_USER,
+        context: {
+            fetchOptions: { next: { revalidate: 300 } },
+        },
     });
 
     return (

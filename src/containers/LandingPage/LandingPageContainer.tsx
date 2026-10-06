@@ -12,11 +12,15 @@ import NewsTicker from "./NewsTicker/NewsTicker";
 import TopicShowcase from "./TopicShowcase/TopicShowcase";
 import TrendingSection from "./TrendingSection/TrendingSection";
 
-export const revalidate = 300;
+const LANDING_REVALIDATE = 300;
 
 export default async function LandingPage() {
     const client = createApolloClient({ isServer: true });
     const FEATURED_POST_SLUG = 'ethical-hacking-techniques'
+
+    const fetchOptions = {
+        next: { revalidate: LANDING_REVALIDATE },
+    };
 
     const [
         { data: dataFeatured },
@@ -26,17 +30,21 @@ export default async function LandingPage() {
     ] = await Promise.all([
         client.query({
             query: GET_POST_BY_SLUG,
-            variables: { slug: FEATURED_POST_SLUG }
+            variables: { slug: FEATURED_POST_SLUG },
+            context: { fetchOptions },
         }),
         client.query({
-            query: GET_ALL_POST_POPULAR
+            query: GET_ALL_POST_POPULAR,
+            context: { fetchOptions },
         }),
         client.query({
             query: GET_LATEST_POSTS,
             variables: { skip: 0, take: 6 },
+            context: { fetchOptions },
         }),
         client.query({
-            query: GET_ALL_CATEGORIES
+            query: GET_ALL_CATEGORIES,
+            context: { fetchOptions },
         }),
     ]);
 

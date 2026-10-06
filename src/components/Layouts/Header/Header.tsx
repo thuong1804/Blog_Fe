@@ -21,7 +21,12 @@ export default async function HeaderLayout() {
     const token = (await cookies()).get("accessToken")?.value;
     const user = await getCurrentUserFromToken(token);
     const client = createApolloClient({isServer: true});
-    const { data } = await client.query({ query: GET_ALL_CATEGORIES });
+    const { data } = await client.query({
+        query: GET_ALL_CATEGORIES,
+        context: {
+            fetchOptions: { next: { revalidate: 300 } },
+        },
+    });
     const categories = data?.categories || [];
 
     return (

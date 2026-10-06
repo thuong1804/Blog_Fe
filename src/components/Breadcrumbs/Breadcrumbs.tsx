@@ -45,7 +45,12 @@ const Breadcrumbs: React.FC<ItemBreadcrumbsProps> = ({ items }) => {
         <div className="breadcrumbs text-base font-normal text-(--text-color-title)">
             <ul>
                 {defaultPath.map((item, key) => {
-                    const formatSlugItem = formatSlug(item.slug);
+                    // Callers pass slugs with a leading "/" (e.g. "/blog") —
+                    // strip it so the href doesn't become "//blog".
+                    const formatSlugItem = formatSlug(item.slug).replace(
+                        /^\/+/,
+                        "",
+                    );
                     const isLast = isLastItem(item.slug);
                     return (
                         <li key={key}>

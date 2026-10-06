@@ -17,9 +17,13 @@ export default function OtpCountdown({
     const seconds = counter % 60;
 
     useEffect(() => {
-        const storedExpire = localStorage.getItem("otp_expire_time");
-        if (storedExpire) {
-            setExpireTime(Number(storedExpire));
+        try {
+            const storedExpire = localStorage.getItem("otp_expire_time");
+            if (storedExpire) {
+                setExpireTime(Number(storedExpire));
+            }
+        } catch {
+            // private-mode storage may throw — countdown just won't restore
         }
     }, [resetFlag]);
 

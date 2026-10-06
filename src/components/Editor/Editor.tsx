@@ -67,7 +67,6 @@ const TiptapEditor = ({
             OrderedList,
             Underline,
             Strike,
-            Link,
             Italic,
             Highlight.configure({ multicolor: true }),
             Heading.configure({
@@ -147,7 +146,6 @@ const TiptapEditor = ({
                     }
                 },
             }),
-            Underline,
             Superscript,
             Subscript,
             TextAlign.configure({ types: ["heading", "paragraph"] }),

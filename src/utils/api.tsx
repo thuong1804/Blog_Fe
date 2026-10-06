@@ -32,8 +32,13 @@ export async function uploadImageToCloud(
             throw new Error(`Upload failed: ${response.statusText}`);
         }
 
-        const result = await response.json();
-        return result.secure_url as string;
+        const result = await response.json().catch(() => null);
+        const secureUrl =
+            typeof result?.secure_url === "string" ? result.secure_url : null;
+        if (!secureUrl) {
+            throw new Error("Upload failed: missing secure_url");
+        }
+        return secureUrl;
     } catch (err) {
         throw err instanceof Error ? err : new Error("Unknown error");
     }

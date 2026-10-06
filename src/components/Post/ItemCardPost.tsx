@@ -6,15 +6,14 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { DATE_TIME_DISPLAY } from "@/constant";
 import { joinSlugCategory, renderImage } from "@/utils";
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { IoIosMore } from "react-icons/io";
 import { HiArrowNarrowRight } from "react-icons/hi";
-import Modal from "../Modal/Modal";
-import { DELETE_POST } from "@/graphql/Mutation/Post";
-import { useMutation } from "@apollo/client";
+import DeletePostModal from "./DeletePostModal";
 import { useAuth } from "@/context/AuthContext/AuthContext";
-import { toast } from "sonner";
-import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
+import { useDeletePost } from "@/hooks/useDeletePost";
+import { isPostAuthor } from "@/utils";
+import { FALLBACK_POST_IMAGE } from "@/constant";
 
 type ImageSize = "sm" | "md" | "lg";
 
@@ -37,9 +36,8 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
     imageSize = "lg",
     isLogin,
 }) => {
-    const [openModal, setOpenModal] = useState(false);
     const { user: userLogin } = useAuth();
-    const [imgSrc, setImgSrc] = useState(image || "/images/banner.jpg");
+    const [imgSrc, setImgSrc] = useState(image || FALLBACK_POST_IMAGE);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -47,64 +45,21 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
     }, []);
 
     useEffect(() => {
-        setImgSrc(image || "/images/banner.jpg");
+        setImgSrc(image || FALLBACK_POST_IMAGE);
     }, [image]);
 
     const isAuthor = Boolean(
-        mounted &&
-        (isLogin ?? (
-            userLogin?.id && (
-                (author?.id && Number(userLogin.id) === Number(author.id)) ||
-                (author?.email && userLogin.email === author.email) ||
-                (author?.handle && userLogin.handle === author.handle)
-            )
-        ))
+        mounted && (isLogin ?? (userLogin && isPostAuthor(userLogin, author)))
     );
 
     const targetHandle = author?.handle || userLogin?.handle;
 
-    const [deletePost, { loading }] = useMutation(DELETE_POST, {
-        update(cache, { data }) {
-            if (data?.deletePost?.success && id) {
-                const normalizedId = cache.identify({ __typename: "Post", id: Number(id) });
-                cache.evict({ id: normalizedId });
-                cache.gc();
-            }
-        },
-        refetchQueries: targetHandle
-            ? [
-                  {
-                      query: GET_POST_BY_AUTHOR,
-                      variables: { handle: targetHandle },
-                  },
-              ]
-            : [],
-        onCompleted: (data) => {
-            if (data?.deletePost?.success) {
-                toast.success(data.deletePost.message || "Deleted post successfully");
-                setOpenModal(false);
-            } else {
-                toast.error("Failed to delete post");
-            }
-        },
-        onError: () => {
-            toast.error("Failed to delete post");
-        },
-    });
-
-    const handleDeletePost = useCallback(async () => {
-        if (!id) {
-            toast.error("Post ID is missing");
-            return;
-        }
-        if (!userLogin?.id) {
-            toast.error("Please login to delete this post");
-            return;
-        }
-        await deletePost({
-            variables: { postId: Number(id) },
+    const { openModal, setOpenModal, loading, handleDeletePost } =
+        useDeletePost({
+            postId: id,
+            authorHandle: targetHandle,
+            userId: userLogin?.id,
         });
-    }, [id, userLogin?.id, deletePost]);
 
     // Tối ưu việc tính toán class bằng useMemo
     const imageClass = useMemo(() => {
@@ -174,7 +129,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                             src={imgSrc}
                             fill
                             alt={title}
-                            onError={() => setImgSrc("/images/banner.jpg")}
+                            onError={() => setImgSrc(FALLBACK_POST_IMAGE)}
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                             sizes="(max-width: 768px) 100vw, 400px"
                             unoptimized={Boolean(typeof imgSrc === "string" && imgSrc.endsWith(".gif"))}
@@ -221,17 +176,14 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                 </Link>
             </div>
 
-            <Modal
-                modal_id={`delete_modal_${id}`}
-                title="Delete post"
+            <DeletePostModal
+                modalId={`delete_modal_${id}`}
+                postTitle={title}
                 open={openModal}
                 setOpenModal={setOpenModal}
                 onSubmit={handleDeletePost}
-                objectName="Delete"
                 loading={loading}
-            >
-                <p className="text-gray-600">Are you sure you want to delete <strong>{title}</strong>? This action cannot be undone.</p>
-            </Modal>
+            />
         </div>
     );
 };

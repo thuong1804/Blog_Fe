@@ -7,10 +7,11 @@ import { useAuth } from "@/context/AuthContext/AuthContext";
 import { UPDATE_POST } from "@/graphql/Mutation/Post";
 import { GET_UPLOAD_SIGNATURE } from "@/graphql/Mutation/UploadImage";
 import { GET_POST_BY_ID } from "@/graphql/Query/PostQuery";
+import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
 import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
 import { GET_TAGS } from "@/graphql/Query/TagQuery";
 import { FormValuesPost } from "@/type/typeProps";
-import { joinSlugCategory, markdownToHtml } from "@/utils";
+import { joinSlugCategory, markdownToHtml, isPostAuthor } from "@/utils";
 import { uploadImageToCloud } from "@/utils/api";
 import { useMutation, useQuery } from "@apollo/client";
 import { Editor } from "@tiptap/react";
@@ -102,10 +103,10 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
     // Check ownership
     const isAuthor = useMemo(() => {
         if (!post || !user) return true; // wait or fallback
-        if (post.authorId && Number(user.id) === Number(post.authorId)) return true;
-        if (post.author?.email && user.email === post.author.email) return true;
-        if (post.author?.handle && user.handle === post.author.handle) return true;
-        return false;
+        return isPostAuthor(user, {
+            ...post.author,
+            id: post.author?.id ?? post.authorId,
+        });
     }, [post, user]);
 
     const handleAddFile = (file: File) => {
@@ -160,6 +161,17 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                     image: infoForm.image,
                     content: html,
                 },
+                // Author page is client-cached: refetch so the edit shows
+                // immediately instead of after cache expiry.
+                refetchQueries:
+                    user?.handle
+                        ? [
+                              {
+                                  query: GET_POST_BY_AUTHOR,
+                                  variables: { handle: user.handle },
+                              },
+                          ]
+                        : [],
             });
 
             if (res.data?.updatePost) {

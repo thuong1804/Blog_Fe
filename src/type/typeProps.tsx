@@ -51,7 +51,7 @@ export type ItemCardBlogProps = {
     }[];
 };
 
-export type BlogCategoryProps = {
+export type PostDetailProps = {
     id?: number | string;
     title: string;
     category?: CategoryProps;
