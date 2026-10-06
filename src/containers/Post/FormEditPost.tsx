@@ -159,7 +159,6 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                     tagIds: infoForm.tagIds,
                     image: infoForm.image,
                     content: html,
-                    authorId: user?.id ? Number(user.id) : undefined,
                 },
             });
 
@@ -295,7 +294,6 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                         {user && (
                             <div className="px-5 pt-3 pb-2 border-b border-gray-100 shrink-0">
                                 <FormPostField
-                                    user={{ user }}
                                     onSubmit={handleSubmitForm}
                                     initialData={infoForm}
                                     initialImage={infoForm?.image}

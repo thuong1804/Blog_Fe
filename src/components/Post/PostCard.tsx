@@ -94,7 +94,7 @@ const PostCard: React.FC<PostCardProps> = ({
             return;
         }
         await deletePost({
-            variables: { postId: Number(cardAnother.id), authorId: Number(userLogin.id) },
+            variables: { postId: Number(cardAnother.id) },
         });
     }, [cardAnother?.id, userLogin?.id, deletePost]);
 

@@ -88,7 +88,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
             return;
         }
         await deletePost({
-            variables: { postId: Number(id), authorId: Number(userLogin.id) },
+            variables: { postId: Number(id) },
         });
     }, [id, userLogin?.id, deletePost]);
     const formatCategory = (slug: string) => {

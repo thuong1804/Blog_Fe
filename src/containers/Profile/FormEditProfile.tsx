@@ -43,16 +43,12 @@ const FormEditProfile = () => {
     const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!user?.id) {
-            console.error("User ID not found");
-            return;
-        }
-
         try {
             await updateUserDetail({
                 variables: {
-                    id: user!.id,
-                    ...form,
+                    name: form.name,
+                    description: form.description,
+                    handle: form.handle,
                 },
             });
 
@@ -67,7 +63,6 @@ const FormEditProfile = () => {
             await deleteAvatar({
                 variables: {
                     publicId: user!.avatarPublicId,
-                    userId: user!.id,
                 },
             });
             setFile(null);
@@ -172,9 +167,6 @@ const FormEditProfile = () => {
                                         setDisabledDeleteButton(loading)
                                     }
                                     actionUpload={updateAvatarUser}
-                                    params={{
-                                        userId: user?.id,
-                                    }}
                                 />
                                 <Button
                                     classNames="rounded-full bg-slate-100 py-[10px] px-[22px] text-sm font-medium text-slate-700 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-200 shadow-none"

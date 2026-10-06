@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CHANGE_PASSWORD = gql`
-    mutation ChangePassword($email: String!, $password: String!) {
-        changePassword(id: $id, password: $password) {
+    mutation ChangePassword($password: String!) {
+        changePassword(password: $password) {
             success
             message
         }
@@ -10,8 +10,8 @@ export const CHANGE_PASSWORD = gql`
 `;
 
 export const VALIDATE_PASSWORD = gql`
-    mutation ValidatePassword($email: String!, $password: String!) {
-        validatePassword(id: $id, password: $password) {
+    mutation ValidatePassword($password: String!) {
+        validatePassword(password: $password) {
             success
             message
         }

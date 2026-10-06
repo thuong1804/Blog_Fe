@@ -102,7 +102,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
             return;
         }
         await deletePost({
-            variables: { postId: Number(id), authorId: Number(userLogin.id) },
+            variables: { postId: Number(id) },
         });
     }, [id, userLogin?.id, deletePost]);
 

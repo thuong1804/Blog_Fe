@@ -8,7 +8,6 @@ export const CREATE_POST = gql`
         $image: String!
         $categoryId: Int!
         $content: String!
-        $authorId: Int!
         $tagIds: [Int!]!
     ) {
         createPost(
@@ -18,7 +17,6 @@ export const CREATE_POST = gql`
             image: $image
             content: $content
             categoryId: $categoryId
-            authorId: $authorId
             tagIds: $tagIds
         ) {
             id
@@ -44,8 +42,8 @@ export const CREATE_POST = gql`
 `;
 
 export const DELETE_POST = gql`
-    mutation DeletePost($postId: Int!, $authorId: Int!) {
-        deletePost(postId: $postId, authorId: $authorId) {
+    mutation DeletePost($postId: Int!) {
+        deletePost(postId: $postId) {
             success
             message
         }
@@ -62,7 +60,6 @@ export const UPDATE_POST = gql`
         $image: String
         $imagePublicId: String
         $categoryId: Int
-        $authorId: Int
         $tagIds: [Int!]
         $isPopular: Boolean
         $isFeatured: Boolean
@@ -78,7 +75,6 @@ export const UPDATE_POST = gql`
             image: $image
             imagePublicId: $imagePublicId
             categoryId: $categoryId
-            authorId: $authorId
             tagIds: $tagIds
             isPopular: $isPopular
             isFeatured: $isFeatured

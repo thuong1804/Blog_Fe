@@ -1,6 +1,5 @@
 import Button from "@/components/Button/Button";
 import InputField from "@/components/InputField/InputField";
-import { useAuth } from "@/context/AuthContext/AuthContext";
 import { CHANGE_PASSWORD, VALIDATE_PASSWORD } from "@/graphql/Mutation/Auth";
 import { useMutation } from "@apollo/client";
 import { useState } from "react";
@@ -15,7 +14,6 @@ const FormChangePassword = () => {
     const [inputOldPassword, setInputOldPassword] = useState<string>("");
     const [changePassword] = useMutation(CHANGE_PASSWORD);
     const [validatePassword] = useMutation(VALIDATE_PASSWORD);
-    const { user } = useAuth();
     const [step, setStep] = useState<number>(0);
 
     const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +22,6 @@ const FormChangePassword = () => {
         try {
             const res = await changePassword({
                 variables: {
-                    email: user?.email,
                     password: form.password,
                 },
             });
@@ -57,7 +54,6 @@ const FormChangePassword = () => {
         try {
             const res = await validatePassword({
                 variables: {
-                    email: user?.email,
                     password: inputOldPassword,
                 },
             });

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { IoIosCamera } from "react-icons/io";
 
 type PropsUpload<TData, TVariables> = {
-    params: Record<string, string | number | Date | undefined>;
+    params?: Record<string, string | number | Date | undefined>;
     title?: string;
     onUploadSuccess?: (imageUrl: string) => void;
     onLoadingUpload?: ((loading: boolean) => void) | undefined;
@@ -18,7 +18,7 @@ export default function UploadImage<TData, TVariables>({
     onUploadSuccess,
     actionUpload,
     onLoadingUpload,
-    params,
+    params = {},
     title = "Upload image",
 }: PropsUpload<TData, TVariables>) {
     const [getUploadSignature] = useMutation(GET_UPLOAD_SIGNATURE);

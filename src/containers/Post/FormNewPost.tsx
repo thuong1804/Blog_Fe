@@ -88,7 +88,6 @@ const FormNewPostContainer = () => {
             variables: {
                 ...infoForm,
                 content: html,
-                authorId: user?.id,
             },
         });
 
@@ -155,7 +154,6 @@ const FormNewPostContainer = () => {
                         {user && (
                             <div className="px-5 pt-3 pb-2 border-b border-gray-100 shrink-0">
                                 <FormPostField
-                                    user={{ user }}
                                     onSubmit={handleSubmitForm}
                                     initialData={infoForm}
                                     initialImage={infoForm?.image}

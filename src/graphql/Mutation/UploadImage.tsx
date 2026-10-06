@@ -28,11 +28,10 @@ export const UPDATE_POST_IMAGE = gql`
 
 export const UPDATE_AVATAR_IMAGE = gql`
     mutation UpdateAvatarUser(
-        $userId: Int!
         $image: String!
         $publicId: String!
     ) {
-        updateAvatarUser(userId: $userId, image: $image, publicId: $publicId) {
+        updateAvatarUser(image: $image, publicId: $publicId) {
             result
             user {
                 id
@@ -44,8 +43,8 @@ export const UPDATE_AVATAR_IMAGE = gql`
 `;
 
 export const DELETE_AVATAR_IMAGE = gql`
-    mutation DeleteAvatar($publicId: String!, $userId: Int!) {
-        deleteAvatar(publicId: $publicId, userId: $userId) {
+    mutation DeleteAvatar($publicId: String!) {
+        deleteAvatar(publicId: $publicId) {
             result
             message
         }

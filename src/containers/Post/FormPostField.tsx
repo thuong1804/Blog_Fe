@@ -6,7 +6,6 @@ import UploadImage from "@/components/UploadImage/UploadImage";
 import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";
 import { GET_TAGS } from "@/graphql/Query/TagQuery";
 import {
-    AuthorPageProps,
     CategoryOptionProps,
     FormValuesPost,
     optionProps,
@@ -27,7 +26,6 @@ import {
 import { MultiValue, SingleValue } from "react-select";
 
 type FormProps = {
-    user: AuthorPageProps;
     onSubmit?: (values: FormValuesPost) => void | Promise<void>;
     initialData?: Partial<FormValuesPost>;
     initialImage?: string;
@@ -36,7 +34,6 @@ type FormProps = {
 };
 
 const FormPostField = ({
-    user,
     onSubmit,
     initialData,
     initialImage,
@@ -305,7 +302,6 @@ const FormPostField = ({
                                         <UploadImage
                                             onUploadSuccess={(imageURL) => setFile(imageURL)}
                                             title="Upload Thumbnail"
-                                            params={{ userId: user?.user?.id }}
                                         />
                                         {file && (
                                             <button
