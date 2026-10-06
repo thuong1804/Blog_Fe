@@ -38,6 +38,10 @@ export default async function BlogSlug(props: { params: tParams }) {
 
     const { category } = data;
 
+    if (!category) {
+        return "404";
+    }
+
     const postData = category?.children.flatMap(
         (child: ChildrenPost) => child.posts,
     );
@@ -55,6 +59,8 @@ export default async function BlogSlug(props: { params: tParams }) {
     return (
         <BlogContainer
             breadcrumbItem={pathBreadcrumbs}
+            variant="category"
+            totalCount={postData.length}
             dataCustom={postData}
             title={category.name}
             description={category.description}

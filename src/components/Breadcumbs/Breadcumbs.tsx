@@ -22,12 +22,23 @@ const Breadcrumbs: React.FC<ItemBreadcrumbsProps> = ({ items }) => {
         },
         ...items,
     ];
-    const isLastItem = (path: string) => {
-        const splitPathName = pathName.split("/");
-        const isLast =
-            splitPathName[splitPathName.length - 1] ===
-            path.toLowerCase();
-        return isLast;
+    const isLastItem = (slug: string) => {
+        // So sánh theo slug (không phân biệt hoa/thường) thay vì tên hiển
+        // thị: tên có thể chứa ký tự không có trong URL (#, &, khoảng trắng).
+        const pathSegments = pathName.split("/").filter(Boolean);
+        const lastSegment = pathSegments[pathSegments.length - 1] ?? "";
+        const itemSegments = formatSlug(slug)
+            .split("/")
+            .filter(Boolean);
+        const itemLast = itemSegments[itemSegments.length - 1] ?? "";
+        try {
+            return (
+                decodeURIComponent(lastSegment).toLowerCase() ===
+                decodeURIComponent(itemLast).toLowerCase()
+            );
+        } catch {
+            return lastSegment.toLowerCase() === itemLast.toLowerCase();
+        }
     };
 
     return (
@@ -35,7 +46,7 @@ const Breadcrumbs: React.FC<ItemBreadcrumbsProps> = ({ items }) => {
             <ul>
                 {defaultPath.map((item, key) => {
                     const formatSlugItem = formatSlug(item.slug);
-                    const isLast = isLastItem(item.path);
+                    const isLast = isLastItem(item.slug);
                     return (
                         <li key={key}>
                             {isLast ? (

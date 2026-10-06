@@ -16,11 +16,19 @@ export default async function BlogSlug(props: { params: tParams }) {
 
     const { category } = data;
 
+    if (!category) {
+        return "404";
+    }
+
     const pathBreadcrumbs = [
-        {
-            path: category?.parent?.name,
-            slug: category?.parent?.slug,
-        },
+        ...(category?.parent
+            ? [
+                  {
+                      path: category.parent.name,
+                      slug: category.parent.slug,
+                  },
+              ]
+            : []),
         {
             path: category?.name,
             slug: category?.slug,
@@ -31,6 +39,8 @@ export default async function BlogSlug(props: { params: tParams }) {
     return (
         <BlogContainer
             breadcrumbItem={pathBreadcrumbs}
+            variant="category"
+            totalCount={category?.posts?.length}
             itemPost={category}
             title={category.name}
             description={category.description}

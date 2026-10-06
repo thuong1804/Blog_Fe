@@ -10,7 +10,11 @@ const joinSlugCategory = (
     children: string | undefined,
     slug: string,
 ) => {
-    return `/${formatSlug(parent || "")}/${formatSlug(children || "")}/${slug}`;
+    // Bài thuộc category cha trực tiếp (không có parent, vd "AI & Data")
+    // thì dùng "general" làm segment đầu — khớp với fallback "general" trong
+    // generateStaticParams của trang chi tiết bài viết. Không để parent rỗng
+    // vì sẽ sinh URL 2 đoạn (//children/slug) rơi nhầm vào route category.
+    return `/${formatSlug(parent || "general")}/${formatSlug(children || "")}/${slug}`;
 };
 
 const renderImage = (file: string | null | undefined) => {

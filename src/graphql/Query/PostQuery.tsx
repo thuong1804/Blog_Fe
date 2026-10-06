@@ -167,6 +167,57 @@ export const GET_ALL_POSTS = gql`
 `;
 
 
+export const GET_POSTS_BY_TAG = gql`
+  query GetPostsByTag(
+    $page: Int!
+    $pageSize: Int!
+    $tag: String!
+  ) {
+    posts(
+      page: $page
+      pageSize: $pageSize
+      tag: $tag
+    ) {
+      items {
+        id
+        title
+        slug
+        excerpt
+        image
+        createdAt
+        description
+        author {
+            id
+            name
+            email
+            avatar
+            handle
+        }
+        category {
+          name
+          parent {
+            name
+          }
+        }
+      }
+      meta {
+        total
+        totalPages
+        currentPage
+      }
+    }
+  }
+`;
+
+export const GET_SITE_STATS = gql`
+    query GetSiteStats {
+        siteStats {
+            totalViews
+            totalPosts
+        }
+    }
+`;
+
 export const GET_LATEST_POSTS = gql`
     query GetLatestPosts($skip: Int, $take: Int) {
         postsLatest(skip: $skip, take: $take) {

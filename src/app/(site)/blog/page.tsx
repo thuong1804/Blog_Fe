@@ -1,6 +1,6 @@
 // app/blog/page.tsx (Server Component)
 import BlogContainer from "@/components/Blog/BlogContainer";
-import { GET_ALL_POSTS } from "@/graphql/Query/PostQuery";
+import { GET_ALL_POSTS, GET_SITE_STATS } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 import { ItemCardBlogProps } from "@/type/typeProps";
 
@@ -8,6 +8,7 @@ interface GetAllPostsData {
     posts: {
         items: ItemCardBlogProps[];
         meta: {
+            total: number;
             totalPages: number;
             currentPage: number;
         }
@@ -40,8 +41,17 @@ export default async function BlogPage({
         }
     });
 
+    const { data: statsData } = await client.query({
+        query: GET_SITE_STATS,
+        context: {
+            fetchOptions: {
+                next: { revalidate: 300 }
+            }
+        }
+    });
+
     const posts = data.posts.items;
-    const { totalPages, currentPage } = data.posts.meta;
+    const { total, totalPages, currentPage } = data.posts.meta;
 
     const pathBreadcrumbs = [
         { path: "Blog", slug: "/blog" },
@@ -50,6 +60,9 @@ export default async function BlogPage({
     return (
         <BlogContainer
             breadcrumbItem={pathBreadcrumbs}
+            variant="blog"
+            totalCount={total}
+            totalViews={statsData?.siteStats?.totalViews}
             totalPages={totalPages}
             currentPage={currentPage}
             dataCustom={posts}

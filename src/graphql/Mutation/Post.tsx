@@ -50,6 +50,12 @@ export const DELETE_POST = gql`
     }
 `;
 
+export const INCREMENT_POST_VIEWS = gql`
+    mutation IncrementPostViews($postId: Int!) {
+        incrementPostViews(postId: $postId)
+    }
+`;
+
 export const UPDATE_POST = gql`
     mutation UpdatePost(
         $id: Int!

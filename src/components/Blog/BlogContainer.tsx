@@ -17,6 +17,9 @@ type CustomItemProps = {
 type BlogItemProp = {
     title?: string;
     description?: string;
+    variant?: "blog" | "category" | "tag";
+    totalCount?: number;
+    totalViews?: number;
     itemPost?: {
         name: string;
         description: string;
@@ -28,11 +31,20 @@ type BlogItemProp = {
     }[];
 };
 
+const VARIANT_LABEL: Record<string, string> = {
+    blog: "Blog",
+    category: "Category",
+    tag: "Tag",
+};
+
 const BlogContainer = ({
     itemPost,
     breadcrumbItem,
     title,
     description,
+    variant = "blog",
+    totalCount,
+    totalViews,
     dataCustom,
     currentPage,
     totalPages,
@@ -59,16 +71,61 @@ const BlogContainer = ({
                 </div>
 
                 {/* Header */}
-                <div className="flex flex-col items-center text-center mt-10">
-                    <h4>OUR BLOGS</h4>
+                <div className="relative mt-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-indigo-50 via-white to-lime-50 px-6 py-12 text-center sm:py-16">
+                    {/* decorative blobs */}
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-indigo-300/30 blur-3xl"
+                    />
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute -right-20 -bottom-24 h-72 w-72 rounded-full bg-lime-300/40 blur-3xl"
+                    />
+                    {/* dot pattern */}
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 opacity-60"
+                        style={{
+                            backgroundImage:
+                                "radial-gradient(circle at 1px 1px, rgb(99 102 241 / 0.10) 1px, transparent 0)",
+                            backgroundSize: "22px 22px",
+                        }}
+                    />
 
-                    <h1 className="mt-6 max-w-[900px]">
-                        {title ? title : itemPost?.name}
-                    </h1>
+                    <div className="relative flex flex-col items-center">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-white/80 px-4 py-1.5 text-xs font-bold tracking-[0.18em] text-indigo-700 uppercase shadow-sm backdrop-blur">
+                            {VARIANT_LABEL[variant] ?? "Blog"}
+                            {typeof totalCount === "number" && (
+                                <span className="font-semibold tracking-normal text-slate-500 normal-case">
+                                    · {totalCount}{" "}
+                                    {totalCount === 1
+                                        ? "article"
+                                        : "articles"}
+                                </span>
+                            )}
+                            {typeof totalViews === "number" && (
+                                <span className="font-semibold tracking-normal text-slate-500 normal-case">
+                                    · {totalViews.toLocaleString()} views
+                                </span>
+                            )}
+                        </span>
 
-                    <p className="mt-6 max-w-[1010px] text-(--text-color-body)">
-                        {description ? description : itemPost?.description}
-                    </p>
+                        <p className="mt-5 text-xs font-bold tracking-[0.28em] text-slate-400 uppercase">
+                            Our blogs
+                        </p>
+
+                        <h1 className="mt-3 max-w-[900px] text-4xl font-extrabold text-slate-900 sm:text-5xl">
+                            {title ? title : itemPost?.name}
+                        </h1>
+
+                        <p className="mt-4 max-w-[720px] text-base text-slate-500">
+                            {description
+                                ? description
+                                : itemPost?.description}
+                        </p>
+
+                        <div className="mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-lime-400" />
+                    </div>
                 </div>
 
                 {(dataCustom && dataCustom.length > 0) ||

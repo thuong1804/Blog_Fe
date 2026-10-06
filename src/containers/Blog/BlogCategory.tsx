@@ -7,6 +7,7 @@ import { LuEye } from "react-icons/lu";
 import { CiEdit } from "react-icons/ci";
 import { IoIosTrash } from "react-icons/io";
 import PostCard from "@/components/Post/PostCard";
+import PostViewTracker from "@/components/Post/PostViewTracker";
 import Modal from "@/components/Modal/Modal";
 import { BlogCategoryProps } from "@/type/typeProps";
 import dayjs from "dayjs";
@@ -37,6 +38,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
     const router = useRouter();
     const { user: userLogin } = useAuth();
     const [openModal, setOpenModal] = useState(false);
+    const [displayViews, setDisplayViews] = useState<number>(views ?? 0);
 
     const isAuthor = Boolean(
         userLogin?.id && author && (
@@ -95,16 +97,22 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
         return slug.toLowerCase().replace(/\s+/g, "-");
     };
 
-    if (!category || !category.parent) return null;
+    if (!category) return null;
 
-    const parentSlug = formatCategory(category.parent.name);
+    const parentSlug = category.parent
+        ? formatCategory(category.parent.name)
+        : "general";
     const childrenSlug = formatCategory(category.name);
 
     const breadcrumbsCategories = [
-        {
-            path: category.parent.name,
-            slug: parentSlug,
-        },
+        ...(category.parent
+            ? [
+                  {
+                      path: category.parent.name,
+                      slug: parentSlug,
+                  },
+              ]
+            : []),
         {
             path: category.name,
             slug: `${parentSlug}/${childrenSlug}`,
@@ -113,6 +121,12 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
 
     return (
         <div className="w-full lg:pt-14 py-6 px-6 lg:px-6">
+            {id != null && (
+                <PostViewTracker
+                    postId={Number(id)}
+                    onCounted={setDisplayViews}
+                />
+            )}
             {/* Breadcrumbs */}
             <div className="max-w-(--max-width-desktop) mx-auto">
                 <Breadcrumbs items={breadcrumbsCategories} />
@@ -166,12 +180,13 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2">
                             {tags.map((tag, index) => (
-                                <span
+                                <Link
                                     key={index}
+                                    href={`/tag/${encodeURIComponent(tag.name)}`}
                                     className="px-3 py-1 border border-[#6D28D9]/30 bg-[#A3E635]/15 rounded-xl shadow text-(--text-color-title) hover:bg-[#A3E635]/30 transition-colors"
                                 >
                                     {tag.name}
-                                </span>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -195,7 +210,7 @@ const BlogCategory: React.FC<BlogCategoryProps> = ({
                     {/* Views & Author Actions */}
                     <div className="flex justify-between items-center flex-wrap gap-4 pt-1">
                         <div className="flex items-center gap-1 font-bold text-(--text-color-title)">
-                            Views: {views}
+                            Views: {displayViews}
                             <LuEye />
                         </div>
 
