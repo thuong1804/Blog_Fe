@@ -44,8 +44,8 @@ const SendOTPContainer = () => {
             } else {
                 toast.error(res.data.sendOTP.message);
             }
-        } catch (error) {
-            toast.error((error as Error).message);
+        } catch {
+            toast.error("Could not send the code. Please try again.");
         }
     };
 

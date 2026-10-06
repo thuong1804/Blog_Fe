@@ -31,15 +31,13 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-   const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(!user);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const savedUser = localStorage.getItem("auth_user");
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
-
+        // NOTE: user profile is kept in memory only (never in localStorage),
+        // so a stored-XSS payload cannot steal PII from disk. It is
+        // re-fetched from the httpOnly-cookie session on every page load.
         async function fetchUser() {
             try {
                 const res = await fetch("/api/me", {
@@ -49,17 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 });
                 if (!res.ok) {
                     setUser(null);
-                    localStorage.removeItem("auth_user");
                     return;
                 }
                 const data = await res.json();
-                const userData = data.userDetail.data;
+                const userData = data.userDetail?.data ?? null;
                 setUser(userData);
-                localStorage.setItem("auth_user", JSON.stringify(userData));
-            } catch (err) {
-                console.log(err);
+            } catch {
                 setUser(null);
-                localStorage.removeItem("auth_user");
             } finally {
                 setLoading(false);
             }

@@ -84,11 +84,11 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                 toast.success(data.deletePost.message || "Deleted post successfully");
                 setOpenModal(false);
             } else {
-                toast.error(data?.deletePost?.message || "Failed to delete post");
+                toast.error("Failed to delete post");
             }
         },
-        onError: (error) => {
-            toast.error(error.message || "Failed to delete post");
+        onError: () => {
+            toast.error("Failed to delete post");
         },
     });
 

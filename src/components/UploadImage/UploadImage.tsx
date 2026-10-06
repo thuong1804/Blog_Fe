@@ -24,12 +24,34 @@ export default function UploadImage<TData, TVariables>({
     const [getUploadSignature] = useMutation(GET_UPLOAD_SIGNATURE);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+    const ALLOWED_EXTS = [".png", ".jpeg", ".jpg"];
+
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0] || null;
-        setLoading(true);
-        onLoadingUpload?.(true);
 
         if (!selectedFile) return;
+
+        // Client-side guard (backend signature endpoint must re-check):
+        // wrong type or oversized files are rejected before any upload.
+        const ext = `.${selectedFile.name.split(".").pop()?.toLowerCase()}`;
+        if (
+            !ALLOWED_TYPES.includes(selectedFile.type) ||
+            !ALLOWED_EXTS.includes(ext)
+        ) {
+            toast.error("Only JPG, JPEG or PNG images are allowed.");
+            e.target.value = "";
+            return;
+        }
+        if (selectedFile.size > MAX_SIZE) {
+            toast.error("Image must be smaller than 5MB.");
+            e.target.value = "";
+            return;
+        }
+
+        setLoading(true);
+        onLoadingUpload?.(true);
 
         try {
             const { data } = await getUploadSignature({
@@ -57,10 +79,7 @@ export default function UploadImage<TData, TVariables>({
 
             const uploadData = await uploadRes.json();
             if (!uploadRes.ok) {
-                throw new Error(
-                    uploadData.error?.message ||
-                        toast.error(uploadData.error?.message),
-                );
+                throw new Error("Upload failed");
             }
 
             const imageUrl = uploadData.secure_url;
@@ -81,10 +100,10 @@ export default function UploadImage<TData, TVariables>({
                 toast.success("Upload image success");
             }
             setLoading(false);
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                toast.error(err.message);
-            }
+        } catch {
+            setLoading(false);
+            onLoadingUpload?.(false);
+            toast.error("Image upload failed. Please try again.");
         }
     };
 

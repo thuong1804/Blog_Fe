@@ -38,6 +38,7 @@
         "dayjs": "^1.11.13",
         "graphql": "^16.11.0",
         "highlight.js": "^11.11.1",
+        "isomorphic-dompurify": "^3.19.0",
         "jsonwebtoken": "^9.0.2",
         "lodash.throttle": "^4.1.1",
         "lowlight": "^3.3.0",

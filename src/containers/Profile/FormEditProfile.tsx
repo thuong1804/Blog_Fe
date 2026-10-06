@@ -57,9 +57,8 @@ const FormEditProfile = () => {
             });
 
             toast.success("Upload user success");
-        } catch (err) {
-            const error = err as Error;
-            toast.error(error.message);
+        } catch {
+            toast.error("Could not save profile. Please try again.");
         }
     };
 
@@ -73,9 +72,8 @@ const FormEditProfile = () => {
             });
             setFile(null);
             toast.success("Delete avatar success");
-        } catch (err) {
-            const error = err as Error;
-            toast.error(error.message);
+        } catch {
+            toast.error("Could not delete avatar. Please try again.");
         }
     };
 

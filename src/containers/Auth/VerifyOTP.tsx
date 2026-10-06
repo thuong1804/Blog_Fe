@@ -17,6 +17,7 @@ const VerifyOTPContainer = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [resetCountdown, setResetCountdown] = useState<boolean>(false);
     const [resetFlag, setResetFlag] = useState(false);
+    const [resending, setResending] = useState(false);
 
     const router = useRouter();
 
@@ -32,23 +33,29 @@ const VerifyOTPContainer = () => {
 
                 if (res.data.verifyOTP.success) {
                     toast.success(res.data.verifyOTP.message);
-                    localStorage.setItem(
-                        "resetToken",
-                        res.data.verifyOTP.resetToken,
-                    );
+                    // Token goes to an httpOnly cookie (never localStorage).
+                    await fetch("/api/auth/reset-token", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            token: res.data.verifyOTP.resetToken,
+                        }),
+                    });
                     router.push(path.changePassword);
                 } else {
                     toast.error(res.data.verifyOTP.message);
                 }
                 setLoading(false);
             }, 2000);
-        } catch (error) {
+        } catch {
             setLoading(false);
-            toast.error((error as Error).message);
+            toast.error("Verification failed. Please try again.");
         }
     };
 
     const handleResetOtp = async () => {
+        if (resending) return; // throttle: one resend at a time
+        setResending(true);
         const EXPIRE_KEY = "otp_expire_time";
         localStorage.removeItem(EXPIRE_KEY);
         setResetCountdown(false);
@@ -70,8 +77,10 @@ const VerifyOTPContainer = () => {
             } else {
                 toast.error(res.data.sendOTP.message);
             }
-        } catch (error) {
-            toast.error((error as Error).message);
+        } catch {
+            toast.error("Could not resend the code. Please try again.");
+        } finally {
+            setResending(false);
         }
     };
 
@@ -97,8 +106,10 @@ const VerifyOTPContainer = () => {
                     <div className="w-full flex justify-center">
                         {resetCountdown ? (
                             <Button
-                                title="Resend OTP"
+                                title={resending ? "Sending..." : "Resend OTP"}
                                 onClick={handleResetOtp}
+                                disabled={resending}
+                                loading={resending}
                                 classNames="w-full sm:w-max px-8"
                             />
                         ) : (

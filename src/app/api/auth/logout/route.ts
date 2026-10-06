@@ -9,17 +9,17 @@ export async function POST() {
         path: "/",
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "strict",
         maxAge: 0,
     });
 
     response.cookies.set({
-        name: "refreshToken ",
+        name: "refreshToken",
         value: "",
         path: "/",
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "strict",
         maxAge: 0,
     });
 

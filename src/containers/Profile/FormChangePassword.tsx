@@ -32,9 +32,8 @@ const FormChangePassword = () => {
             if (res.data.changePassword.success) {
                 toast.success(res.data.changePassword.message);
             }
-        } catch (error) {
-            const err = error as Error;
-            toast.error(err.message);
+        } catch {
+            toast.error("Could not change password. Please try again.");
         }
 
         setForm({
@@ -67,10 +66,8 @@ const FormChangePassword = () => {
             } else {
                 toast.error("Old password is incorrect!");
             }
-        } catch (error) {
-            console.log(error);
-            const err = error as Error;
-            toast.error(err.message);
+        } catch {
+            toast.error("Could not verify password. Please try again.");
         }
     };
 

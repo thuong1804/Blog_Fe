@@ -179,9 +179,8 @@ const FormEditPostContainer: React.FC<FormEditPostProps> = ({ postId }) => {
                     router.push("/blog");
                 }
             }
-        } catch (err: unknown) {
-            const error = err as Error;
-            toast.error(error.message || "Failed to update post");
+        } catch {
+            toast.error("Failed to update post");
         } finally {
             setIsSaving(false);
         }

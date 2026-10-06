@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DOMPurify from "isomorphic-dompurify";
 
 const formatSlug = (slug: string): string => {
     return slug.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
@@ -42,7 +43,7 @@ const renderImage = (file: string | null | undefined) => {
 const markdownToHtml = (md: string): string => {
     if (!md) return "";
     if (md.trim().startsWith("<") && md.includes("</")) {
-        return md;
+        return sanitizeHtml(md);
     }
 
     let html = md;
@@ -95,7 +96,27 @@ const markdownToHtml = (md: string): string => {
         })
         .join("");
 
-    return html;
+    return sanitizeHtml(html);
+};
+
+const sanitizeHtml = (dirty: string): string => {
+    return DOMPurify.sanitize(dirty, {
+        FORBID_TAGS: [
+            "script",
+            "style",
+            "iframe",
+            "object",
+            "embed",
+            "form",
+            "input",
+            "button",
+            "meta",
+            "link",
+            "base",
+        ],
+        FORBID_ATTR: ["onerror", "onload", "onclick", "onmouseover"],
+        ALLOW_DATA_ATTR: false,
+    });
 };
 
 export { formatSlug, joinSlugCategory, renderImage, markdownToHtml };

@@ -13,11 +13,17 @@ interface JwtPayloadCustom {
 export async function getCurrentUserFromToken(token: string | undefined) {
     if (!token) return null;
 
+    const secret = process.env.ACCESS_TOKEN_SECRET;
+    if (!secret) {
+        console.error("Missing ACCESS_TOKEN_SECRET");
+        return null;
+    }
+
     try {
-        const decoded = jwt.verify(
-            token,
-            process.env.ACCESS_TOKEN_SECRET!,
-        ) as JwtPayloadCustom;
+        // Pin the algorithm: never accept "none" or an unexpected alg.
+        const decoded = jwt.verify(token, secret, {
+            algorithms: ["HS256"],
+        }) as JwtPayloadCustom;
         const queryString = print(GET_USER_BY_ID);
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
@@ -30,14 +36,14 @@ export async function getCurrentUserFromToken(token: string | undefined) {
         });
 
         const data = await response.json();
+        if (!data?.data?.userDetail) return null;
         return {
             data: {
                 ...data.data.userDetail,
                 provider: decoded.provider,
             },
         };
-    } catch (err) {
-        console.log(err);
+    } catch {
         return null;
     }
 }

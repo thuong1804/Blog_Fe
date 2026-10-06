@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/Button/Button";
 import { CONTACT_MUTATION } from "@/graphql/Mutation/SendMail";
 import { useMutation } from "@apollo/client";
@@ -17,10 +17,29 @@ const SendMailContact = () => {
     });
 
     const [contact, { loading }] = useMutation(CONTACT_MUTATION);
+    const [cooldown, setCooldown] = useState(0);
+
+    useEffect(() => {
+        if (cooldown <= 0) return;
+        const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
+        return () => clearTimeout(t);
+    }, [cooldown]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (loading) return;
+        if (loading || cooldown > 0) return;
+
+        // Honeypot: bots fill hidden fields, humans don't. Silently
+        // "succeed" so spammers can't tell they were blocked.
+        const honeypot = (
+            e.currentTarget.elements.namedItem("company") as HTMLInputElement
+        )?.value;
+        if (honeypot) {
+            toast.success(
+                "Thanks for contacting us! We will get back to you soon.",
+            );
+            return;
+        }
 
         try {
             await contact({ variables: form });
@@ -36,9 +55,9 @@ const SendMailContact = () => {
                 subject: "",
                 message: "",
             });
-        } catch (error) {
-            const er = error as Error
-            console.log(er)
+            // Throttle: one message per 60s to slow down spam floods.
+            setCooldown(60);
+        } catch {
             toast.error("Something went wrong. Please try again.");
         }
     };
@@ -181,6 +200,7 @@ const SendMailContact = () => {
                         name="message"
                         onChange={handleChange}
                         required
+                        maxLength={2000}
                         className="
                             textarea
                             w-full
@@ -193,12 +213,29 @@ const SendMailContact = () => {
                     />
                 </fieldset>
 
+                {/* Honeypot anti-spam: hidden from humans, bots fill it in */}
+                <input
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute h-0 w-0 opacity-0"
+                    onChange={() => {}}
+                />
+
                 {/* BUTTON */}
                 <Button
                     type="submit"
                     className="btn w-full"
-                    disabled={loading}
-                    title={loading ? "Sending..." : "Send email"}
+                    disabled={loading || cooldown > 0}
+                    title={
+                        loading
+                            ? "Sending..."
+                            : cooldown > 0
+                              ? `Wait ${cooldown}s to send again`
+                              : "Send email"
+                    }
                 />
             </form>
 

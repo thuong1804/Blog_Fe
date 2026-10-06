@@ -42,9 +42,10 @@ const SignupContainer = () => {
                 "✅ Thanks for subscribing! Check your inbox for our latest stories.",
             );
             router.push("/signin");
-        } catch (err) {
-            const error = err as Error;
-            toast.error(error.message || "Something went wrong");
+        } catch {
+            // Never surface raw backend/GraphQL errors: they can leak
+            // internals and enable account enumeration.
+            toast.error("Sign up failed. Please try again.");
         }
     };
 

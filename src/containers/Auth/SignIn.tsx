@@ -41,8 +41,8 @@ const SigninContainer = () => {
                     toast.error("Failed to set cookie");
                 }
             }
-        } catch (err) {
-            toast.error((err as Error).message);
+        } catch {
+            toast.error("Sign in failed. Please check your details and try again.");
         }
     };
 
