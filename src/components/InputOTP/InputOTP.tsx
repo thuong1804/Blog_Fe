@@ -1,19 +1,21 @@
-import React, { useState, useRef, ChangeEvent, KeyboardEvent } from "react";
+import React, {useRef, ChangeEvent, KeyboardEvent } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface OtpInputProps {
-    length?: number;
     onChange?: (otp: string, flag: boolean) => void;
     disabled?: boolean;
+    setOtp: (otp: string[]) => void;
+    otp: string[];
 }
 
 const OtpInput: React.FC<OtpInputProps> = ({
-    length = 6,
     onChange,
     disabled,
+    setOtp,
+    otp
 }) => {
-    const [otp, setOtp] = useState<string[]>(Array(length).fill(""));
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
+    const length = 6;
 
     const handleChange = (value: string, index: number) => {
         if (/[^0-9]/.test(value)) return;
@@ -62,19 +64,20 @@ const OtpInput: React.FC<OtpInputProps> = ({
                     }}
                     className={twMerge(
                         `
-                font-bold
-                text-center
-                border
-                border-gray-300
-                rounded-lg
-                focus:outline-none
-                focus:border-blue-500
-                bg-white
+                            font-bold
+                            text-center
+                            border
+                            border-gray-300
+                            rounded-lg
+                            focus:outline-none
+                            focus:border-blue-500
+                            bg-white
 
-                w-10 h-10 text-base
-                sm:w-12 sm:h-12 sm:text-lg
-                md:w-14 md:h-14 md:text-xl
-                `,
+                            w-10 h-10 text-base
+                            sm:w-12 sm:h-12 sm:text-lg
+                            md:w-14 md:h-14 md:text-xl
+                            text-black
+                        `,
                         disabled &&
                         "bg-gray-200 cursor-not-allowed focus:border-gray-300",
                     )}

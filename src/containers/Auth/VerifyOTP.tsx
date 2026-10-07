@@ -18,6 +18,7 @@ const VerifyOTPContainer = () => {
     const [resetCountdown, setResetCountdown] = useState<boolean>(false);
     const [resetFlag, setResetFlag] = useState(false);
     const [resending, setResending] = useState(false);
+    const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
 
     const router = useRouter();
 
@@ -25,8 +26,7 @@ const VerifyOTPContainer = () => {
         if (!otp) return;
 
         setLoading(true);
-        // try/catch phải nằm TRONG callback async — bọc ngoài setTimeout
-        // sẽ không bắt được lỗi của verifyOTP/fetch.
+
         setTimeout(async () => {
             try {
                 const res = await verifyOTP({
@@ -46,9 +46,11 @@ const VerifyOTPContainer = () => {
                     router.push(path.changePassword);
                 } else {
                     toast.error(res.data.verifyOTP.message);
+                    setOtp(Array(6).fill(""))
                 }
             } catch {
                 toast.error("Verification failed. Please try again.");
+                setOtp(Array(6).fill(""))
             } finally {
                 setLoading(false);
             }
@@ -85,7 +87,7 @@ const VerifyOTPContainer = () => {
             setResending(false);
         }
     };
-
+    console.log(otp)
     useEffect(() => {
         fetch("/api/get-email")
             .then((res) => res.json())
@@ -103,6 +105,8 @@ const VerifyOTPContainer = () => {
                     <OtpInput
                         onChange={handleOnChange}
                         disabled={loading}
+                        setOtp={setOtp}
+                        otp={otp}
                     />
 
                     <div className="w-full flex justify-center">
