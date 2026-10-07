@@ -93,8 +93,8 @@ const VerifyOTPContainer = () => {
     }, []);
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
-            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+        <div className="w-full flex justify-center px-4 sm:px-6">
+            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-8">
                 <div className="w-full flex flex-col items-center gap-8 sm:gap-10">
                     <h1 className="text-center text-2xl sm:text-3xl font-semibold">
                         OTP Verification

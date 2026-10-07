@@ -237,6 +237,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         content={item.content}
                         author={item.author}
                         excerpt={item.excerpt}
+                        likesCount={item.likesCount}
                         isLogin={isLogin}
                     />
                 ))}

@@ -36,6 +36,13 @@ export async function middleware(req: NextRequest) {
     const email = req.cookies.get("emailVerify")?.value;
     const url = req.nextUrl.clone();
 
+    const redirectToSignIn = () => {
+        const next = `${req.nextUrl.pathname}${req.nextUrl.search}`;
+        url.pathname = "/signin";
+        url.search = `?next=${encodeURIComponent(next)}`;
+        return NextResponse.redirect(url);
+    };
+
     if (req.nextUrl.pathname.startsWith("/verify-otp") && !email) {
         url.pathname = "/signin";
         return NextResponse.redirect(url);
@@ -46,8 +53,7 @@ export async function middleware(req: NextRequest) {
     }
 
     if (!accessToken && !refreshToken) {
-        url.pathname = "/";
-        return NextResponse.redirect(url);
+        return redirectToSignIn();
     }
 
     const isAccessTokenValid = accessToken
@@ -69,8 +75,7 @@ export async function middleware(req: NextRequest) {
             });
 
             if (!response.ok) {
-                url.pathname = "/";
-                return NextResponse.redirect(url);
+                return redirectToSignIn();
             }
             const { data } = await response.json().catch(() => ({}));
 
@@ -99,12 +104,10 @@ export async function middleware(req: NextRequest) {
                 }
                 return res;
             } else {
-                url.pathname = "/";
-                return NextResponse.redirect(url);
+                return redirectToSignIn();
             }
         } catch {
-            url.pathname = "/";
-            return NextResponse.redirect(url);
+            return redirectToSignIn();
         }
     }
 
@@ -119,5 +122,6 @@ export const config = {
         "/post/:id",
         "/post/edit/:path*",
         "/edit-post/:path*",
+        "/saved",
     ],
 };

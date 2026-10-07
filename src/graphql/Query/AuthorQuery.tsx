@@ -17,6 +17,7 @@ export const GET_POST_BY_AUTHOR = gql`
                 excerpt
                 image
                 views
+                likesCount
                 readingTime
                 createdAt
                 updatedAt
@@ -53,6 +54,17 @@ export const GET_LIST_USER = gql`
             handle
             email
             avatar
+        }
+    }
+`;
+
+export const GET_AUTHOR_STATS = gql`
+    query GetAuthorStats($handle: String!) {
+        authorStats(handle: $handle) {
+            totalPosts
+            totalViews
+            totalLikes
+            totalBookmarks
         }
     }
 `;

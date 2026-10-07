@@ -7,7 +7,10 @@ import { LuEye } from "react-icons/lu";
 import { CiEdit } from "react-icons/ci";
 import { IoIosTrash } from "react-icons/io";
 import PostCard from "@/components/Post/PostCard";
+import PostEngagement from "@/components/Post/PostEngagement";
+import CommentSection from "@/components/Comments/CommentSection";
 import PostViewTracker from "@/components/Post/PostViewTracker";
+import ReadingProgressBar from "@/components/Post/ReadingProgressBar";
 import DeletePostModal from "@/components/Post/DeletePostModal";
 import { PostDetailProps } from "@/type/typeProps";
 import dayjs from "dayjs";
@@ -29,8 +32,10 @@ const PostDetail: React.FC<PostDetailProps> = ({
     tags,
     author,
     views,
+    readingTime,
+    likesCount,
     image,
-    data,
+    relatedPosts = [],
 }) => {
     const router = useRouter();
     const { user: userLogin } = useAuth();
@@ -78,6 +83,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
 
     return (
         <div className="w-full lg:pt-14 py-6 px-6 lg:px-6">
+            <ReadingProgressBar />
             {id != null && (
                 <PostViewTracker
                     postId={Number(id)}
@@ -156,13 +162,29 @@ const PostDetail: React.FC<PostDetailProps> = ({
                                 .locale("en")
                                 .format(DATE_TIME_DISPLAY)}
                         </span>
+                        {typeof readingTime === "number" && readingTime > 0 && (
+                            <>
+                                <span>-</span>
+                                <span className="font-semibold">
+                                    {readingTime} min read
+                                </span>
+                            </>
+                        )}
                     </div>
 
                     {/* Views & Author Actions */}
                     <div className="flex justify-between items-center flex-wrap gap-4 pt-1">
-                        <div className="flex items-center gap-1 font-bold text-(--text-color-title)">
-                            Views: {displayViews}
-                            <LuEye />
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-1 font-bold text-(--text-color-title)">
+                                Views: {displayViews}
+                                <LuEye />
+                            </div>
+                            {id != null && (
+                                <PostEngagement
+                                    postId={Number(id)}
+                                    initialLikesCount={likesCount}
+                                />
+                            )}
                         </div>
 
                         {isAuthor && id && (
@@ -201,9 +223,19 @@ const PostDetail: React.FC<PostDetailProps> = ({
                 </div>
             </div>
 
-            <div className="max-w-(--max-width-desktop) mx-auto mt-10">
-                <PostCard title="Popular Post" itemCards={data} />
+            <div className="max-w-[1024px] mx-auto mt-10">
+                {id != null && <CommentSection postId={Number(id)} />}
             </div>
+
+            {relatedPosts.length > 0 && (
+                <div className="max-w-(--max-width-desktop) mx-auto mt-10">
+                    <PostCard
+                        title="Related Posts"
+                        itemCards={relatedPosts}
+                        isViewAll={false}
+                    />
+                </div>
+            )}
         </div>
     );
 

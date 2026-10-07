@@ -50,15 +50,15 @@ const SendOTPContainer = () => {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
-            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+        <div className="w-full flex justify-center px-4 sm:px-6">
+            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-8">
                 <h1 className="text-center text-2xl sm:text-3xl font-semibold">
                     Verify your email
                 </h1>
 
                 <form
                     onSubmit={handleSubmit}
-                    className="mt-8 sm:mt-10 w-full opacity-90"
+                    className="mt-6 w-full opacity-90"
                 >
                     <div className="flex flex-col gap-3">
                         <InputField.Email

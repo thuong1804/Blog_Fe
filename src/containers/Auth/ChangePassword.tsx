@@ -62,14 +62,14 @@ const ChangePasswordContainer = () => {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
-            <div className="w-full max-w-lg bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+        <div className="w-full flex justify-center px-4 sm:px-6">
+            <div className="w-full max-w-lg bg-white rounded-box shadow-2xs p-6 sm:p-8">
                 <h1 className="text-center text-2xl sm:text-3xl font-semibold">
                     Change password
                 </h1>
 
                 <form
-                    className="mt-8 sm:mt-10 w-full flex flex-col gap-5"
+                    className="mt-6 w-full flex flex-col gap-4"
                     onSubmit={handleSubmitForm}
                 >
                     <InputField.Password

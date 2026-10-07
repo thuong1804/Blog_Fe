@@ -1,4 +1,10 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import {
+    ApolloClient,
+    HttpLink,
+    InMemoryCache,
+    Observable,
+} from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 
 type CreateClientOptions = {
     isServer?: boolean;
@@ -18,6 +24,80 @@ function getApiUri(): string {
     return uri;
 }
 
+export const SESSION_EXPIRED_MESSAGE =
+    "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.";
+
+/** With `errorPolicy: "all"`, mutation promises resolve (not reject) on
+ *  GraphQL errors — call this to turn them into thrown errors. */
+export function throwIfGraphQLErrors(result: {
+    errors?: ReadonlyArray<{ message?: string } | Error> | null;
+}): void {
+    const first = result?.errors?.[0];
+    if (!first) return;
+    if (first instanceof Error) throw first;
+    throw new Error(
+        typeof first?.message === "string" && first.message
+            ? first.message
+            : "Request failed. Please try again.",
+    );
+}
+
+// Single-flight session refresh shared by concurrent retried operations.
+let refreshing: Promise<boolean> | null = null;
+
+async function refreshSession(): Promise<boolean> {
+    if (!refreshing) {
+        refreshing = fetch("/api/auth/refresh", {
+            method: "POST",
+            credentials: "include",
+        })
+            .then((res) => res.ok)
+            .catch(() => false)
+            .finally(() => {
+                refreshing = null;
+            });
+    }
+    return refreshing;
+}
+
+function isUnauthorizedError(message: string): boolean {
+    return /unauthorized|unauthenticated|jwt|expired|invalid.*token|please (log|sign) in/i.test(
+        message,
+    );
+}
+
+/**
+ * Client-only link: when the backend rejects an operation with an auth
+ * error (typically an expired access token on a page the middleware doesn't
+ * cover), silently refresh the session once and retry the operation.
+ * The retried request goes through /api/graphql, which reads the FRESH
+ * httpOnly cookie — no token handling in JS needed.
+ */
+function createAuthErrorLink() {
+    return onError(({ graphQLErrors, operation, forward }) => {
+        const unauthorized = graphQLErrors?.some((error) =>
+            isUnauthorizedError(error.message),
+        );
+        if (!unauthorized) return;
+        if (operation.getContext().hasRetriedAuth) return;
+        operation.setContext({ hasRetriedAuth: true });
+
+        return new Observable((observer) => {
+            refreshSession().then((ok) => {
+                if (!ok) {
+                    observer.error(new Error(SESSION_EXPIRED_MESSAGE));
+                    return;
+                }
+                forward(operation).subscribe({
+                    next: (value) => observer.next(value),
+                    error: (error) => observer.error(error),
+                    complete: () => observer.complete(),
+                });
+            });
+        });
+    });
+}
+
 export function createApolloClient({
     isServer = false,
     headers,
@@ -33,15 +113,18 @@ export function createApolloClient({
         isServer || typeof window === "undefined"
             ? getApiUri()
             : `${window.location.origin}/api/graphql`;
+    const httpLink = new HttpLink({
+        uri,
+        // Send httpOnly auth cookies to the API on both server & client.
+        // Without this, authenticated mutations go out unauthenticated.
+        credentials: "include",
+        headers,
+    });
     return new ApolloClient({
         ssrMode: isServer,
-        link: new HttpLink({
-            uri,
-            // Send httpOnly auth cookies to the API on both server & client.
-            // Without this, authenticated mutations go out unauthenticated.
-            credentials: "include",
-            headers,
-        }),
+        // The retry link only exists in the browser (it calls a relative
+        // URL that doesn't resolve server-side).
+        link: isServer ? httpLink : createAuthErrorLink().concat(httpLink),
         cache: new InMemoryCache({
             typePolicies: {
                 Query: {

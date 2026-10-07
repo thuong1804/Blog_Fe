@@ -51,7 +51,7 @@ export default function OtpCountdown({
     }, [resetFlag, onResetDone]);
 
     return (
-        <span className="countdown text-lg font-bold">
+        <span className="countdown text-lg font-bold text-black">
             <span style={{ "--value": minutes } as React.CSSProperties}></span>:
             <span style={{ "--value": seconds } as React.CSSProperties}></span>
         </span>

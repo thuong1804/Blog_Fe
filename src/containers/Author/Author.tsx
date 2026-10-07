@@ -9,11 +9,22 @@ import Link from "next/link";
 import Button from "@/components/Button/Button";
 import { IoMdCreate } from "react-icons/io";
 import { useSuspenseQuery } from "@apollo/client";
-import { GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
+import { GET_AUTHOR_STATS, GET_POST_BY_AUTHOR } from "@/graphql/Query/AuthorQuery";
 import { AuthorPageProps } from "@/type/typeProps";
+import { FaBookmark, FaHeart, FaNewspaper } from "react-icons/fa6";
+import { LuEye } from "react-icons/lu";
 
 type GetPostByAuthorData = {
   userByPosts: AuthorPageProps["user"];
+};
+
+type GetAuthorStatsData = {
+    authorStats: {
+        totalPosts: number;
+        totalViews: number;
+        totalLikes: number;
+        totalBookmarks: number;
+    };
 };
 
 const AuthorPage = ({ handle }: { handle: string }) => {
@@ -26,8 +37,44 @@ const AuthorPage = ({ handle }: { handle: string }) => {
         }
     );
 
+    const { data: statsData } = useSuspenseQuery<GetAuthorStatsData>(
+        GET_AUTHOR_STATS,
+        {
+            variables: { handle },
+        }
+    );
+
     const user = data?.userByPosts;
     if (!user) return null;
+
+    const stats = statsData?.authorStats ?? {
+        totalPosts: 0,
+        totalViews: 0,
+        totalLikes: 0,
+        totalBookmarks: 0,
+    };
+    const statCards = [
+        {
+            label: "Posts",
+            value: stats.totalPosts,
+            icon: <FaNewspaper className="text-lg text-indigo-600" />,
+        },
+        {
+            label: "Views",
+            value: stats.totalViews,
+            icon: <LuEye className="text-lg text-sky-600" />,
+        },
+        {
+            label: "Likes",
+            value: stats.totalLikes,
+            icon: <FaHeart className="text-lg text-rose-500" />,
+        },
+        {
+            label: "Saves",
+            value: stats.totalBookmarks,
+            icon: <FaBookmark className="text-lg text-amber-500" />,
+        },
+    ];
 
     const posts = user?.posts ?? [];
     const isUserLogin = userLogin?.email === user?.email;
@@ -88,6 +135,27 @@ const AuthorPage = ({ handle }: { handle: string }) => {
                             </Link>
                         )}
                     </div>
+                </div>
+                {/* Author stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-8">
+                    {statCards.map((stat) => (
+                        <div
+                            key={stat.label}
+                            className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-sm"
+                        >
+                            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-100">
+                                {stat.icon}
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-lg font-extrabold text-slate-900">
+                                    {stat.value.toLocaleString()}
+                                </span>
+                                <span className="text-xs font-medium text-slate-500">
+                                    {stat.label}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
                 </div>
                 <div className="mt-20">
                     {isUserLogin ? (

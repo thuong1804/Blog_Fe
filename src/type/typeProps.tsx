@@ -27,6 +27,7 @@ export type ItemCardBlogProps = {
     category?: CategoryProps;
     tags?: { id: number; name: string }[];
     views?: number;
+    likesCount?: number;
     readingTime?: number;
     isFeatured?: boolean;
     createdAt: string;
@@ -65,13 +66,15 @@ export type PostDetailProps = {
     createdAt: string;
     updatedAt: string;
     views: number;
+    readingTime?: number | null;
+    likesCount?: number | null;
     content: string;
     image: string;
     tags: {
         id: string;
         name: string;
     }[];
-    data: ItemCardBlogProps[];
+    relatedPosts?: ItemCardBlogProps[];
 };
 
 export type CategorySlug = {

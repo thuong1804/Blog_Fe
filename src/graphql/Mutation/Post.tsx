@@ -56,6 +56,23 @@ export const INCREMENT_POST_VIEWS = gql`
     }
 `;
 
+export const TOGGLE_LIKE = gql`
+    mutation ToggleLike($postId: Int!) {
+        toggleLike(postId: $postId) {
+            liked
+            likesCount
+        }
+    }
+`;
+
+export const TOGGLE_BOOKMARK = gql`
+    mutation ToggleBookmark($postId: Int!) {
+        toggleBookmark(postId: $postId) {
+            bookmarked
+        }
+    }
+`;
+
 export const UPDATE_POST = gql`
     mutation UpdatePost(
         $id: Int!

@@ -12,5 +12,6 @@ export const path = {
     changePassword: "/change-password",
     createPost: "/post/new",
     editPost: (id: number | string) => `/post/edit/${id}`,
+    saved: "/saved",
 };
 

@@ -155,6 +155,7 @@ const BlogContainer = ({
                                     author={post.author}
                                     category={post.category}
                                     content={post.content}
+                                    likesCount={post.likesCount}
                                 />
                             )
                         )}

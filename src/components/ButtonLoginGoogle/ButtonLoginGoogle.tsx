@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 
 const STATE_COOKIE = "g_oauth_state";
+const NEXT_COOKIE = "g_oauth_next";
 
 function newState(): string {
     const arr = new Uint8Array(16);
@@ -14,7 +15,7 @@ function newState(): string {
         .join("");
 }
 
-export default function ButtonLoginGoogle() {
+export default function ButtonLoginGoogle({ next }: { next?: string }) {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const redirectUri = `${process.env.NEXT_PUBLIC_URL_BLOG}/api/auth/callback/google`;
     const scope = "openid email profile";
@@ -29,7 +30,10 @@ export default function ButtonLoginGoogle() {
         // Cookie (not httpOnly on purpose): server callback reads it to
         // verify `state` and reject forged logins (CSRF). Short-lived.
         document.cookie = `${STATE_COOKIE}=${s}; Max-Age=600; Path=/; SameSite=Lax`;
-    }, []);
+        if (next && next !== "/") {
+            document.cookie = `${NEXT_COOKIE}=${encodeURIComponent(next)}; Max-Age=600; Path=/; SameSite=Lax`;
+        }
+    }, [next]);
 
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
         redirectUri,

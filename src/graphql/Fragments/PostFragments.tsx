@@ -40,6 +40,7 @@ export const POST_LIST_ITEM_FIELDS = gql`
         image
         createdAt
         description
+        likesCount
         author {
             ...PostAuthorFields
         }
@@ -66,6 +67,7 @@ export const POST_DETAIL_FIELDS = gql`
         imagePublicId
         views
         readingTime
+        likesCount
         isFeatured
         isPopular
         createdAt

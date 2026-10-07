@@ -1,5 +1,5 @@
 import PostDetail from "@/containers/Post/PostDetail";
-import { GET_ALL_POST_POPULAR, GET_ALL_POST_SLUGS, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
+import { GET_ALL_POST_SLUGS, GET_POST_BY_SLUG, GET_RELATED_POSTS } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 import { GetAllPostSlugsData, PostSlugData } from "@/type/typeProps";
 import { notFound } from "next/navigation";
@@ -44,10 +44,12 @@ export default async function BlogDetail(props: { params: tParams }) {
         },
     });
 
-    const { data: popularPosts } = await client.query({
-        query: GET_ALL_POST_POPULAR,
+    const postId = dataByPost.data.post.id;
+    const { data: relatedData } = await client.query({
+        query: GET_RELATED_POSTS,
+        variables: { postId, take: 4 },
         context: {
-            fetchOptions: { next: { revalidate: 300 } },
+            fetchOptions: { next: { revalidate: 60 } },
         },
     });
 
@@ -66,6 +68,8 @@ export default async function BlogDetail(props: { params: tParams }) {
         image,
         author,
         views,
+        readingTime,
+        likesCount,
     } = dataByPost.data.post;
 
     return (
@@ -73,12 +77,14 @@ export default async function BlogDetail(props: { params: tParams }) {
             id={dataByPost.data.post.id}
             title={title}
             views={views}
+            readingTime={readingTime}
+            likesCount={likesCount}
             category={category}
             createdAt={createdAt}
             content={content}
             tags={tags}
             image={image}
-            data={popularPosts.popularPosts}
+            relatedPosts={relatedData?.relatedPosts ?? []}
             author={author}
             updatedAt={updatedAt}
         />

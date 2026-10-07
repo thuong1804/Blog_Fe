@@ -9,6 +9,7 @@ import { joinSlugCategory, renderImage } from "@/utils";
 import React, { useState, useMemo, useEffect } from "react";
 import { IoIosMore } from "react-icons/io";
 import { HiArrowNarrowRight } from "react-icons/hi";
+import { FaHeart } from "react-icons/fa6";
 import DeletePostModal from "./DeletePostModal";
 import { useAuth } from "@/context/AuthContext/AuthContext";
 import { useDeletePost } from "@/hooks/useDeletePost";
@@ -33,6 +34,7 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
     category,
     excerpt,
     readingTime,
+    likesCount,
     imageSize = "lg",
     isLogin,
 }) => {
@@ -171,6 +173,9 @@ const ItemCardPost: React.FC<ItemCardBlogProps & ItemCardPostProps> = ({
                     href={postUrl}
                     className="flex items-center gap-1 font-semibold text-slate-500 group-hover:text-blue-600 transition-colors"
                 >
+                    <FaHeart className="text-xs text-rose-400" />
+                    <span>{likesCount ?? 0}</span>
+                    <span className="mx-0.5 text-slate-300">·</span>
                     <span>{readingTime ? `${readingTime}m` : `${Math.max(2, Math.ceil((description?.length || 100) / 100))}m`} read</span>
                     <HiArrowNarrowRight className="text-base transform transition-transform group-hover:translate-x-1" />
                 </Link>

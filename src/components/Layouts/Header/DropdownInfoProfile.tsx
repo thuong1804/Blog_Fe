@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa6";
 import { ImProfile } from "react-icons/im";
 import { MdListAlt } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -83,6 +84,11 @@ export default function DropdownInfoProfile({ user, position = "start" }: Dropdo
                     href={`${path.author}/${user.handle}`}
                     icon={<MdListAlt />}
                     label="Posts"
+                />
+                <DropdownItem
+                    href={path.saved}
+                    icon={<FaBookmark />}
+                    label="Saved"
                 />
 
                 <li className="mt-1 border-t border-base-200 pt-1">

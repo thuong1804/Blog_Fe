@@ -8,8 +8,8 @@ export default function AuthLayout({
 }) {
     return (
         <main className="relative min-h-screen w-full overflow-x-hidden bg-[#070B18] text-white">
-            {/* Background decoration */}
-            <div className="pointer-events-none absolute inset-0">
+            {/* Background decoration (clipped: glow orbs bleed outside) */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#080D1A] via-[#0F172A] to-[#1E293B]" />
                 {/* Glow orbs */}
                 <div className="absolute -top-32 -left-32 h-[480px] w-[480px] rounded-full bg-blue-600/25 blur-[120px]" />
@@ -28,8 +28,8 @@ export default function AuthLayout({
                 />
             </div>
 
-            <div className="relative z-10 flex min-h-screen flex-col">
-                <header className="flex items-center justify-between px-4 py-4 sm:px-8">
+            <div className="relative z-10 flex min-h-screen flex-col w-full">
+                <header className="absolute top-0 left-0 z-20 flex items-center px-4 py-4 sm:px-8">
                     <Link
                         href="/"
                         className="group flex w-max items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-md transition hover:border-white/20 hover:bg-white/10"
@@ -43,7 +43,7 @@ export default function AuthLayout({
                     </Link>
                 </header>
 
-                <div className="flex flex-1 items-center justify-center px-4 pb-10 pt-2 sm:px-6 lg:px-8">
+                <div className="flex flex-1 items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
                     {children}
                 </div>
             </div>

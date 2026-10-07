@@ -5,11 +5,13 @@ import ButtonLoginGoogle from "@/components/ButtonLoginGoogle/ButtonLoginGoogle"
 import InputField from "@/components/InputField/InputField";
 import { path } from "@/constant/path";
 import { SIGNIN } from "@/graphql/Mutation/Signin";
+import { useAuth } from "@/context/AuthContext/AuthContext";
 import { useMutation } from "@apollo/client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getSafeNextPath } from "@/utils";
 
 const SigninContainer = () => {
     const [signin] = useMutation(SIGNIN);
@@ -19,6 +21,9 @@ const SigninContainer = () => {
     });
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const returnTo = getSafeNextPath(searchParams.get("next"));
+    const { refreshUser } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -36,7 +41,13 @@ const SigninContainer = () => {
                 });
 
                 if (response.ok) {
-                    router.push("/");
+                    // Reload the session into context BEFORE navigating —
+                    // AuthProvider lives in the root layout and won't remount
+                    // on client-side navigation, so without this user stays
+                    // null until a manual refresh.
+                    await refreshUser();
+                    router.push(returnTo);
+                    router.refresh();
                 } else {
                     toast.error("Failed to set cookie");
                 }
@@ -54,15 +65,15 @@ const SigninContainer = () => {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6">
-            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-10 lg:p-14">
+        <div className="w-full flex justify-center px-4 sm:px-6">
+            <div className="w-full max-w-md bg-white rounded-box shadow-2xs p-6 sm:p-8">
                 <h1 className="text-center text-2xl sm:text-3xl font-semibold">
                     Login
                 </h1>
 
                 <form
                     onSubmit={handleSubmit}
-                    className="mt-8 sm:mt-10 w-full opacity-90"
+                    className="mt-6 w-full opacity-90"
                 >
                     <div className="flex flex-col gap-3">
                         <InputField.Email
@@ -90,7 +101,7 @@ const SigninContainer = () => {
                     <div className="w-full flex justify-end mt-4 sm:mt-5">
                         <Link
                             href={path.sendOtp}
-                            className="text-sm hover:text-blue-400 hover:underline"
+                            className="text-sm text-blue-400 hover:underline"
                         >
                             Forgot password?
                         </Link>
@@ -107,7 +118,7 @@ const SigninContainer = () => {
                             OR
                         </div>
 
-                        <ButtonLoginGoogle />
+                        <ButtonLoginGoogle next={returnTo} />
                     </div>
 
                     <div className="w-full flex justify-center mt-4 sm:mt-5 text-sm text-black">

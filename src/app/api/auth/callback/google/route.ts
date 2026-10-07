@@ -89,9 +89,25 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        const res = NextResponse.redirect(
-            process.env.NEXT_PUBLIC_URL_BLOG || "http://localhost:5000",
-        );
+        const base =
+            process.env.NEXT_PUBLIC_URL_BLOG || "http://localhost:5000";
+        const rawNext = req.cookies.get("g_oauth_next")?.value;
+        let destination = base;
+        if (rawNext) {
+            try {
+                const candidate = decodeURIComponent(rawNext);
+                if (
+                    candidate.startsWith("/") &&
+                    !candidate.startsWith("//") &&
+                    !candidate.includes("\\")
+                ) {
+                    destination = `${base}${candidate}`;
+                }
+            } catch {
+                /* invalid encoding -> home */
+            }
+        }
+        const res = NextResponse.redirect(destination);
 
         res.cookies.set("accessToken", session.token, {
             httpOnly: true,
@@ -111,6 +127,7 @@ export async function GET(req: NextRequest) {
         }
         // Single-use state: clear it
         res.cookies.set(STATE_COOKIE, "", { path: "/", maxAge: 0 });
+        res.cookies.set("g_oauth_next", "", { path: "/", maxAge: 0 });
         return res;
     } catch (err) {
         // Log message only — the error object may contain the OAuth `code`.

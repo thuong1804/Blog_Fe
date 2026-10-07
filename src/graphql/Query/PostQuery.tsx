@@ -162,3 +162,41 @@ export const GET_POST_BY_ID = gql`
     }
     ${POST_DETAIL_FIELDS}
 `;
+
+export const GET_POST_ENGAGEMENT = gql`
+    query GetPostEngagement($id: Int!) {
+        post(id: $id) {
+            id
+            likesCount
+            likedByMe
+            bookmarkedByMe
+        }
+    }
+`;
+
+export const GET_MY_BOOKMARKS = gql`
+    query GetMyBookmarks($page: Int!, $pageSize: Int!) {
+        myBookmarks(page: $page, pageSize: $pageSize) {
+            items {
+                ...PostListItemFields
+            }
+            meta {
+                total
+                totalPages
+                currentPage
+            }
+        }
+    }
+    ${POST_LIST_ITEM_FIELDS}
+`;
+
+export const GET_RELATED_POSTS = gql`
+    query GetRelatedPosts($postId: Int!, $take: Int = 4) {
+        relatedPosts(postId: $postId, take: $take) {
+            ...PostListItemFields
+            updatedAt
+            readingTime
+        }
+    }
+    ${POST_LIST_ITEM_FIELDS}
+`;

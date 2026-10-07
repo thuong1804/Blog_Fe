@@ -152,11 +152,42 @@ const isPostAuthor = (
     return false;
 };
 
+/**
+ * Validate a post-login return URL. Only same-origin absolute paths are
+ * allowed (blocks open-redirects like `//evil.com` or `https://...`).
+ */
+const getSafeNextPath = (
+    value: string | null | undefined,
+    fallback = "/",
+): string => {
+    if (!value) return fallback;
+    try {
+        const decoded = decodeURIComponent(value);
+        if (
+            decoded.startsWith("/") &&
+            !decoded.startsWith("//") &&
+            !decoded.includes("\\")
+        ) {
+            return decoded;
+        }
+    } catch {
+        /* invalid encoding -> fallback */
+    }
+    return fallback;
+};
+
+/** Sign-in URL preserving where to return afterwards. */
+const signInHref = (next?: string | null): string => {
+    return next ? `/signin?next=${encodeURIComponent(next)}` : "/signin";
+};
+
 export {
     formatSlug,
     joinSlugCategory,
     renderImage,
     markdownToHtml,
     isPostAuthor,
+    getSafeNextPath,
+    signInHref,
 };
 
