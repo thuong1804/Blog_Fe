@@ -44,6 +44,10 @@ export default async function BlogDetail(props: { params: tParams }) {
         },
     });
 
+    if (!dataByPost.data?.post) {
+        notFound();
+    }
+
     const postId = dataByPost.data.post.id;
     const { data: relatedData } = await client.query({
         query: GET_RELATED_POSTS,
@@ -52,11 +56,6 @@ export default async function BlogDetail(props: { params: tParams }) {
             fetchOptions: { next: { revalidate: 60 } },
         },
     });
-
-
-    if (!dataByPost.data?.post) {
-        notFound();
-    }
 
     const {
         title,

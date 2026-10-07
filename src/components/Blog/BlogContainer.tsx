@@ -71,32 +71,12 @@ const BlogContainer = ({
                 </div>
 
                 {/* Header */}
-                <div className="relative mt-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-indigo-50 via-white to-lime-50 px-6 py-12 text-center sm:py-16">
-                    {/* decorative blobs */}
-                    <div
-                        aria-hidden
-                        className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-indigo-300/30 blur-3xl"
-                    />
-                    <div
-                        aria-hidden
-                        className="pointer-events-none absolute -right-20 -bottom-24 h-72 w-72 rounded-full bg-lime-300/40 blur-3xl"
-                    />
-                    {/* dot pattern */}
-                    <div
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 opacity-60"
-                        style={{
-                            backgroundImage:
-                                "radial-gradient(circle at 1px 1px, rgb(99 102 241 / 0.10) 1px, transparent 0)",
-                            backgroundSize: "22px 22px",
-                        }}
-                    />
-
+                <div className="relative mt-10 overflow-hidden rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm sm:py-16">
                     <div className="relative flex flex-col items-center">
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-white/80 px-4 py-1.5 text-xs font-bold tracking-[0.18em] text-indigo-700 uppercase shadow-sm backdrop-blur">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase">
                             {VARIANT_LABEL[variant] ?? "Blog"}
                             {typeof totalCount === "number" && (
-                                <span className="font-semibold tracking-normal text-slate-500 normal-case">
+                                <span className="font-normal tracking-normal text-slate-400 normal-case">
                                     · {totalCount}{" "}
                                     {totalCount === 1
                                         ? "article"
@@ -104,27 +84,27 @@ const BlogContainer = ({
                                 </span>
                             )}
                             {typeof totalViews === "number" && (
-                                <span className="font-semibold tracking-normal text-slate-500 normal-case">
+                                <span className="font-normal tracking-normal text-slate-400 normal-case">
                                     · {totalViews.toLocaleString()} views
                                 </span>
                             )}
                         </span>
 
-                        <p className="mt-5 text-xs font-bold tracking-[0.28em] text-slate-400 uppercase">
+                        <p className="mt-5 text-xs font-semibold tracking-[0.24em] text-slate-400 uppercase">
                             Our blogs
                         </p>
 
-                        <h1 className="mt-3 max-w-[900px] text-4xl font-extrabold text-slate-900 sm:text-5xl">
+                        <h1 className="mt-3 max-w-[900px] text-4xl font-bold text-slate-900 sm:text-5xl">
                             {title ? title : itemPost?.name}
                         </h1>
 
-                        <p className="mt-4 max-w-[720px] text-base text-slate-500">
+                        <p className="mt-4 max-w-[640px] text-base leading-relaxed text-slate-500">
                             {description
                                 ? description
                                 : itemPost?.description}
                         </p>
 
-                        <div className="mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-lime-400" />
+                        <div className="mt-6 h-px w-16 rounded-full bg-slate-200" />
                     </div>
                 </div>
 
