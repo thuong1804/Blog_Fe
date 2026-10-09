@@ -160,7 +160,7 @@ const TiptapEditor = ({
         return editor ? (
             <Menubar editor={editor} onAddFile={onAddFile} />
         ) : null;
-    }, [editor]);
+    }, [editor, onAddFile]);
 
     useEffect(() => {
         if (editorRef) editorRef.current = editor;
