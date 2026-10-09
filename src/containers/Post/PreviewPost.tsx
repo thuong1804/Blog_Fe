@@ -1,7 +1,7 @@
 "use client";
 
-import { markdownToHtml, renderImage } from "@/utils";
-import DOMPurify from "isomorphic-dompurify";
+import { markdownToHtml, sanitizeHtml } from "@/utils/sanitize";
+import { renderImage } from "@/utils/render";
 import dayjs from "dayjs";
 import hljs from "highlight.js";
 import Image from "next/image";
@@ -51,7 +51,7 @@ const PreviewPost: React.FC<PreviewPostProps> = ({
 
     const processedContent = useMemo(() => {
         if (!content) return "";
-        return DOMPurify.sanitize(markdownToHtml(content));
+        return sanitizeHtml(markdownToHtml(content));
     }, [content]);
 
     const hasHeaderInfo = Boolean(

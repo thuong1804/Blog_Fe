@@ -3,7 +3,7 @@
 import Button from "@/components/Button/Button";
 import { DATE_TIME_DISPLAY } from "@/constant";
 import { ItemCardBlogProps } from "@/type/typeProps";
-import { joinSlugCategory } from "@/utils";
+import { joinSlugCategory } from "@/utils/slug";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
 import Link from "next/link";

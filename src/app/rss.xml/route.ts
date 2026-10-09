@@ -1,7 +1,7 @@
 import { GET_LATEST_POSTS } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
 import { GENERAL_CATEGORY_SLUG } from "@/constant";
-import { formatSlug } from "@/utils";
+import { formatSlug } from "@/utils/slug";
 
 export const revalidate = 3600;
 

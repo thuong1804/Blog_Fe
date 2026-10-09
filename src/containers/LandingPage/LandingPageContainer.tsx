@@ -2,7 +2,7 @@ import Button from "@/components/Button/Button";
 import AnotherPost from "@/containers/LandingPage/AnotherPost/AnotherPost";
 import Image from "next/image";
 import Link from "next/link";
-import { joinSlugCategory } from "@/utils";
+import { joinSlugCategory } from "@/utils/slug";
 import PopularPost from "./PopularPost/PopularPost";
 import { GET_ALL_POST_POPULAR, GET_LATEST_POSTS, GET_POST_BY_SLUG } from "@/graphql/Query/PostQuery";
 import { GET_ALL_CATEGORIES } from "@/graphql/Query/CategoryQuery";

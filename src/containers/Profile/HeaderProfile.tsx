@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext/AuthContext";
-import { renderImage } from "@/utils";
+import { renderImage } from "@/utils/render";
 import { usePathname } from "next/navigation";
 
 const HeaderProfile = () => {

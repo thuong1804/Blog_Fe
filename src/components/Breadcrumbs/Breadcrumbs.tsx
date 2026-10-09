@@ -1,6 +1,6 @@
 "use client";
 
-import { formatSlug } from "@/utils";
+import { formatSlug } from "@/utils/slug";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

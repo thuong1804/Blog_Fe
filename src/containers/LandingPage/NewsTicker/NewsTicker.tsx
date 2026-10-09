@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ItemCardBlogProps } from "@/type/typeProps";
-import { joinSlugCategory } from "@/utils";
+import { joinSlugCategory } from "@/utils/slug";
 import { HiLightningBolt } from "react-icons/hi";
 
 interface NewsTickerProps {

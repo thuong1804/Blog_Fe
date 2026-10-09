@@ -16,7 +16,7 @@ import {
     SESSION_EXPIRED_MESSAGE,
     throwIfGraphQLErrors,
 } from "@/lib/apolloClient";
-import { signInHref } from "@/utils";
+import { signInHref } from "@/utils/guards";
 import { usePathname, useRouter } from "next/navigation";
 
 type PostEngagementProps = {

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useMutation, useQuery } from "@apollo/client";
-import DOMPurify from "isomorphic-dompurify";
+import { sanitizeCommentHtml } from "@/utils/sanitize";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext/AuthContext";
 import {
@@ -21,7 +21,7 @@ import {
 import CommentEditor, {
     type CommentEditorHandle,
 } from "./CommentEditor";
-import { signInHref } from "@/utils";
+import { signInHref } from "@/utils/guards";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./CommentSection.module.css";
 
@@ -55,22 +55,7 @@ const SORTS: { key: SortKey; label: string }[] = [
 /** Client-side defense in depth: the backend already allowlists comment
  *  HTML, this strips anything unexpected before injecting. */
 function safeCommentHtml(html: string): string {
-    return DOMPurify.sanitize(html || "", {
-        ALLOWED_TAGS: [
-            "b",
-            "i",
-            "em",
-            "strong",
-            "u",
-            "ul",
-            "ol",
-            "li",
-            "blockquote",
-            "p",
-            "br",
-        ],
-        ALLOWED_ATTR: [],
-    });
+    return sanitizeCommentHtml(html || "");
 }
 
 export function timeAgo(value: string): string {
