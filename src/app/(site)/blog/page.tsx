@@ -22,33 +22,45 @@ export default async function BlogPage({
 }) {
     const sParams = await searchParams;
     const page = Number(sParams.page ?? 1);
-    const search = (sParams.search as string) ?? null;
+    const searchParam = sParams.search;
+    const search = typeof searchParam === "string" ? searchParam : null;
+    // Search results must always be fresh; only the plain listing is cached.
+    const hasSearch = (search?.trim() ?? "") !== "";
     const PAGE_SIZE = 12;
 
     const client = createApolloClient({isServer: true});
 
-    const { data } = await client.query<GetAllPostsData>({
-        query: GET_ALL_POSTS,
-        variables: {
-            page,
-            pageSize: PAGE_SIZE,
-            search
-        },
-        context: {
-            fetchOptions: {
-                next: { revalidate: 300 }
+    const [postsResult, statsResult] = await Promise.all([
+        client.query<GetAllPostsData>({
+            query: GET_ALL_POSTS,
+            variables: {
+                page,
+                pageSize: PAGE_SIZE,
+                search
+            },
+            context: {
+                fetchOptions: hasSearch
+                    ? { cache: "no-store" }
+                    : {
+                        next: { revalidate: 300 }
+                    }
             }
-        }
-    });
+        }),
+        // Site-wide views are hidden in search mode — skip the query.
+        hasSearch
+            ? Promise.resolve(null)
+            : client.query({
+                query: GET_SITE_STATS,
+                context: {
+                    fetchOptions: {
+                        next: { revalidate: 300 }
+                    }
+                }
+            }),
+    ]);
 
-    const { data: statsData } = await client.query({
-        query: GET_SITE_STATS,
-        context: {
-            fetchOptions: {
-                next: { revalidate: 300 }
-            }
-        }
-    });
+    const { data } = postsResult;
+    const statsData = statsResult?.data;
 
     const posts = data.posts.items;
     const { total, totalPages, currentPage } = data.posts.meta;

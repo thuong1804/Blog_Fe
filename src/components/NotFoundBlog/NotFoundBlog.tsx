@@ -1,6 +1,10 @@
 import Image from "next/image";
 
-const NotFoundBlog = () => {
+type NotFoundBlogProps = {
+    hint?: string;
+};
+
+const NotFoundBlog = ({ hint }: NotFoundBlogProps) => {
     return (
         <div className="
             w-full
@@ -32,7 +36,7 @@ const NotFoundBlog = () => {
             </p>
 
             <p className="text-sm sm:text-base">
-                Try selecting a different category.
+                {hint ?? "Try selecting a different category."}
             </p>
         </div>
     );

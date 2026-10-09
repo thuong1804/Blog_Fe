@@ -1,14 +1,24 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const SearchBarFields = () => {
-    const [showInput, setShowInput] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>("");
-    const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const urlKeyword = searchParams.get("search") ?? "";
+    const [showInput, setShowInput] = useState<boolean>(
+        urlKeyword.trim().length > 0,
+    );
+    const [inputValue, setInputValue] = useState<string>(urlKeyword);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Keep the input in sync with the URL (back/forward, direct link,
+    // navigation from another page). The active keyword stays visible.
+    useEffect(() => {
+        setInputValue(urlKeyword);
+    }, [urlKeyword]);
 
    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -16,9 +26,6 @@ const SearchBarFields = () => {
         const keyword = inputValue.trim();
 
         router.push(keyword ? `/blog?search=${encodeURIComponent(keyword)}` : "/blog");
-
-        setInputValue("");
-        setShowInput(false);
     };
 
     const handelOnclickShow = () => {

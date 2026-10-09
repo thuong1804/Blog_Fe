@@ -53,6 +53,9 @@ const BlogContainer = ({
     const router = useRouter();
     const pathname = usePathname();
 
+    const searchQuery = (searchParams.get("search") ?? "").trim();
+    const isSearch = variant === "blog" && searchQuery.length > 0;
+
     const handleChangePage = (page: number) => {
         if (page === currentPage) return;
         const params = new URLSearchParams(searchParams.toString());
@@ -74,7 +77,9 @@ const BlogContainer = ({
                 <div className="relative mt-10 overflow-hidden rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm sm:py-16">
                     <div className="relative flex flex-col items-center">
                         <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase">
-                            {VARIANT_LABEL[variant] ?? "Blog"}
+                            {isSearch
+                                ? "Search results"
+                                : (VARIANT_LABEL[variant] ?? "Blog")}
                             {typeof totalCount === "number" && (
                                 <span className="font-normal tracking-normal text-slate-400 normal-case">
                                     · {totalCount}{" "}
@@ -83,25 +88,36 @@ const BlogContainer = ({
                                         : "articles"}
                                 </span>
                             )}
-                            {typeof totalViews === "number" && (
-                                <span className="font-normal tracking-normal text-slate-400 normal-case">
-                                    · {totalViews.toLocaleString()} views
-                                </span>
-                            )}
+                            {!isSearch &&
+                                typeof totalViews === "number" && (
+                                    <span className="font-normal tracking-normal text-slate-400 normal-case">
+                                        · {totalViews.toLocaleString()}{" "}
+                                        views
+                                    </span>
+                                )}
                         </span>
 
-                        <p className="mt-5 text-xs font-semibold tracking-[0.24em] text-slate-400 uppercase">
-                            Our blogs
-                        </p>
+                        {!isSearch && (
+                            <p className="mt-5 text-xs font-semibold tracking-[0.24em] text-slate-400 uppercase">
+                                Our blogs
+                            </p>
+                        )}
 
-                        <h1 className="mt-3 max-w-[900px] text-4xl font-bold text-slate-900 sm:text-5xl">
-                            {title ? title : itemPost?.name}
+                        <h1 className="mt-3 max-w-[900px] text-4xl font-bold text-slate-900 sm:text-5xl break-words">
+                            {isSearch
+                                ? `Search results for: "${searchQuery}"`
+                                : (title ? title : itemPost?.name)}
                         </h1>
 
                         <p className="mt-4 max-w-[640px] text-base leading-relaxed text-slate-500">
-                            {description
-                                ? description
-                                : itemPost?.description}
+                            {isSearch
+                                ? typeof totalCount === "number" &&
+                                  totalCount === 0
+                                    ? `No posts found for "${searchQuery}". Try a different keyword.`
+                                    : `Found ${totalCount} ${totalCount === 1 ? "article" : "articles"} matching "${searchQuery}".`
+                                : (description
+                                      ? description
+                                      : itemPost?.description)}
                         </p>
 
                         <div className="mt-6 h-px w-16 rounded-full bg-slate-200" />
@@ -142,7 +158,13 @@ const BlogContainer = ({
                     </div>
                 ) : (
                     <div className="mt-20">
-                        <NotFoundBlog />
+                        <NotFoundBlog
+                            hint={
+                                isSearch
+                                    ? `No results for "${searchQuery}". Try a different keyword.`
+                                    : undefined
+                            }
+                        />
                     </div>
                 )}
                 {(totalPages && currentPage) && totalPages > 1 && (
