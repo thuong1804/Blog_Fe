@@ -1,0 +1,92 @@
+'use client'
+
+import SearchBar from "@/components/SearchBar/SearchBar";
+import { IoIosMenu } from "react-icons/io";
+import DropdownInfoProfile from "./DropdownInfoProfile";
+import Link from "next/link";
+import { AuthorPageProps, CategoryItem } from "@/type/typeProps";
+import React, { useState } from "react";
+import { usePathname } from "next/navigation";
+import { path } from "@/constant/path";
+import Category from "@/components/Categories/Categories";
+
+type SidebarUser = AuthorPageProps["user"];
+
+
+type SideBarProps = {
+    user:SidebarUser;
+    itemMenu: {
+        href: string;
+        title: string;
+    }[];
+    categories: CategoryItem[]
+};
+
+const SideBar = ({ user, itemMenu, categories}: SideBarProps) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const pathName = usePathname();
+    const itemPath = [path.contact, path.createPost];
+    const isHideCategories = itemPath.some((item) => pathName.includes(item));
+
+    const onHandleClickLink = () => {
+        setIsOpen(false)
+    }
+
+    return (
+        <div className="drawer drawer-end">
+            <input
+                id="mobile-drawer"
+                type="checkbox"
+                className="drawer-toggle"
+                checked={isOpen}
+                onChange={(e) => setIsOpen(e.target.checked)}
+            />
+
+            <div className="drawer-content w-full flex justify-end">
+                <button
+                    className="btn btn-ghost lg:hidden"
+                    onClick={() => setIsOpen(true)}
+                >
+                    <IoIosMenu className="text-3xl" />
+                </button>
+            </div>
+
+            <div className="drawer-side z-50">
+                <div
+                    className="drawer-overlay"
+                    onClick={() => setIsOpen(false)}
+                />
+
+                <div className="bg-white min-h-full w-[90%] p-6 pt-7 flex flex-col gap-3">
+                    <div><SearchBar /></div>
+                    {!isHideCategories && (
+                        <div>
+                            <div className="mt-2 font-semibold">Categories</div>
+                            <Category items={categories} onClickLink={onHandleClickLink}/>
+                        </div>
+                    )}
+
+                    <ul className="menu border-t-2 border-base-200 pt-2 p-0">
+                        {itemMenu.map((item, key) => (
+                            <li key={key}>
+                                <Link
+                                    href={item.href}
+                                    className="font-bold"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {item.title}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <div className="pt-2 w-max">
+                        <DropdownInfoProfile user={user} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default SideBar;

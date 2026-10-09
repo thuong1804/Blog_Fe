@@ -1,0 +1,63 @@
+/* ===== Code block overflow fix ===== */
+.tiptap pre,
+.wysiwyg pre {
+    overflow-x: auto;
+    max-width: 100%;
+    white-space: pre;
+    word-break: normal;
+    word-wrap: normal;
+}
+
+.tiptap pre code,
+.wysiwyg pre code {
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+/* ===== Image max width ===== */
+.tiptap img,
+.wysiwyg img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ===== YouTube embed responsive ===== */
+.tiptap div[data-youtube-video],
+.wysiwyg div[data-youtube-video] {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.tiptap div[data-youtube-video] iframe,
+.wysiwyg div[data-youtube-video] iframe {
+    max-width: 100%;
+}
+
+/* ===== Menubar button active state ===== */
+.is-active {
+    background-color: #6d28d9 !important;
+    color: white !important;
+}
+
+/* ===== Paragraph line breaks & multiline formatting ===== */
+.tiptap p,
+.wysiwyg p,
+.preview-content p {
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 1.5rem;
+    margin: 0.75rem 0;
+}
+
+.tiptap p:empty::before,
+.wysiwyg p:empty::before,
+.preview-content p:empty::before {
+    content: "\00a0";
+}
+
+.preview-content {
+    line-height: 1.75;
+    color: #374151;
+}
+

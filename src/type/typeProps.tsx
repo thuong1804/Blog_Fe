@@ -1,86 +1,175 @@
-type CategoryProps = {
-  id?: number
-  name: string,
-  description: string,
-  parent: {
-    id: string,
-    name: string,
-    description: string,
-  },
-  children: {
-    id?: number
-    name: string,
-    description: string
-  }
-}
+import { FetchResult } from "@apollo/client";
 
-export type ItemCardBlogProps = {
-  id?: number;
-  title: string;
-  slug: string;
-  content?: string;
-  description?: string;
-  excerpt?: string;
-  image: string;
-  category?: CategoryProps,
-  tags?: { id: number; name: string }[];
-  views?: number;
-  readingTime?: number;
-  isFeatured?: boolean;
-  createdAt: string;
-  updatedAt?: string;
-  author: {
+type CategoryProps = {
     id?: number;
     name: string;
-    email?: string;
-    avatar?: string;
-  };
-  authorId?: number;
-  comments?: {
-    id: number;
-    content: string;
-    createdAt: string;
-    author: {
-      id: number;
-      name: string;
-      email: string;
+    description: string;
+    parent: {
+        id: string;
+        name: string;
+        description: string;
     };
-  }[];
+    children: {
+        id?: number;
+        name: string;
+        description: string;
+    };
 };
 
+export type ItemCardBlogProps = {
+    id?: number;
+    title: string;
+    slug: string;
+    content?: string;
+    description?: string;
+    excerpt?: string;
+    image: string;
+    category?: CategoryProps;
+    tags?: { id: number; name: string }[];
+    views?: number;
+    likesCount?: number;
+    readingTime?: number;
+    isFeatured?: boolean;
+    createdAt: string;
+    updatedAt?: string;
+    author: {
+        id?: number;
+        name: string;
+        email?: string;
+        avatar?: string;
+        handle?: string;
+    };
+    authorId?: number;
+    comments?: {
+        id: number;
+        content: string;
+        createdAt: string;
+        author: {
+            id: number;
+            name: string;
+            email: string;
+        };
+    }[];
+};
 
-export type BlogCategoryProps = {
-  title: string,
-  category?: CategoryProps,
-  author: {
-    id: string,
-    name: string,
-    email: string,
-    avatar: string,
-  },
-  createdAt: string,
-  updatedAt: string,
-  views: number,
-  content: string,
-  image: string,
-  tags: {
-    id: string,
-    name: string,
-  }[],
-  data: ItemCardBlogProps[],
-}
+export type PostDetailProps = {
+    id?: number | string;
+    title: string;
+    category?: CategoryProps;
+    author: {
+        id?: string | number;
+        name: string;
+        email: string;
+        avatar: string;
+        handle: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    views: number;
+    readingTime?: number | null;
+    likesCount?: number | null;
+    content: string;
+    image: string;
+    tags: {
+        id: string;
+        name: string;
+    }[];
+    relatedPosts?: ItemCardBlogProps[];
+};
 
 export type CategorySlug = {
-  parent?: string
-  children?: string
-  slug: string
-}
-
-export type PageProps = {
-  params: {
-    parent: string;
-    children: string;
+    parent?: string;
+    children?: string;
     slug: string;
-  };
 };
 
+export type PageProps = {
+    params: {
+        parent: string;
+        children: string;
+        slug: string;
+    };
+};
+
+export type AuthorPageProps = {
+    user: {
+        id?: string | number;
+        avatar: string;
+        handle: string;
+        email: string;
+        description: string;
+        name: string;
+        posts?: ItemCardBlogProps[];
+    };
+};
+
+export type optionProps = {
+    name: string;
+    id: number | string;
+};
+
+export type CategoryOptionProps = {
+    id: number | string;
+    name: string;
+    children: optionProps[];
+};
+
+export interface CategoryItem {
+    id?: number;
+    name: string;
+    description: string;
+    slug: string;
+    posts: ItemCardBlogProps[];
+    children: {
+        name: string;
+        description: string;
+        slug: string;
+        posts: ItemCardBlogProps[];
+    }[];
+}
+export interface OptionType {
+    readonly value: string;
+    readonly label: string;
+    readonly color?: string;
+    readonly isFixed?: boolean;
+    readonly isDisabled?: boolean;
+}
+
+export type FormValuesPost = {
+    title: string;
+    excerpt: string;
+    description: string;
+    readingTime: number | undefined;
+    categoryId?: number | undefined;
+    tagIds?: number[];
+    image: string;
+};
+
+export type UploadSignatureResponse = {
+    getUploadSignature: {
+        apiKey: string;
+        cloudName: string;
+        timestamp: number;
+        signature: string;
+        folder?: string;
+    };
+};
+
+export interface CategoryRelation {
+  slug: string;
+  parent: {
+    slug: string;
+  } | null;
+}
+
+export interface PostSlugData {
+  slug: string;
+  category: CategoryRelation | null;
+}
+export interface GetAllPostSlugsData {
+  postAllSlugs: PostSlugData[];
+}
+
+export type GetUploadSignatureFn = (params: {
+    variables: { folder: string };
+}) => Promise<FetchResult<UploadSignatureResponse>>;
