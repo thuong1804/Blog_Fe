@@ -77,5 +77,8 @@
         "sass": "^1.92.1",
         "tailwindcss": "^4.3.3",
         "typescript": "^5"
+    },
+    "overrides": {
+        "html-encoding-sniffer": "4.0.0"
     }
 }
