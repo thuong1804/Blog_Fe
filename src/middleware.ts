@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { print } from "graphql";
 import { REFRESH_TOKEN } from "@/graphql/Mutation/Auth";
-import { jwtVerify } from "jose/jwt/verify";
+import { jwtVerify } from "jose";
 
 function getAccessSecret(): string | null {
     const secret = process.env.ACCESS_TOKEN_SECRET;

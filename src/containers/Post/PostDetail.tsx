@@ -18,7 +18,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DATE_TIME_DISPLAY, GENERAL_CATEGORY_SLUG } from "@/constant";
-import { formatSlug, renderImage, isPostAuthor } from "@/utils";
+import { formatSlug } from "@/utils/slug";
+import { renderImage } from "@/utils/render";
+import { isPostAuthor } from "@/utils/guards";
 import { useAuth } from "@/context/AuthContext/AuthContext";
 import { useDeletePost } from "@/hooks/useDeletePost";
 

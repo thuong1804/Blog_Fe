@@ -1,5 +1,5 @@
 // lib/session.ts
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import { GET_USER_BY_ID } from "@/graphql/Query/AuthorQuery";
 import { print } from "graphql";
 
@@ -21,17 +21,19 @@ export async function getCurrentUserFromToken(token: string | undefined) {
 
     try {
         // Pin the algorithm: never accept "none" or an unexpected alg.
-        const decoded = jwt.verify(token, secret, {
-            algorithms: ["HS256"],
-        });
+        // jose (ESM-native, Web Crypto) works in Node + Edge runtimes —
+        // jsonwebtoken pulls Node-only CJS chains into every page via Header.
+        const { payload } = await jwtVerify(
+            token,
+            new TextEncoder().encode(secret),
+            { algorithms: ["HS256"] },
+        );
         if (
-            typeof decoded !== "object" ||
-            decoded === null ||
-            typeof (decoded as JwtPayloadCustom).userId !== "number"
+            typeof payload?.userId !== "number"
         ) {
             return null;
         }
-        const payload = decoded as JwtPayloadCustom;
+        const jwtPayload = payload as unknown as JwtPayloadCustom;
         const queryString = print(GET_USER_BY_ID);
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}`, {
@@ -41,7 +43,7 @@ export async function getCurrentUserFromToken(token: string | undefined) {
             cache: "no-store",
             body: JSON.stringify({
                 query: queryString,
-                variables: { id: payload.userId },
+                variables: { id: jwtPayload.userId },
             }),
         });
 
@@ -51,7 +53,7 @@ export async function getCurrentUserFromToken(token: string | undefined) {
         return {
             data: {
                 ...data.data.userDetail,
-                provider: payload.provider,
+                provider: jwtPayload.provider,
             },
         };
     } catch {

@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getSafeNextPath } from "@/utils";
+import { getSafeNextPath } from "@/utils/guards";
 
 const SigninContainer = () => {
     const [signin] = useMutation(SIGNIN);

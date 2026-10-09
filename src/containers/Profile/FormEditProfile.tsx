@@ -9,7 +9,7 @@ import {
     DELETE_AVATAR_IMAGE,
     UPDATE_AVATAR_IMAGE,
 } from "@/graphql/Mutation/UploadImage";
-import { renderImage } from "@/utils";
+import { renderImage } from "@/utils/render";
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useMemo, useState } from "react";
 import { FaCheck, FaEye, FaLock, FaRotateLeft, FaTrash } from "react-icons/fa6";

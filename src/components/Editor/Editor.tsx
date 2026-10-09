@@ -28,7 +28,7 @@ import Link from "@tiptap/extension-link";
 import { all, createLowlight } from "lowlight";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 
-import { markdownToHtml } from "@/utils";
+import { markdownToHtml } from "@/utils/sanitize";
 import Menubar from "./Menubar";
 import "./Editor.scss";
 

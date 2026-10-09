@@ -10,7 +10,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 import { path } from "@/constant/path";
 import { AuthorPageProps } from "@/type/typeProps";
-import { renderImage } from "@/utils";
+import { renderImage } from "@/utils/render";
 import { toast } from "sonner";
 
 type DropdownInfoProfileProps = {

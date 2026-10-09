@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
 import { DATE_TIME_DISPLAY } from "@/constant";
-import { joinSlugCategory, renderImage } from "@/utils";
+import { joinSlugCategory } from "@/utils/slug";
+import { renderImage } from "@/utils/render";
 import React, { useState, useMemo, useEffect } from "react";
 import { IoIosMore } from "react-icons/io";
 import { HiArrowNarrowRight } from "react-icons/hi";
@@ -13,7 +14,7 @@ import { FaHeart } from "react-icons/fa6";
 import DeletePostModal from "./DeletePostModal";
 import { useAuth } from "@/context/AuthContext/AuthContext";
 import { useDeletePost } from "@/hooks/useDeletePost";
-import { isPostAuthor } from "@/utils";
+import { isPostAuthor } from "@/utils/guards";
 import { FALLBACK_POST_IMAGE } from "@/constant";
 
 type ImageSize = "sm" | "md" | "lg";
