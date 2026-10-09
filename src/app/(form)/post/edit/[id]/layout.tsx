@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+// Auth-gated form pages must never appear in search results.
+export const metadata: Metadata = {
+    robots: { index: false, follow: false },
+};
+
 export default function LayoutForm({
     children,
 }: {

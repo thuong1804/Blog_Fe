@@ -1,5 +1,11 @@
 import HeaderProfile from "@/containers/Profile/HeaderProfile";
 import MenuProfile from "@/containers/Profile/MenuProfile";
+import type { Metadata } from "next";
+
+// Private user area — never index.
+export const metadata: Metadata = {
+    robots: { index: false, follow: false },
+};
 
 export default function SiteLayout({
     children,
