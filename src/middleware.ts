@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { print } from "graphql";
 import { REFRESH_TOKEN } from "@/graphql/Mutation/Auth";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose/jwt/verify";
 
 function getAccessSecret(): string | null {
     const secret = process.env.ACCESS_TOKEN_SECRET;
@@ -13,10 +13,15 @@ function getAccessSecret(): string | null {
     return secret;
 }
 
-function isTokenValid(token: string, secret: string): boolean {
+async function isTokenValid(
+    token: string,
+    secret: string,
+): Promise<boolean> {
     try {
         // Pin the algorithm: never accept "none" or an unexpected alg.
-        jwt.verify(token, secret, { algorithms: ["HS256"] });
+        await jwtVerify(token, new TextEncoder().encode(secret), {
+            algorithms: ["HS256"],
+        });
         return true;
     } catch {
         return false;
@@ -57,7 +62,7 @@ export async function middleware(req: NextRequest) {
     }
 
     const isAccessTokenValid = accessToken
-        ? isTokenValid(accessToken, secret)
+        ? await isTokenValid(accessToken, secret)
         : false;
 
     if (!isAccessTokenValid && refreshToken) {

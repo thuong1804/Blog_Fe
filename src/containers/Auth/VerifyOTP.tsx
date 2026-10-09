@@ -87,7 +87,6 @@ const VerifyOTPContainer = () => {
             setResending(false);
         }
     };
-    console.log(otp)
     useEffect(() => {
         fetch("/api/get-email")
             .then((res) => res.json())
