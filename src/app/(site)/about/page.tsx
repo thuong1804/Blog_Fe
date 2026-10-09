@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import CardAbout from "@/containers/About/CardAbout";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+    title: "About us",
+    description:
+        "Learn more about TECHNEWS — a creative blog writing and publishing site.",
+    alternates: { canonical: "/about" },
+};
 
 const AboutPage = () => {
     return (

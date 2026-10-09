@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import CardContact from "@/containers/Contact/CardContact";
 import SendMailContact from "@/containers/Contact/SendMail";
+
+export const metadata: Metadata = {
+    title: "Contact",
+    description:
+        "Contact TECHNEWS to publish your content and reach more readers.",
+    alternates: { canonical: "/contact" },
+};
 
 const ContactPage = () => {
     return (

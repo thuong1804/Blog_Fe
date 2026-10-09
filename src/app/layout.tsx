@@ -21,12 +21,33 @@ const roboto = Roboto({
     weight: ["400", "700"],
 });
 export const metadata: Metadata = {
+    metadataBase: new URL(
+        process.env.NEXT_PUBLIC_URL_BLOG || "http://localhost:5000",
+    ),
     icons: {
         icon: "/global.svg",
     },
-    title: "TECHNEWS",
+    title: {
+        default: "TECHNEWS",
+        // Page-level `generateMetadata` returns a plain string title and
+        template: "%s | TECHNEWS",
+    },
     description:
         "Explore articles on programming, Next.js, React, Node.js, and web development best practices. Stay updated with the latest tech trends for developers.",
+    openGraph: {
+        type: "website",
+        siteName: "TECHNEWS",
+        locale: "en_US",
+        title: "TECHNEWS",
+        description:
+            "Explore articles on programming, Next.js, React, Node.js, and web development best practices.",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "TECHNEWS",
+        description:
+            "Explore articles on programming, Next.js, React, Node.js, and web development best practices.",
+    },
 };
 
 export default function RootLayout({

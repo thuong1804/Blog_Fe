@@ -1,4 +1,5 @@
 // app/blog/page.tsx (Server Component)
+import type { Metadata } from "next";
 import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_ALL_POSTS, GET_SITE_STATS } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
@@ -14,6 +15,13 @@ interface GetAllPostsData {
         }
     }
 }
+
+export const metadata: Metadata = {
+    title: "Blog",
+    description:
+        "Browse all TECHNEWS articles on programming, frameworks, and web development.",
+    alternates: { canonical: "/blog" },
+};
 
 export default async function BlogPage({
     searchParams,

@@ -1,4 +1,5 @@
 // app/saved/page.tsx (Server Component, auth-gated by middleware)
+import type { Metadata } from "next";
 import BlogContainer from "@/components/Blog/BlogContainer";
 import { GET_MY_BOOKMARKS } from "@/graphql/Query/PostQuery";
 import { createApolloClient } from "@/lib/apolloClient";
@@ -6,6 +7,11 @@ import { ItemCardBlogProps } from "@/type/typeProps";
 import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
+
+// Private user data — never index.
+export const metadata: Metadata = {
+    robots: { index: false, follow: false },
+};
 
 interface MyBookmarksData {
     myBookmarks: {
